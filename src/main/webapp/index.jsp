@@ -1,5 +1,5 @@
 <%@ page import="java.io.File" %>
-<%@ page import="com.github.b402.FileManager" %>
+<%@ page import="core.FileManager" %>
 <html>
 <body>
 <h2>Hello World!</h2>

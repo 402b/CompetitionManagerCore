@@ -4,7 +4,6 @@
     <option name="directories">
       <list>
         <option value="E:\IDEA\CompetitionManagerCore/src/main/java" />
-        <option value="E:\IDEA\CompetitionManagerCore/src/main/kotlin" />
       </list>
     </option>
   </component>
@@ -19,7 +18,7 @@
         </webroots>
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/kotlin" />
+          <root url="file://$MODULE_DIR$/src/main/resources" />
         </sourceRoots>
       </configuration>
     </facet>
