@@ -1,4 +1,4 @@
-package com.github.b402
+package com.github.b402.cmc.core
 
 import java.io.File
 

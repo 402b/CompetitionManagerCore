@@ -1,4 +1,4 @@
-package com.github.b402.configuration
+package com.github.b402.cmc.core.configuration
 
 import com.google.gson.JsonObject
 
