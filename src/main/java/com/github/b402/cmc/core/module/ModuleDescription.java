@@ -20,18 +20,18 @@ public class ModuleDescription {
         try (InputStreamReader br = new InputStreamReader(inputStream)) {
             JsonParser jp = new JsonParser();
             JsonElement e = jp.parse(br);
-            if(e.isJsonObject()){
+            if (e.isJsonObject()) {
                 JsonObject json = e.getAsJsonObject();
                 name = json.get("name").getAsString();
                 denepdns = new ArrayList<>();
-                if(json.has("depends")){
+                if (json.has("depends")) {
                     JsonArray arr = json.get("depends").getAsJsonArray();
                     for (JsonElement d : arr) {
                         denepdns.add(d.getAsString());
                     }
                 }
                 mainClass = json.get("main").getAsString();
-            }else{
+            } else {
                 throw new IllegalArgumentException("传入的模块说明文件不是json文件");
             }
         } catch (Exception e) {

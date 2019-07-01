@@ -22,12 +22,14 @@ public class ModuleClassLoader extends URLClassLoader {
     private JarFile jar;
     private Module module;
     private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
+    private ModuleDescription description;
     private URL url;
 
     public ModuleClassLoader(ModuleLoader loader,ModuleDescription description, ClassLoader parent, File file) throws IOException {
         super(new URL[]{file.toURI().toURL()}, parent);
         this.loader = loader;
         this.file = file;
+        this.description = description;
         jar = new JarFile(file);
         manifest = jar.getManifest();
         this.url = file.toURI().toURL();
@@ -36,6 +38,9 @@ public class ModuleClassLoader extends URLClassLoader {
             Class<?> cls = Class.forName(description.getMainClass(), true, this);
             Class<? extends Module> modulecls = cls.asSubclass(Module.class);
             module = modulecls.newInstance();
+            module.dependModules = description.getDenepdns().toArray(new String[description.getDenepdns().size()]);
+            module.name = description.getName();
+            module.description = description;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
