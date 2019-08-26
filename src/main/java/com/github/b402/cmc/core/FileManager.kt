@@ -3,6 +3,7 @@ package com.github.b402.cmc.core
 import java.io.File
 
 object FileManager {
+    const val HELLO_WORLD ="Hello world"
     fun checkFolder(){
         val bf = getBaseFolder()
         if(!bf.exists()){

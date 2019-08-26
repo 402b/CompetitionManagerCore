@@ -1,11 +1,11 @@
-<%@ page import="java.io.File" %>
-<%@ page import="com.github.b402.cmc.core.FileManager" %>
+<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
 </head>
 <body>
 <div id="app">
@@ -15,8 +15,15 @@
     var v = new Vue({
         el: '#app',
         data: {
-            message: '<%=FileManager.HELLO_WORLD%>'
+            message: 'Hello Vue.js!'
         }
+    })
+    axios({
+        method: 'get',
+        url: '/test'
+    }).then(function(res){
+        console.log(res.data.message)
+        v.$data.message = res.data.message
     })
 </script>
 </body>
