@@ -6,6 +6,7 @@ object FileManager {
     const val HELLO_WORLD ="Hello world"
     fun checkFolder(){
         val bf = getBaseFolder()
+        println(bf.absolutePath)
         if(!bf.exists()){
             bf.mkdirs()
         }

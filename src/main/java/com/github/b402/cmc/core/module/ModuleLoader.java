@@ -1,5 +1,8 @@
 package com.github.b402.cmc.core.module;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,15 +17,15 @@ public class ModuleLoader {
     private ClassLoader loader;
     private List<ModuleClassLoader> loaders = new CopyOnWriteArrayList<>();
 
-    public ModuleLoader(ClassLoader loader) {
+    public ModuleLoader(@NotNull ClassLoader loader) {
         this.loader = loader;
     }
 
-    public void load(File jarFile) {
+    public void load(@NotNull File jarFile) {
         try (JarFile jar = new JarFile(jarFile)) {
             JarEntry des = jar.getJarEntry("module.json");
             ModuleDescription description = new ModuleDescription(jar.getInputStream(des));
-            ModuleClassLoader mcl = new ModuleClassLoader(this,description,loader,jarFile);
+            ModuleClassLoader mcl = new ModuleClassLoader(this, description, loader, jarFile);
             loaders.add(mcl);
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,11 +33,12 @@ public class ModuleLoader {
 
     }
 
+    @NotNull
     public ClassLoader getLoader() {
         return loader;
     }
 
-    void setClass(final String name, final Class<?> clazz) {
+    void setClass(@NotNull final String name, @NotNull final Class<?> clazz) {
         if (!classes.containsKey(name)) {
             classes.put(name, clazz);
         }

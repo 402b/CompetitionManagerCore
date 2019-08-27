@@ -3,13 +3,8 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+  <listener>
+    <listener-class>com.github.b402.cmc.core.ContextManager</listener-class>
+  </listener>
   <display-name>Archetype Created Web Application</display-name>
-  <servlet>
-    <servlet-name>test</servlet-name>
-    <servlet-class>com.github.b402.cmc.core.TestServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>test</servlet-name>
-    <url-pattern>/test</url-pattern>
-  </servlet-mapping>
 </web-app>

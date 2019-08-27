@@ -24,6 +24,10 @@ public class ModuleClassLoader extends URLClassLoader {
     private final Map<String, Class<?>> classes = new HashMap<String, Class<?>>();
     private ModuleDescription description;
     private URL url;
+    private boolean enable = false;
+    private boolean load = false;
+
+
 
     public ModuleClassLoader(ModuleLoader loader,ModuleDescription description, ClassLoader parent, File file) throws IOException {
         super(new URL[]{file.toURI().toURL()}, parent);
@@ -68,6 +72,22 @@ public class ModuleClassLoader extends URLClassLoader {
 
     public Module getModule() {
         return module;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public boolean isLoad() {
+        return load;
+    }
+
+    public void setLoad(boolean load) {
+        this.load = load;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     @Override

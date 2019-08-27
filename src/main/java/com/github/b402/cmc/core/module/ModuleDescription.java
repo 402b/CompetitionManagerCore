@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.List;
 public class ModuleDescription {
 
     private String name;
-    private List<String> denepdns;
+    private List<String> denepdns = new ArrayList<>();
     private String mainClass;
 
     public ModuleDescription(InputStream inputStream) {
@@ -39,14 +41,17 @@ public class ModuleDescription {
         }
     }
 
+    @NotNull
     public String getName() {
         return name;
     }
 
+    @NotNull
     public List<String> getDenepdns() {
         return denepdns;
     }
 
+    @NotNull
     public String getMainClass() {
         return mainClass;
     }
