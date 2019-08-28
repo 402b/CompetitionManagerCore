@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>syl-vue-test</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script src = "./resourceJs/login.js"></script>
+    <style>
+        *{padding: 0;margin: 0;}
+        a{text-decoration: none;color: #fff;}
+        ul{list-style: none;}
+        nav,ul{
+            width: 100%;
+            display: flex; /* 开启弹性盒模型 布局方式*/
+            flex-direction: row;
+            justify-content: center;
+            background: yellowgreen;
+        }
+        nav>ul>li{
+            width: 20%;
+            height: 100%;
+            text-align: center;
+            line-height: 50px;
+        }
+        nav>ul>li:hover{
+            box-shadow: 1px 0px 10px #fff;
+        }
+        nav>ul>li>ul{
+            display: flex;
+            flex-direction: column;
+        }
+        nav>ul>li>ul>li{
+            box-shadow: 1px 0px 10px #fff;
+        }
+        nav>ul>li>a{
+            text-transform: uppercase;
+        }
+    </style>
+    <!-- 引入 vue.js -->
+    <!--script src="https://labfile.oss.aliyuncs.com/courses/1262/vue.js"></script-->
+</head>
+<body>
+<div id="app">
+    <nav>
+        <ul>
+            <!-- 循环渲染一级菜单 -->
+            <!-- 鼠标移入触发currentIndex(index)函数，更正current是当前菜单的index, 鼠标移出重置current为空  事件回调方法在methods中实现-->
+            <li v-for="(nav,index) in navbar" :key="index" @mouseover="currentIndex(index)" @mouseout="changeIndex">
+                <!-- nav.name 一级菜单名字 -->
+                <a href="javascript:;">{{nav.name}}</a>
+                <!-- 如果nav.child存在，说明有子菜单，再次循环渲染子菜单 -->
+                <!-- 子菜单v-show  如果当前菜单的 index 等于 鼠标移入那个菜单的下标我们就展示出子菜单-->
+                <ul v-if="nav.child" v-show="current===index">
+                    <li v-for="item in nav.child">
+                        <a href="javascript:;">{{item}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+用户名：<input type="text" id = "userName"/>
+<Br/>
+密  码：<input type="text" id = "password"/>
+<Br/>
+<button onclick="login()">登录</button>
+
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            //navbar 模拟后台获取到的菜单列表
+            navbar:[
+                {
+                    name:'home',
+                    child:['homeItem','homeItem']
+                },
+                {
+                    name:'contact',
+                    child:['contactItem','contactItem']
+                },
+                {
+                    name:'about'
+                }
+            ],
+            //current 当前鼠标在那个菜单上 ，初始时没有值
+            current:null
+        } ,
+        methods: {
+            //更正 当前鼠标移入的是哪个菜单的 index
+            currentIndex:function(index){
+                this.current = index
+            },
+            //鼠标移出 重置current 值
+            changeIndex:function(){
+                this.current=null
+            }
+
+        },
+    })
+</script>
+</body>
+</html>
