@@ -20,10 +20,12 @@ function login(){
     var password = document.getElementById("password").value;
     axios({
         url:'/Data/login',
-        param: {
-            params: {
-                userName: userName,
-                password: password
+        params: {
+            param: {
+                Data:{
+                    userName: userName,
+                    password: password
+                }
             }
         }
     }).then(
@@ -48,17 +50,19 @@ function register(){
     var userName = document.getElementById("userName").value;
     var password = document.getElementById("password").value;
     axios({
-        url:'/register',
+        url:'/Data/register',
         params:{
-            userName: userName,
-            password: password
+            param: {
+                Data:{
+                    userName: userName,
+                    password: password
+                }
+            }
         }
     }).then(
         rep=>{
-
-
-        }
-        ,)
+            alert(rep)
+        })
 }
 
 //检查是否有token存在

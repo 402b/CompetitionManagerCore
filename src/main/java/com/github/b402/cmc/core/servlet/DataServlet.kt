@@ -1,6 +1,7 @@
 package com.github.b402.cmc.core.servlet
 
 import com.github.b402.cmc.core.service.DataService
+import com.github.b402.cmc.core.service.RegisterService
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
@@ -39,7 +40,10 @@ class DataServlet : HttpServlet() {
         val registeredDataService = mutableMapOf<String, DataService<*>>()
 
         fun register(ds: DataService<*>) {
-            registeredDataService[ds.path] = ds
+            registeredDataService["/${ds.path}"] = ds
+        }
+        fun init(){
+            register(RegisterService())
         }
     }
 }
