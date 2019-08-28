@@ -5,7 +5,7 @@ import com.google.gson.JsonObject
 interface ConfigurationSection {
     val name: String
 
-    var keys: Set<String>?
+    var keys: MutableSet<String>?
 
     fun getBoolean(path: String, def: Boolean = false): Boolean
 
@@ -28,4 +28,8 @@ interface ConfigurationSection {
     operator fun set(path: String, data: Any?)
 
     fun save(): JsonObject
+    fun toJson():String {
+        val jo = save()
+        return Configuration.gson.toJson(jo)
+    }
 }

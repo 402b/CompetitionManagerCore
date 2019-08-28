@@ -2,6 +2,7 @@ package com.github.b402.cmc.core;
 
 import com.github.b402.cmc.core.module.Module;
 import com.github.b402.cmc.core.module.ModuleClassLoader;
+import com.github.b402.cmc.core.sql.SQLManager;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +21,7 @@ public class ContextManager implements ServletContextListener {
         servletContext = evt.getServletContext();
         Logger.getLogger(ContextManager.class).info("开始初始化模块");
         Module.loadModules();
+        SQLManager.INSTANCE.init();
     }
 
     @Override

@@ -5,7 +5,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
 </head>
 <body>
 <div id="app">
@@ -14,16 +14,21 @@
 <button onclick="
     axios({
         method: 'get',
-        url: '/Data/t',
+        url: '/Data/register',
         params: {
-            test: 'test'
+            param: {
+                token: 'xx',
+                Data: {
+                }
+            }
         }
     }).then(
         function(res){
             console.log(res.data)
         }
     )
-">test</button>
+">test
+</button>
 <script>
     var v = new Vue({
         el: '#app',
@@ -34,7 +39,7 @@
     axios({
         method: 'get',
         url: '/test'
-    }).then(function(res){
+    }).then(function (res) {
         console.log(res.data.message)
         v.$data.message = res.data.message
     })

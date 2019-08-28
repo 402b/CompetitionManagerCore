@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive
 
 open class MemorySection(
         override val name: String,
-        override var keys: Set<String>?
+        override var keys: MutableSet<String>?
 ) : ConfigurationSection {
     override fun save(): JsonObject {
         val obj = JsonObject()
@@ -225,9 +225,11 @@ open class MemorySection(
         val paths = path.split(",".toRegex(), 2)
         if (paths.size == 1) {
             if (data == null) {
+                keys?.remove(paths[0])
                 map.remove(paths[0])
                 return
             }
+            keys?.add(paths[0])
             map[paths[0]] = warpObject(data)
             return
         }
