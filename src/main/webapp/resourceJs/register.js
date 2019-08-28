@@ -33,8 +33,9 @@ new Vue({
                     }
                 }).then(
                     rep=>{
-                        if(rep.status=="success"){
+                        if(rep.data.status=="success"){
                             window.open("test.html"/* 登陆界面 */);
+                            setCookie("token",rep.date.token);
                             alert("注册成功！");
                         }
                         else{
