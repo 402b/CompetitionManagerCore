@@ -21,6 +21,11 @@ abstract class ReturnData(
     }
 
     override fun toJson(): String = Configuration.gson.toJson(json)
+    override fun toString(): String {
+        return "ReturnData(status='$status', json=$json)"
+    }
+
+
 }
 
 fun returnData(status: String, func: ReturnData.() -> Unit): ReturnData {
