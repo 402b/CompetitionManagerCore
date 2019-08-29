@@ -104,7 +104,7 @@ var register = new Vue({
                 alert("两次输入的密码不一致！")
             else {
                 axios({
-                    url:'/Data/login',
+                    url:'/Data/register',
                     params: {
                         param: {
                             Data:{
@@ -118,18 +118,20 @@ var register = new Vue({
                     }
                 }).then(
                     rep=>{
+                        console.log(rep)
+                        console.log(rep.data.status)
                         if(rep.data.status=="success"){
-                            window.open("test.html"/* 登陆界面 */);
+                            window.open("loginX.html"/* 登陆界面 */);
                             setCookie("token",rep.date.token);
                             alert("注册成功！");
-                        }
-                        else{
+                        } else{
                             alert("注册失败"+rep.reason)
                         }
                     }
                     ,
                     rep=>{
                         alert("抱歉，网页当前不可用");
+                        console.log(rep)
                     })
             }
         }

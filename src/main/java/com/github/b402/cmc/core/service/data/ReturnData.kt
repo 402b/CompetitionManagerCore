@@ -9,6 +9,7 @@ const val NO_TOKEN = "no_token"
 const val ERROR = "error"
 const val ERROR_TOKEN = "error_token"
 const val ERROR_TIMTOUT = "error_timeout"
+const val ILLEGAL_INPUT = "illegal_input"
 
 abstract class ReturnData(
         val status: String
@@ -26,4 +27,8 @@ fun returnData(status: String, func: ReturnData.() -> Unit): ReturnData {
     val rd = object : ReturnData(status) {}
     rd.func()
     return rd
+}
+
+fun returnData(status: String, reason: String): ReturnData = returnData(status) {
+    this.json.addProperty("reason", reason)
 }

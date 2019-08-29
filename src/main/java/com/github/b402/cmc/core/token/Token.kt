@@ -1,24 +1,21 @@
 package com.github.b402.cmc.core.token
 
 import com.github.b402.cmc.core.configuration.Configuration
-import com.github.b402.cmc.core.service.data.User
+import com.github.b402.cmc.core.sql.data.User
 import com.github.b402.cmc.core.util.deBase64
 import com.github.b402.cmc.core.util.md5HashWithSalt
 import com.github.b402.cmc.core.util.toBase64
 import java.util.*
 import kotlin.random.Random
 
+
 class Token(
         val uid: Int,
-        val exp: Long = System.currentTimeMillis() + 48L * 60L * 60L * 1000L,
+        val exp: Long = System.currentTimeMillis() + 60L * 1000L,
         val iat: Long = System.currentTimeMillis(),
         val jti: Long = Random.Default.nextLong()
 ) {
 
-
-    constructor(user: User) : this(user.uid) {
-        user.lastToken = this
-    }
 
     val isTourist: Boolean by lazy {
         this == TokenManager.Tourist_Token
@@ -59,7 +56,7 @@ class Token(
     companion object {
         const val HEADER = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 
-        fun deToken(token: String): Token? {
+        suspend fun deToken(token: String): Token? {
             val str = token.split("\\.".toRegex(), 3)
             if (str.size != 3 || str[0] != HEADER) {
                 return null
@@ -68,12 +65,16 @@ class Token(
             if (auth == str[2]) {
                 val json = str[1].deBase64()
                 val data = Configuration(json)
-                return Token(
+                val token = Token(
                         data.getInt("uid"),
                         data.getLong("exp"),
                         data.getLong("iat"),
                         data.getLong("jti")
                 )
+                if (token.exp < System.currentTimeMillis()) {
+                    return Token(token.uid)
+                }
+
             }
             return null
         }

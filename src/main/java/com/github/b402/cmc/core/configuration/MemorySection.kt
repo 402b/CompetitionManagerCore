@@ -10,7 +10,7 @@ open class MemorySection(
 
     companion object {
         val jsonParser = JsonParser()
-        fun readFromJson(json: String): MemorySection = MemorySection(jsonParser.parse(json).asJsonObject)
+        fun readFromJson(json: String): ConfigurationSection = MemorySection(jsonParser.parse(json).asJsonObject)
     }
 
     override fun save(): JsonObject {
@@ -46,7 +46,7 @@ open class MemorySection(
         }
     }
 
-    constructor(json: JsonObject) : this("", json.keySet()) {
+    constructor(json: JsonObject) : this("", HashSet(json.keySet())) {
         for (key in json.keySet()) {
             val get = json.get(key)
             if (get.isJsonObject) {

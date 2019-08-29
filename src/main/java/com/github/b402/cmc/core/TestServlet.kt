@@ -1,25 +1,35 @@
-package com.github.b402.cmc.core;
+package com.github.b402.cmc.core
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.PrintWriter
+import java.lang.Thread.sleep
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-@WebServlet("/test")
-public class TestServlet extends HttpServlet {
+import javax.servlet.AsyncContext
+import javax.servlet.ServletException
+import javax.servlet.annotation.WebServlet
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        writer.println("{\"message\": \"Hello world\"}");
+@WebServlet("/test",asyncSupported = true)
+class TestServlet : HttpServlet() {
+
+    @Throws(ServletException::class, IOException::class)
+    override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
+        val writer = resp.writer
+        writer.println("{\"message\": \"Hello world\"}")
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        writer.println("{\"message\": \"Hello world\"}");
+    @Throws(ServletException::class, IOException::class)
+    override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
+        val async = req.startAsync(req, resp)
+        GlobalScope.launch {
+            val writer = async.response.writer
+            sleep(3000L)
+            writer.println("{\"message\": \"Hello world\"}")
+            async.complete()
+        }
     }
 }

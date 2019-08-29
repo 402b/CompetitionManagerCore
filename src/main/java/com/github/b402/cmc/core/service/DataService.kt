@@ -9,6 +9,7 @@ import com.github.b402.cmc.core.token.Token
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
+import org.apache.log4j.Logger
 
 abstract class DataService<in S : SubmitData>(
         val path: String,
@@ -36,7 +37,13 @@ abstract class DataService<in S : SubmitData>(
             this.json.addProperty("reason", "状态异常,未传入数据")
         }
         val c = sClass.getConstructor(JsonObject::class.java)
-        val input = c.newInstance(data) as S
+        val input: S
+        try {
+            input = c.newInstance(data) as S
+        } catch (e: Throwable) {
+            Logger.getLogger(DataService::class.java).debug("传入的参数异常", e)
+            return returnData(ILLEGAL_INPUT, "传入的参数异常")
+        }
         if (this.permission != Permission.ANY) {
             val token = Token.deToken(json.get("token").asString)
                     ?: return returnData(ERROR_TOKEN) {

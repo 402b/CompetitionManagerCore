@@ -4,6 +4,7 @@ import com.github.b402.cmc.core.module.Module;
 import com.github.b402.cmc.core.module.ModuleClassLoader;
 import com.github.b402.cmc.core.servlet.DataServlet;
 import com.github.b402.cmc.core.sql.SQLManager;
+import com.github.b402.cmc.core.token.TokenManager;
 
 import org.apache.log4j.Logger;
 
@@ -24,6 +25,7 @@ public class ContextManager implements ServletContextListener {
         Module.loadModules();
         SQLManager.INSTANCE.init();
         DataServlet.Companion.init();
+        TokenManager.INSTANCE.init();
     }
 
     @Override

@@ -1,17 +1,15 @@
 import com.github.b402.cmc.core.configuration.Configuration
 import com.github.b402.cmc.core.configuration.MemorySection
+import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.token.TokenManager
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.*
-import kotlin.system.measureTimeMillis
-
 class ConfigTest {
 
     @Test
@@ -40,11 +38,12 @@ class ConfigTest {
         Assert.assertEquals(cs!!.getInt("key"), 1)
         Assert.assertArrayEquals(cs.getNumberList("array")!!
                 .map { it.toInt() }.toTypedArray()
-                , arrayOf(1,2,3))
+                , arrayOf(1, 2, 3))
     }
 
     @Test
-    fun token() {
+    fun token() = runBlocking{
+        SQLManager.init()
         val testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIzNCwiZXhwIjoxNTY3MTQyMjEwMjMyLCJpYXQiOjE1NjY5Njk0MTAyMzIsImp0aSI6MTI4OTQzMX0=.0A9D3DE82D08F9490E64CE321CC01834"
 
         TokenManager.init()
@@ -58,7 +57,7 @@ class ConfigTest {
     }
 
     @Test
-    fun touristToken() {
+    fun touristToken() = runBlocking {
         TokenManager.init()
         val tt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOi0xLCJleHAiOjAsImlhdCI6MCwianRpIjowfQ==.D2DE9C919F12FF28AE46182C533D0BCB"
         val token = Token(-1, 0, 0, 0)

@@ -1,13 +1,17 @@
 package com.github.b402.cmc.core.util
 
 import com.github.b402.cmc.core.token.TokenManager
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.*
 
 fun String.toBase64(): String {
     return String(Base64.getEncoder().encode(this.toByteArray()))
 }
-fun String.deBase64():String{
+
+fun String.deBase64(): String {
     return String(Base64.getDecoder().decode(this))
 }
 
@@ -39,4 +43,13 @@ fun byteToHexString(b: Byte): String {
     val d1 = n / 16
     val d2 = n % 16
     return hexDigIts[d1] + "" + hexDigIts[d2]
+}
+
+fun <E> Channel<E>.asyncSend(e: E) {
+    val c = this
+    GlobalScope.launch {
+        if (c.isClosedForSend) return@launch
+        c.send(e)
+        c.close()
+    }
 }

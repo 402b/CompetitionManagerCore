@@ -11,7 +11,10 @@ import java.sql.SQLException
 
 object SQLManager {
     private lateinit var connectPool: HikariDataSource
+    private var init = false
     fun init() {
+        if (init) return
+        init = true
         Logger.getLogger(SQLManager::class.java).info("开始初始化数据库连接池")
         try {
             val configs = Thread.currentThread().contextClassLoader.getResourceAsStream("config.json")!!
@@ -60,16 +63,30 @@ object SQLManager {
             val stn = this.createStatement()
             stn.execute("""
                 CREATE TABLE IF NOT EXISTS User(
-                 UID INT NOT NULL PRIMARY KEY,
+                 UID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                  Name VARCHAR(30) NOT NULL,
-                 Data TEXT NOT NULL
+                 Data Json NOT NULL
                 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
         }
     }
 
-
     fun operateConnection(func: Connection.() -> Unit) {
+        var conn: Connection? = null
+        try {
+            conn = connectPool.connection
+            conn.func()
+        } catch (e: SQLException) {
+            Logger.getLogger(SQLManager::class.java).error("执行数据库回调中发生错误", e)
+        } finally {
+            if (conn != null) {
+                connectPool.evictConnection(conn)
+            }
+        }
+    }
+
+    suspend fun coroutinesConnection(func: suspend Connection.() -> Unit) {
+        SQLManager.init()
         var conn: Connection? = null
         try {
             conn = connectPool.connection

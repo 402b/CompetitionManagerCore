@@ -1,10 +1,9 @@
 package com.github.b402.cmc.core.servlet
 
+import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.service.DataService
-import com.github.b402.cmc.core.service.RegisterService
-import com.github.b402.cmc.core.service.data.ERROR
-import com.github.b402.cmc.core.service.data.ERROR_TIMTOUT
-import com.github.b402.cmc.core.service.data.returnData
+import com.github.b402.cmc.core.service.data.*
+import com.github.b402.cmc.core.service.impl.RegisterService
 import kotlinx.coroutines.*
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
@@ -25,19 +24,24 @@ class DataServlet : HttpServlet() {
             return
         }
         val json = req.getParameter("param")
+        Logger.getLogger(DataServlet::class.java).debug("json: $json")
         if (json == null) {
             resp.status = 404
             return
         }
-        resp.characterEncoding = "utf-8";
-        resp.setHeader("Content-type", "application/json;charset=UTF-8");
         req.characterEncoding = "utf-8";
-        val async = req.asyncContext
-        GlobalScope.launch {
+        Logger.getLogger(DataServlet::class.java).debug("req.asyncContext")
+        val async = req.startAsync(req, resp)
+        Logger.getLogger(DataServlet::class.java).debug("GlobalScope.launch ")
+        val job = GlobalScope.launch {
+            resp.characterEncoding = "utf-8";
+            resp.setHeader("Content-type", "application/json;charset=UTF-8");
+            Logger.getLogger(DataServlet::class.java).debug("async")
             val resp = async.response
+            Logger.getLogger(DataServlet::class.java).debug(" async.response")
             val returndata = withTimeoutOrNull(5000) {
                 try {
-                    return@withTimeoutOrNull ds.input(json,this)
+                    return@withTimeoutOrNull ds.input(json, this)
                 } catch (timeout: TimeoutCancellationException) {
                     Logger.getLogger(DataServlet::class.java).error("@/Data/${ds.path}}处理数据${json}时超时", timeout)
                     return@withTimeoutOrNull returnData(ERROR_TIMTOUT) {
@@ -50,6 +54,8 @@ class DataServlet : HttpServlet() {
                     }
                 }
             }
+            Logger.getLogger(DataServlet::class.java).debug("returndata: ${returndata?.toString()
+                    ?: "=null"}")
             val writer = resp.writer
             if (returndata == null) {
                 val rd = returnData(ERROR_TIMTOUT) {
@@ -72,6 +78,12 @@ class DataServlet : HttpServlet() {
 
         fun init() {
             register(RegisterService())
+            register(object : DataService<SubmitData>("test", Permission.ANY, SubmitData::class.java) {
+                override suspend fun readData(data: SubmitData, cs: CoroutineScope): ReturnData {
+                    return returnData(SUCCESS, "test")
+                }
+
+            })
         }
     }
 }
