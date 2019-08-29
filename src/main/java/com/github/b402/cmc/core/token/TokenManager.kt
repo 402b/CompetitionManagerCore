@@ -25,6 +25,6 @@ object TokenManager {
         val fr = FileReader(f)
         Signature = fr.readText()
         fr.close()
-        Tourist_Token = Token(UUID.fromString("00000000-0000-0000-0000-000000000000"),0,0,0)
+        Tourist_Token = Token(-1,0,0,0)
     }
 }

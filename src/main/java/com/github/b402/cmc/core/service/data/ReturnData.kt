@@ -8,6 +8,7 @@ const val SUCCESS = "success"
 const val NO_TOKEN = "no_token"
 const val ERROR = "error"
 const val ERROR_TOKEN = "error_token"
+const val ERROR_TIMTOUT = "error_timeout"
 
 abstract class ReturnData(
         val status: String

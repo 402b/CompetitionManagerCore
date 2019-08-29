@@ -21,6 +21,8 @@ interface ConfigurationSection {
 
     fun getList(path: String): List<Any>?
 
+    fun getNumberList(path:String):List<Number>?
+
     fun getConfigurationSection(path: String): ConfigurationSection?
 
     operator fun get(path: String): Any?

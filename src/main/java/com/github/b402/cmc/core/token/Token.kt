@@ -9,14 +9,14 @@ import java.util.*
 import kotlin.random.Random
 
 class Token(
-        val uid: UUID,
+        val uid: Int,
         val exp: Long = System.currentTimeMillis() + 48L * 60L * 60L * 1000L,
         val iat: Long = System.currentTimeMillis(),
         val jti: Long = Random.Default.nextLong()
 ) {
 
 
-    constructor(user: User) : this(user.uuid) {
+    constructor(user: User) : this(user.uid) {
         user.lastToken = this
     }
 
@@ -69,7 +69,7 @@ class Token(
                 val json = str[1].deBase64()
                 val data = Configuration(json)
                 return Token(
-                        UUID.fromString(data.getString("uid")),
+                        data.getInt("uid"),
                         data.getLong("exp"),
                         data.getLong("iat"),
                         data.getLong("jti")

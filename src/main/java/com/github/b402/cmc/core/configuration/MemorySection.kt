@@ -1,14 +1,18 @@
 package com.github.b402.cmc.core.configuration
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
+import com.google.gson.*
 
 open class MemorySection(
         override val name: String,
         override var keys: MutableSet<String>?
 ) : ConfigurationSection {
+    constructor() : this("", mutableSetOf())
+
+    companion object {
+        val jsonParser = JsonParser()
+        fun readFromJson(json: String): MemorySection = MemorySection(jsonParser.parse(json).asJsonObject)
+    }
+
     override fun save(): JsonObject {
         val obj = JsonObject()
         if (keys == null) {
@@ -28,8 +32,6 @@ open class MemorySection(
     }
 
     protected val map: MutableMap<String, Any> = LinkedHashMap()
-
-    protected constructor() : this("", null)
 
     protected fun init(json: JsonObject) {
         keys = json.keySet()
@@ -147,6 +149,20 @@ open class MemorySection(
         return list
     }
 
+    override fun getNumberList(path: String): List<Number>? {
+        val array = getArray(path) ?: return null
+        val list = mutableListOf<Number>()
+        for(v in array){
+            if(v.isJsonPrimitive){
+                val jp = v.asJsonPrimitive
+                if(jp.isNumber){
+                    list.add(jp.asNumber)
+                }
+            }
+        }
+        return list
+    }
+
     override fun getConfigurationSection(path: String): ConfigurationSection? {
         if (path.isEmpty()) {
             return null
@@ -240,7 +256,19 @@ open class MemorySection(
         }
     }
 
-    private fun warpObject(data: Any): Any {
+    private fun warpObject(data: Any): JsonElement {
+        if (data is String) {
+            return JsonPrimitive(data)
+        }
+        if (data is Number) {
+            return JsonPrimitive(data)
+        }
+        if (data is Char) {
+            return JsonPrimitive(data)
+        }
+        if (data is Boolean) {
+            return JsonPrimitive(data)
+        }
         if (data is JsonElement) {
             return data
         }
@@ -263,4 +291,24 @@ open class MemorySection(
         }
         throw IllegalArgumentException("无法包装对象")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MemorySection) return false
+
+        if (name != other.name) return false
+        if (keys != other.keys) return false
+        if (map != other.map) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + (keys?.hashCode() ?: 0)
+        result = 31 * result + map.hashCode()
+        return result
+    }
+
+
 }

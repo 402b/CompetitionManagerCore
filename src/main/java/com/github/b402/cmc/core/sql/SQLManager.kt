@@ -57,23 +57,23 @@ object SQLManager {
     private fun checkTable() {
         Logger.getLogger(SQLManager::class.java).info("正在检查数据表")
         operateConnection {
-            val stn = it.createStatement()
+            val stn = this.createStatement()
             stn.execute("""
                 CREATE TABLE IF NOT EXISTS User(
-                 UUID CHAR(36) NOT NULL PRIMARY KEY,
+                 UID INT NOT NULL PRIMARY KEY,
                  Name VARCHAR(30) NOT NULL,
-                 Data BLOB NOT NULL
+                 Data TEXT NOT NULL
                 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
         }
     }
 
 
-    private fun operateConnection(func: (Connection) -> Unit) {
+    fun operateConnection(func: Connection.() -> Unit) {
         var conn: Connection? = null
         try {
             conn = connectPool.connection
-            func(conn)
+            conn.func()
         } catch (e: SQLException) {
             Logger.getLogger(SQLManager::class.java).error("执行数据库回调中发生错误", e)
         } finally {
