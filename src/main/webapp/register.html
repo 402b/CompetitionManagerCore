@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+<section class="container">
+    <div class="login">
+<div id="reg">
+    <h1>用户注册</h1>
+    <label>真实姓名：</label> <input type="text" v-model="realName"><br/>
+    <label>性别：</label>
+    <select v-model="gender"><option value ="M">男</option>
+        <option value ="F">女</option></select><br/>
+    <label>识别号：</label> <input type="text" v-model="id"><br/>
+    <label>用户名：</label> <input type="text" v-model="userName"><br/>
+    <label>密码：</label> <input type="text" v-model="password"><br/>
+    <label>再次输入密码：</label> <input type="text" v-model="password2"><br/>
+    <input type="checkbox" v-model="isread"><label>我已阅读并同意
+    </label><a href="http://www.baidu.com" target="_blank">相关服务条款和隐私政策</a>
+    <p class="submit"><input type="submit" v-on:click="check" value="立即注册"></p>
+</div>
+<script src="resourceJs/register.js"></script>
+    </div>
+</section>
+</body>
