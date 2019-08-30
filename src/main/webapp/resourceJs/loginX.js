@@ -60,7 +60,7 @@ var login = new Vue({
                         alert("登录成功！");
                     }
                     else{
-                        alert("登陆失败"+rep.reason)
+                        alert("登陆失败"+rep.data.reason)
                     }
                 }
                 ,
@@ -122,10 +122,10 @@ var register = new Vue({
                         console.log(rep.data.status)
                         if(rep.data.status=="success"){
                             window.open("loginX.html"/* 登陆界面 */);
-                            setCookie("token",rep.date.token);
+                            setCookie("token",rep.data.token);
                             alert("注册成功！");
                         } else{
-                            alert("注册失败"+rep.reason)
+                            alert("注册失败"+rep.data.reason)
                         }
                     }
                     ,

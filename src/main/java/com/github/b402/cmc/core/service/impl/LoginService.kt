@@ -16,13 +16,13 @@ object LoginService : DataService<LoginData>(
     override suspend fun readData(data: LoginData): ReturnData {
         val cuser = User.getUserByName(data.userName)
         val user = cuser.receive() ?: return returnData(INVALID_USER_OR_PASSWORD, "错误的用户名或密码")
-        if (user.checkPassword(data.password)) {
+        return if (user.checkPassword(data.password)) {
             val token = Token(user.uid)
-            return returnData(SUCCESS) {
+            returnData(SUCCESS) {
                 this.json.addProperty("token", token.toTokenString())
             }
         } else {
-            return returnData(INVALID_USER_OR_PASSWORD, "错误的用户名或密码")
+            returnData(INVALID_USER_OR_PASSWORD, "错误的用户名或密码")
         }
     }
 }

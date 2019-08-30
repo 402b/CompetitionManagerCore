@@ -16,28 +16,27 @@ import javax.servlet.http.HttpServletResponse
         asyncSupported = true
 )
 class DataServlet : HttpServlet() {
-    override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
+    override fun doGet(req: HttpServletRequest, response: HttpServletResponse) {
         req.characterEncoding = "utf-8";
         val path = req.pathInfo
         val ds = dataService[path]
         if (ds == null) {
-            resp.status = 404
+            response.status = 404
             return
         }
         val json = req.getParameter("param")
         Logger.getLogger(DataServlet::class.java).debug("json: $json")
         if (json == null) {
-            resp.status = 404
+            response.status = 404
             return
         }
         Logger.getLogger(DataServlet::class.java).debug("req.asyncContext")
-        val async = req.startAsync(req, resp)
+        val async = req.startAsync(req, response)
         Logger.getLogger(DataServlet::class.java).debug("GlobalScope.launch ")
         GlobalScope.launch {
-            resp.characterEncoding = "utf-8";
-            resp.setHeader("Content-type", "application/json;charset=UTF-8");
             Logger.getLogger(DataServlet::class.java).debug("async")
             val resp = async.response
+            resp.characterEncoding = "utf-8";
             Logger.getLogger(DataServlet::class.java).debug(" async.response")
             val returndata = withTimeoutOrNull(5000) {
                 try {
@@ -59,6 +58,8 @@ class DataServlet : HttpServlet() {
             } else {
                 writer.write(returndata.toJson())
             }
+            response.characterEncoding = "utf-8";
+            response.setHeader("Content-type", "application/json;charset=UTF-8");
             async.complete()
         }
     }

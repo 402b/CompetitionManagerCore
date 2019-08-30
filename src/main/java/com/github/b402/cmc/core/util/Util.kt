@@ -6,6 +6,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.*
+import kotlin.coroutines.coroutineContext
 
 fun String.toBase64(): String {
     return String(Base64.getEncoder().encode(this.toByteArray()))
@@ -52,4 +53,8 @@ fun <E> Channel<E>.asyncSend(e: E) {
         c.send(e)
         c.close()
     }
+}
+
+suspend fun test(){
+    val context = coroutineContext
 }

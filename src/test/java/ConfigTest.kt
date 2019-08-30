@@ -5,12 +5,19 @@ import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.token.TokenManager
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 class ConfigTest {
+
+    @Before
+    fun init(){
+        SQLManager.init()
+        TokenManager.init()
+    }
 
     @Test
     fun testJson() {
@@ -43,8 +50,6 @@ class ConfigTest {
 
     @Test
     fun token() = runBlocking{
-        SQLManager.init()
-        TokenManager.init()
         Assert.assertEquals(TokenManager.Signature, "9112D7490C0480CC7014593DF27CC0A3")
         val uuid = 234
         val token = Token(uuid)

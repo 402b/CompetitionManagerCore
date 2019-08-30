@@ -86,7 +86,6 @@ object SQLManager {
     }
 
     suspend fun coroutinesConnection(func: suspend Connection.() -> Unit) {
-        SQLManager.init()
         var conn: Connection? = null
         try {
             conn = connectPool.connection

@@ -8,15 +8,25 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import org.junit.Before
 import org.junit.Test
 
 class UserTest {
-    @Test
-    fun createUser() = runBlocking<Unit> {
+    @Before
+    fun init() {
         SQLManager.init()
         TokenManager.init()
-        val rs = RegisterService
-        val result = rs.input("""
+    }
+
+    @Test
+    fun createUser() = runBlocking<Unit> {
+        withTimeout(3000L) {
+            SQLManager.coroutinesConnection{
+                this.prepareStatement("DELETE FROM User WHERE Name = 'Bryanlzh'").executeUpdate()
+            }
+            val rs = RegisterService
+            val result = rs.input("""
             {
                 "Data": {
                     "realName": "林zh",
@@ -27,6 +37,7 @@ class UserTest {
                 }
             }
         """.trimIndent())
-        println(result.toJson())
+            println(result.toJson())
+        }
     }
 }
