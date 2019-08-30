@@ -17,10 +17,6 @@ class Token(
 ) {
 
 
-    val isTourist: Boolean by lazy {
-        this == TokenManager.Tourist_Token
-    }
-
     fun toTokenString(): String {
         val json = """{"uid":$uid,"exp":$exp,"iat":$iat,"jti":$jti}""".trimIndent().toBase64()
         val auth = "$HEADER,$json".md5HashWithSalt()
@@ -56,7 +52,7 @@ class Token(
     companion object {
         const val HEADER = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 
-        suspend fun deToken(token: String): Token? {
+        fun deToken(token: String): Token? {
             val str = token.split("\\.".toRegex(), 3)
             if (str.size != 3 || str[0] != HEADER) {
                 return null
@@ -74,7 +70,7 @@ class Token(
                 if (token.exp < System.currentTimeMillis()) {
                     return Token(token.uid)
                 }
-
+                return token
             }
             return null
         }

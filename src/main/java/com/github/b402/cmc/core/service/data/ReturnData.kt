@@ -10,6 +10,7 @@ const val ERROR = "error"
 const val ERROR_TOKEN = "error_token"
 const val ERROR_TIMTOUT = "error_timeout"
 const val ILLEGAL_INPUT = "illegal_input"
+const val INVALID_USER_OR_PASSWORD = "invalid_user_or_password"
 
 abstract class ReturnData(
         val status: String
@@ -22,7 +23,7 @@ abstract class ReturnData(
 
     override fun toJson(): String = Configuration.gson.toJson(json)
     override fun toString(): String {
-        return "ReturnData(status='$status', json=$json)"
+        return "ReturnData(json=$json)"
     }
 
 

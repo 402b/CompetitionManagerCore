@@ -8,9 +8,11 @@ import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.util.asyncSend
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.coroutineContext
 
 enum class UserGender(val key: String) {
     MALE("M"), FEMALE("F");
@@ -51,6 +53,11 @@ class User(
         get() =  data.getString("id")!!
 
 
+    fun checkPassword(password:String):Boolean{
+        val pw = data.getString("password")
+        return pw == password
+    }
+
     companion object UserManager {
         val cacheUser: MutableMap<Int, User> = ConcurrentHashMap()
 
@@ -66,7 +73,7 @@ class User(
             }
         }
 
-        suspend fun createUser(rd: RegisterData, cs: CoroutineScope, resp: Channel<String?>): User? {
+        suspend fun createUser(rd: RegisterData, resp: Channel<String?>): User? {
             val hasUser = getUserByName(rd.userName)
             val uid = Channel<User?>()
             SQLManager.coroutinesConnection {
@@ -92,9 +99,9 @@ class User(
             return uid.receive()
         }
 
-        fun getUser(uid: Int): Channel<User?> {
+        suspend fun getUser(uid: Int): Channel<User?> {
             val channel = Channel<User?>()
-            GlobalScope.launch {
+            GlobalScope.launch(coroutineContext) {
                 val cache = cacheUser[uid]
                 if (cache != null) {
                     channel.asyncSend(cache)
@@ -117,9 +124,9 @@ class User(
             return channel
         }
 
-        fun getUserByName(name: String): Channel<User?> {
+        suspend fun getUserByName(name: String): Channel<User?> {
             val channel = Channel<User?>()
-            GlobalScope.launch {
+            GlobalScope.launch(coroutineContext) {
                 SQLManager.coroutinesConnection {
                     val ps = this.prepareStatement("SELECT * FROM User WHERE Name = ? LIMIT 1")
                     ps.setString(1, name)

@@ -15,19 +15,18 @@ class UserTest {
     fun createUser() = runBlocking<Unit> {
         SQLManager.init()
         TokenManager.init()
-        val rs = RegisterService()
-        val resp = Channel<String?>()
+        val rs = RegisterService
         val result = rs.input("""
             {
                 "Data": {
                     "realName": "林zh",
-                    "gender": "男",
+                    "gender": "M",
                     "id": "9177d25",
                     "userName": "Bryanlzh",
                     "password": "123456"
                 }
             }
-        """.trimIndent(),this)
+        """.trimIndent())
         println(result.toJson())
     }
 }

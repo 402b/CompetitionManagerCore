@@ -16,26 +16,18 @@ abstract class DataService<in S : SubmitData>(
         val permission: Permission,
         val sClass: Class<in S>
 ) {
-    suspend abstract fun readData(data: S, cs: CoroutineScope): ReturnData
+    abstract suspend fun readData(data: S): ReturnData
 
-    open suspend fun input(data: String, cs: CoroutineScope): ReturnData {
-        val je = jsonParser.parse(data) ?: return returnData(ERROR) {
-            this.json.addProperty("reason", "状态异常,传入数据非json")
-        }
+    open suspend fun input(data: String): ReturnData {
+        val je = jsonParser.parse(data) ?: return returnData(ERROR, "状态异常,传入数据非json")
         if (!je.isJsonObject) {
-            return returnData(ERROR) {
-                this.json.addProperty("reason", "状态异常,传入数据非json")
-            }
+            return returnData(ERROR, "状态异常,传入数据非json")
         }
         val json = je.asJsonObject
         if (this.permission != Permission.ANY && !json.has("token")) {
-            return returnData(NO_TOKEN) {
-                this.json.addProperty("reason", "状态异常,未传入token")
-            }
+            return returnData(NO_TOKEN, "状态异常,未传入token")
         }
-        val data = json.getAsJsonObject("Data") ?: return returnData(ERROR) {
-            this.json.addProperty("reason", "状态异常,未传入数据")
-        }
+        val data = json.getAsJsonObject("Data") ?: return returnData(ERROR, "状态异常,未传入数据")
         val c = sClass.getConstructor(JsonObject::class.java)
         val input: S
         try {
@@ -46,12 +38,10 @@ abstract class DataService<in S : SubmitData>(
         }
         if (this.permission != Permission.ANY) {
             val token = Token.deToken(json.get("token").asString)
-                    ?: return returnData(ERROR_TOKEN) {
-                        this.json.addProperty("reason", "token校验失败")
-                    }
+                    ?: return returnData(ERROR_TOKEN, "token校验失败")
             input.token = token
         }
-        return readData(input, cs)
+        return readData(input)
     }
 
     companion object {

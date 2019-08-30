@@ -44,27 +44,14 @@ class ConfigTest {
     @Test
     fun token() = runBlocking{
         SQLManager.init()
-        val testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIzNCwiZXhwIjoxNTY3MTQyMjEwMjMyLCJpYXQiOjE1NjY5Njk0MTAyMzIsImp0aSI6MTI4OTQzMX0=.0A9D3DE82D08F9490E64CE321CC01834"
-
         TokenManager.init()
         Assert.assertEquals(TokenManager.Signature, "9112D7490C0480CC7014593DF27CC0A3")
         val uuid = 234
-        val time = 1566969410232L
-        val token = Token(uuid, time + 48L * 60L * 60L * 1000L, time, 1289431L)
-        Assert.assertEquals(token.toTokenString(), testToken)
+        val token = Token(uuid)
+        val testToken = token.toTokenString()
+        println("testToken: $testToken")
         val c = Token.deToken(testToken)
         Assert.assertEquals(c, token)
-    }
-
-    @Test
-    fun touristToken() = runBlocking {
-        TokenManager.init()
-        val tt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOi0xLCJleHAiOjAsImlhdCI6MCwianRpIjowfQ==.D2DE9C919F12FF28AE46182C533D0BCB"
-        val token = Token(-1, 0, 0, 0)
-        Assert.assertEquals(token.toTokenString(), tt)
-        val c = Token.deToken(tt)
-        Assert.assertEquals(c, token)
-        Assert.assertTrue(c?.isTourist ?: false)
     }
 
     @Test
