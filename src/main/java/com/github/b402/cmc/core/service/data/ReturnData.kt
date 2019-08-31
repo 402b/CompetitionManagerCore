@@ -2,6 +2,7 @@ package com.github.b402.cmc.core.service.data
 
 import com.github.b402.cmc.core.configuration.Configuration
 import com.github.b402.cmc.core.configuration.ConfigurationSection
+import com.github.b402.cmc.core.token.Token
 import com.google.gson.JsonObject
 
 const val SUCCESS = "success"
@@ -12,7 +13,7 @@ const val ERROR_TIMTOUT = "error_timeout"
 const val ILLEGAL_INPUT = "illegal_input"
 const val INVALID_USER_OR_PASSWORD = "invalid_user_or_password"
 
-abstract class ReturnData(
+open class ReturnData(
         val status: String
 ) : IData {
     val json = JsonObject()
@@ -25,16 +26,21 @@ abstract class ReturnData(
     override fun toString(): String {
         return "ReturnData(json=$json)"
     }
-
-
 }
 
-fun returnData(status: String, func: ReturnData.() -> Unit): ReturnData {
-    val rd = object : ReturnData(status) {}
+inline fun returnData(status: String, token: Token, func: ReturnData.() -> Unit): ReturnData {
+    val rd = ReturnData(status)
+    rd.json.addProperty("token", token.toTokenString())
     rd.func()
     return rd
 }
 
-fun returnData(status: String, reason: String): ReturnData = returnData(status) {
+inline fun returnData(status: String, func: ReturnData.() -> Unit): ReturnData {6
+    val rd = ReturnData(status)
+    rd.func()
+    return rd
+}
+
+ fun returnData(status: String, reason: String): ReturnData = returnData(status) {
     this.json.addProperty("reason", reason)
 }

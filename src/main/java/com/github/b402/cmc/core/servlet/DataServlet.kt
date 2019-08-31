@@ -2,8 +2,7 @@ package com.github.b402.cmc.core.servlet
 
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
-import com.github.b402.cmc.core.service.impl.LoginService
-import com.github.b402.cmc.core.service.impl.RegisterService
+import com.github.b402.cmc.core.service.impl.*
 import kotlinx.coroutines.*
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @WebServlet(
-        urlPatterns = arrayOf("/Data/*"),
+        urlPatterns = ["/Data/*"],
         asyncSupported = true
 )
 class DataServlet : HttpServlet() {
@@ -74,6 +73,7 @@ class DataServlet : HttpServlet() {
         fun init() {
             register(RegisterService)
             register(LoginService)
+            register(UserInfoService)
         }
     }
 }

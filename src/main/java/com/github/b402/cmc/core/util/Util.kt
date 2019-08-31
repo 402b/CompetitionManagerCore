@@ -46,15 +46,11 @@ fun byteToHexString(b: Byte): String {
     return hexDigIts[d1] + "" + hexDigIts[d2]
 }
 
-fun <E> Channel<E>.asyncSend(e: E) {
+suspend fun <E> Channel<E>.asyncSend(e: E) {
     val c = this
-    GlobalScope.launch {
+    GlobalScope.launch(coroutineContext) {
         if (c.isClosedForSend) return@launch
         c.send(e)
         c.close()
     }
-}
-
-suspend fun test(){
-    val context = coroutineContext
 }
