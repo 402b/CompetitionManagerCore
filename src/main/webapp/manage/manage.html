@@ -6,6 +6,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<script type="text/javascript" src="js/page.js"></script>
 	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
 	<title>管理员页面</title>
 	<meta name="description" content="">
@@ -186,17 +187,20 @@
                     <div id="UmpireInfo">
 					<h2>裁判列表</h2>
                         <div class="tableX">
-						<table border="5">
+							<table border="4" id="idData">
 							<tr>
 								<th>裁判ID</th><th>裁判姓名</th><th>裁判类型</th><th>项目</th><th>项目类型</th><th>项目ID</th>
-                                <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
+								<th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
 							</tr>
 							<tr v-for="umpire in umpire">
 								<td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.umpireType}}</td><td>{{umpire.game}}</td><td>{{umpire.gameType}}</td><td>{{umpire.gameID}}</td>
-								<td><input type="checkbox" :checked="check(umpire.uid,umpire.gameID)" @click="checkOne(umpire.uid,umpire.gameID)"></td>
+								<td><input type="checkbox" :checked="check(umpire.uid,umpire.gameID)" @click="checkOne(umpire.uid,umpire.gameID)"><h6>选择</h6></td>
 							</tr>
-						</table>
+							</table>
                         </div>
+						<table>
+							<tr><td><div id="barcon" name="barcon"></div></td></tr>
+						</table>
                         </br><button v-on:click="send" type="submit">取消裁判资格</button>
                     </div>
 				</div>
@@ -271,3 +275,8 @@ if (typeof console === "undefined") {
 </script>
 </body>
 </html>
+<script type="text/javascript" language="javascript">
+	window.onload = function(){
+		goPage(1,8);
+	};
+</script>

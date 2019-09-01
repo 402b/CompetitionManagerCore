@@ -100,11 +100,11 @@ var createGame = new Vue({  //创建比赛
                 }).then(
                     rep=>{
                     if(rep.data.status=="success"){
-                    window.open("index.html"/* 管理界面 */);
                     setCookie("token",rep.data.token);
-                    alert("注册成功！");
+                    alert("创建比赛成功！");
+                    location.reload(true);
                 } else{
-                    alert("注册失败"+rep.reason)
+                    alert("创建比赛失败"+rep.reason)
                 }
             }
             ,
@@ -155,13 +155,18 @@ var setUmpire = new Vue({   //任命裁判
                 }).then(
                     rep=>{
                     if(rep.data.status=="success"){
-                    window.open("index.html"/* 管理界面 */);
                     setCookie("token",rep.data.token);
                     alert("任命成功！");
+                    location.reload(true);
                 } else{
                     alert("任命失败"+rep.reason);
                 }
-            })
+            }
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
             }
         }
     }
@@ -175,7 +180,8 @@ var UmpireInfo = new Vue({
             {uid:"002",realName:"Linda",umpireType:"普通裁判",game:"女子800米",gameType:"决赛",gameID:"003"},
             {uid:"004",realName:"Linda",umpireType:"普通裁判",game:"女子800米",gameType:"决赛",gameID:"004"}
         ],
-        umpire:[],
+        umpire:[
+        ],
         isCheckAll: false,
         checked:[
         ],
@@ -266,6 +272,7 @@ var UmpireInfo = new Vue({
                         if(rep.data.status=="success"){
                             setCookie("token",rep.data.token);
                             alert("取消裁判资格成功！");
+                            location.reload(true);
                         } else{
                             alert("取消裁判资格失败!");
                         }
