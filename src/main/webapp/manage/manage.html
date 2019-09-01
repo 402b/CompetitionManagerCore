@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+	<title>管理员页面</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="css/fontAwesome.css">
+	<link rel="stylesheet" href="css/light-box.css">
+	<link rel="stylesheet" href="css/templatemo-main.css">
+
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+
+	<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+</head>
+
+<body>
+
+<div class="sequence">
+
+  <div class="seq-preloader">
+	<svg width="39" height="16" viewBox="0 0 39 16" xmlns="http://www.w3.org/2000/svg" class="seq-preload-indicator"><g fill="#F96D38"><path class="seq-preload-circle seq-preload-circle-1" d="M3.999 12.012c2.209 0 3.999-1.791 3.999-3.999s-1.79-3.999-3.999-3.999-3.999 1.791-3.999 3.999 1.79 3.999 3.999 3.999z"/><path class="seq-preload-circle seq-preload-circle-2" d="M15.996 13.468c3.018 0 5.465-2.447 5.465-5.466 0-3.018-2.447-5.465-5.465-5.465-3.019 0-5.466 2.447-5.466 5.465 0 3.019 2.447 5.466 5.466 5.466z"/><path class="seq-preload-circle seq-preload-circle-3" d="M31.322 15.334c4.049 0 7.332-3.282 7.332-7.332 0-4.049-3.282-7.332-7.332-7.332s-7.332 3.283-7.332 7.332c0 4.05 3.283 7.332 7.332 7.332z"/></g></svg>
+  </div>
+  
+</div>
+
+
+	<nav>
+	  <div class="logo">
+		  <img src="img/logo.png" alt="">
+	  </div>
+	  <div class="mini-logo">
+		  <img src="img/mini_logo.png" alt="">
+	  </div>
+	  <ul>
+		<li><a href="#1"><i class="fa fa-home"></i> <em>Home</em></a></li>
+		<li><a href="#2"><i class="fa fa-user"></i> <em>相关信息</em></a></li>
+		<li><a href="#3"><i class="fa fa-pencil"></i> <em>创建比赛</em></a></li>
+		  <li><a href="#4"><i class="fa fa-pencil"></i> <em>任命裁判</em></a></li>
+		  <li><a href="#5"><i class="fa fa-image"></i> <em>取消裁判</em></a></li>
+		  <li><a href="#6"><i class="fa fa-envelope"></i> <em>审核运动员</em></a></li>
+		  <!--<li><a href="#4"><i class="fa fa-image"></i> <em>委任裁判</em></a></li>-->
+		<!--<li><a href="#5"><i class="fa fa-envelope"></i> <em>Contact</em></a></li>-->
+	  </ul>
+	</nav>
+	
+	<div class="slides">
+	  <div class="slide" id="1">
+		<div class="content first-content">
+		  <div class="container-fluid">
+			  <div class="col-md-3">
+				  <div class="author-image"><img src="img/author_image.png" alt=""></div>
+			  </div>
+			  <div id = "userInfo">
+				  <h2>{{realName}}</h2>
+				  <p>你好！ <em>尊敬的管理员</em>， 欢迎来到管理员界面。 在这里，你可以进行有关运动会管理的相关操作。</p>
+				  <div class="main-btn"><a href="#2">了解更多</a></div>
+				  <div class="fb-btn"><a href="#" target="_blank">回到主页</a></div>
+			  </div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="slide" id="2">
+		<div class="content second-content">
+			<div class="container-fluid">
+				<div class="col-md-6">
+					<div class="left-content">
+						<h2>相关信息</h2>
+						<p>  本页面为运动会管理系统的管理员专属页面。</p>
+						<p>  在本页面中，你可以进行人员委任与取消，审核运动员资格等操作。</p>
+						<p>  作为管理员，你担负的责任重大，请遵守运动会相关章程，并谨慎操作。</p>
+						<div class="main-btn"><a href="#3">创建比赛</a></div></br>
+						<div class="main-btn"><a href="#4">任命裁判</a></div></br>
+						<div class="main-btn"><a href="#5">取消裁判</a></div></br>
+						<div class="main-btn"><a href="#6">审核运动员</a></div>
+				  </div>
+				</div>
+				<div class="col-md-6">
+					<div class="right-image">
+					  <img src="img/about_image.jpg" alt="">
+				  </div>
+				</div>
+			</div>
+		</div>
+	  </div>
+	  <div class="slide" id="3">
+		<div class="content third-content">
+			<div class="container-fluid">
+				<div class="col-md-6">
+						<div class="row">
+							<div id="createGame">
+							<div class="col-md-12">
+								<fieldset>
+									<h4>比赛</h4>
+									<input name="name" v-model="name" type="text" placeholder="比赛名称...">
+								</fieldset>
+							</div>
+							<div class="col-md-12">
+								<fieldset>
+									<input name="type" v-model="type" type="text" placeholder="比赛类型...(预赛/预决赛)">
+								</fieldset>
+							</div>
+							<div class="col-md-12">
+								<fieldset>
+									<input name="time" v-model="time" type="datetime-local" placeholder="比赛时间...">
+								</fieldset>
+							</div>
+							<div class="col-md-12">
+								<fieldset>
+									<h5>报名开始日期...</h5>
+									<input name="startDate" v-model="startDate" type="date" placeholder="报名开始日期...">
+								</fieldset>
+							</div>
+							<div class="col-md-12">
+								<fieldset>
+									<h5>报名截止日期...</h5>
+									<input name="endDate" v-model="endDate" type="date" placeholder="报名截止日期...">
+								</fieldset>
+							</div>
+							<div class="col-md-12">
+								<fieldset>
+									<input name="number" v-model="number" type="number" placeholder="比赛人数...">
+								</fieldset>
+							</div>
+							<div class="col-md-12">
+								<fieldset>
+									<button v-on:click="check" type="submit">创建比赛</button>
+								</fieldset>
+							</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	  <div class="slide" id="4">
+		  <div class="content fourth-content">
+			  <div class="container-fluid">
+				  <div class="col-md-6">
+					  <div class="row">
+						  <div id="setUmpire">
+						  <div class="col-md-12">
+							  <fieldset>
+								  <input name="umpireName" v-model="umpireName" type="text" placeholder="裁判姓名...">
+							  </fieldset>
+						  </div>
+						  <div class="col-md-12">
+							  <fieldset>
+								  <input name="UID" v-model="UID" type="text" placeholder="裁判UID...">
+							  </fieldset>
+						  </div>
+						  <div class="col-md-12">
+							  <fieldset>
+								  <input name="gameName" v-model="gameName" type="text" placeholder="比赛项目...">
+							  </fieldset>
+						  </div>
+						  <div class="col-md-12">
+							  <fieldset>
+								  <input name="type" v-model="type" type="text" placeholder="裁判类型...(主裁判/项目裁判/普通裁判)">
+							  </fieldset>
+						  </div>
+						  <div class="col-md-12">
+							  <fieldset>
+								  <button v-on:click="check" type="submit">任命裁判</button>
+							  </fieldset>
+						  </div>
+						  </div>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		</div>
+	  <div class="slide" id="5">
+		<div class="content fifth-content">
+			<div class="container-fluid">
+				<div class="col-md-6">
+                    <div id="UmpireInfo">
+					<h2>裁判列表</h2>
+                        <div class="tableX">
+						<table border="5">
+							<tr>
+								<th>裁判ID</th><th>裁判姓名</th><th>裁判类型</th><th>项目</th><th>项目类型</th><th>项目ID</th>
+                                <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
+							</tr>
+							<tr v-for="umpire in umpire">
+								<td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.umpireType}}</td><td>{{umpire.game}}</td><td>{{umpire.gameType}}</td><td>{{umpire.gameID}}</td>
+								<td><input type="checkbox" :checked="check(umpire.uid,umpire.gameID)" @click="checkOne(umpire.uid,umpire.gameID)"></td>
+							</tr>
+						</table>
+                        </div>
+                        </br><button v-on:click="send" type="submit">取消裁判资格</button>
+                    </div>
+				</div>
+			</div>
+		</div>
+	  </div>
+		<div class="slide" id="6">
+			<!--<a name="x6">-->
+			<div class="content sixth-content">
+				<div class="container-fluid">
+
+				</div>
+			</div>
+			<!--</a>-->
+		</div>
+	</div>
+
+	<div class="footer">
+	  <div class="content">
+		  <p>Copyright &copy; 2019.402B All rights reserved.</p>
+	  </div>
+	</div>
+
+
+<script src="js/vendor/jquery-1.11.2.min.js"></script>
+
+<script src="js/vendor/bootstrap.min.js"></script>
+
+<script src="js/datepicker.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<script src="js/manage.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+
+
+	// navigation click actions
+	$('.scroll-link').on('click', function(event){
+		event.preventDefault();
+		var sectionID = $(this).attr("data-id");
+		scrollToID('#' + sectionID, 750);
+	});
+	// scroll to top action
+	$('.scroll-top').on('click', function(event) {
+		event.preventDefault();
+		$('html, body').animate({scrollTop:0}, 'slow');
+	});
+	// mobile nav toggle
+	$('#nav-toggle').on('click', function (event) {
+		event.preventDefault();
+		$('#main-nav').toggleClass("open");
+	});
+});
+// scroll function
+function scrollToID(id, speed){
+	var offSet = 0;
+	var targetOffset = $(id).offset().top - offSet;
+	var mainNav = $('#main-nav');
+	$('html,body').animate({scrollTop:targetOffset}, speed);
+	if (mainNav.hasClass("open")) {
+		mainNav.css("height", "1px").removeClass("in").addClass("collapse");
+		mainNav.removeClass("open");
+	}
+}
+if (typeof console === "undefined") {
+	console = {
+		log: function() { }
+	};
+}
+</script>
+</body>
+</html>
