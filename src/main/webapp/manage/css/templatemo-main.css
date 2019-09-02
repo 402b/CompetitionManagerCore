@@ -613,8 +613,6 @@ nav a:hover::before {
 	background-color: #fff;
 }
 
-
-
 .fifth-content .container-fluid {
 	padding-left: 300px;
 	padding-right: 0px;
@@ -690,9 +688,23 @@ nav a:hover::before {
 	background-color: #fff;
 }
 
+.sixth-content table {
+	margin-left: 70px;
+	white-space: nowrap;
+	font-size: 15px;
+}
+.sixth-content .container-fluid {
+	padding-left: 280px;
+	padding-right: 0px;
+	margin-top: 60px;
+	margin-bottom: 60px;
+	color: white;
+}
+
 .sixth-content .container-fluid .col-md-6 {
 	padding-left: 0px;
 	padding-right: 0px;
+	width: 70%;
 }
 
 .sixth-content #map {
@@ -716,7 +728,6 @@ nav a:hover::before {
 	line-height: 40px;
 	height: 40px;
 	width: 100%;
-	margin-bottom: 25px;
 }
 
 .sixth-content textarea {
@@ -739,7 +750,6 @@ nav a:hover::before {
 
 .sixth-content button {
 	max-width: 100%;
-	width: 100%;
 	display: inline-block;
 	border: 2px solid #fff;
 	padding: 8px 15px;

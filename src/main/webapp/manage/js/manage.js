@@ -286,3 +286,145 @@ var UmpireInfo = new Vue({
         }
     }
 })
+
+var checkPlayer = new Vue({ //审查运动员资格
+    el: "#checkPlayer",
+    data: {
+        player: [
+            ],
+        tests: [
+            {uid:"001",id:"1243",userName:"是的",realName:"Tony",gender:"F"},
+            {uid:"002",id:"1243",userName:"风扇",realName:"Tony",gender:"M"},
+            {uid:"003",id:"1243",userName:"分割",realName:"Tony",gender:"F"},
+            {uid:"004",id:"1243",userName:"格式",realName:"Tony",gender:"M"},
+        ],
+        isCheckAll: false,
+        checked: [],
+        isAgree: false,
+    },
+    created(){
+        this.getPlayer();
+    },
+    methods: {
+        getPlayer: function() {
+            axios({
+                url: '/Data/checkPlayer',
+                params: {
+                    param: {
+                        token: getCookie("token"),
+                        Data: {
+                        }
+                    }
+                }
+            }).then(
+                rep=>{
+                    if(rep.data.status=="success"){
+                        setCookie("token",rep.data.token);
+                        this.player = rep.data.player;
+                    } else{
+                        alert("获取运动员申请表失败!");
+                    }
+                })
+        },
+        checkAll: function() {
+            this.isCheckAll = !this.isCheckAll;
+            if(this.isCheckAll == true) {
+                this.checked = [];
+                for (var i = 0; i < this.player.length; i++) {
+                    this.checked.push(this.player[i].uid);
+                }
+            }
+            else {
+                this.checked = [];
+            }
+            console.log(this.checked.length);
+        },
+        checkOne: function(uid) {
+            var x = this.checked.indexOf(uid);
+            if (x>-1) {
+                this.checked.splice(x,1)
+                console.log(this.checked.length);
+            }
+            else {
+                this.checked.push(uid);
+            }
+        },
+        check: function(uid) {
+            this.isCheckAll = (this.checked.length == this.player.length);
+            var x = this.checked.indexOf(uid);
+            console.log(uid+":"+x);
+            console.log(this.checked.length);
+            if (x>-1)
+                return true;
+            else
+                return false;
+        },
+        agree: function () {
+            if (this.checked.length < 1)
+                alert("你未选择任何项目！");
+            else {
+                isAgree = true;
+                axios({
+                    url: '/Data/checkPlayer',
+                    params: {
+                        param: {
+                            token: getCookie("token"),
+                            Data: {
+                                checked:this.checked,
+                                isAgree:this.isAgree,
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("成功通过相应用户的申请！");
+                            location.reload(true);
+                        } else{
+                            alert("审核失败!");
+                        }
+                    }
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
+        },
+        disagree: function () {
+            if (this.checked.length < 1)
+                alert("你未选择任何项目！");
+            else {
+                isAgree = false;
+                axios({
+                    url: '/Data/checkPlayer',
+                    params: {
+                        param: {
+                            token: getCookie("token"),
+                            Data: {
+                                checked:this.checked,
+                                isAgree:this.isAgree,
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("成功拒绝相应用户的申请！");
+                            location.reload(true);
+                        } else{
+                            alert("审核失败!");
+                        }
+                    }
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
+
+        }
+    }
+})

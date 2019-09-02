@@ -208,13 +208,29 @@
 		</div>
 	  </div>
 		<div class="slide" id="6">
-			<!--<a name="x6">-->
 			<div class="content sixth-content">
 				<div class="container-fluid">
-
+					<div class="col-md-6">
+						<div id="checkPlayer">
+							<h2>运动员资格申请表</h2>
+								<table border="4" id="idData2">
+									<tr>
+										<th>申请人ID</th><th>UID</th><th>用户名</th><th>真实姓名</th><th>性别</th>
+										<th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
+									</tr>
+									<tr v-for="player in player">
+										<td>{{player.uid}}</td><td>{{player.id}}</td><td>{{player.userName}}</td><td>{{player.realName}}</td><td>{{player.gender}}</td>
+										<td><input type="checkbox" :checked="check(player.uid)" @click="checkOne(player.uid)"><h6>选择</h6></td>
+									</tr>
+								</table>
+							<table>
+								<tr><td><div id="barcon2" name="barcon2"></div></td></tr>
+							</table>
+							</br><button v-on:click="agree" type="submit">同意</button>----<button v-on:click="disagree" type="submit">拒绝</button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<!--</a>-->
 		</div>
 	</div>
 
@@ -278,5 +294,6 @@ if (typeof console === "undefined") {
 <script type="text/javascript" language="javascript">
 	window.onload = function(){
 		goPage(1,8);
+		goPage2(1,8);
 	};
 </script>
