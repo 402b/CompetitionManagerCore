@@ -94,6 +94,8 @@ var createGame = new Vue({  //创建比赛
                                 type: this.type,
                                 time: this.time,
                                 number: this.number,
+                                startDate: this.startDate,
+                                endDate: this.endDate,
                             }
                         }
                     }
