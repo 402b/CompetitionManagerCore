@@ -73,9 +73,12 @@ var createGame = new Vue({  //创建比赛
         check:function () {
             console.log(this.name);
             console.log(this.type);
+            this.time = Date.parse(this.time);
             console.log(this.time);
             console.log(this.number);
+            this.startDate = Date.parse(this.startDate);
             console.log(this.startDate);
+            this.endDate = Date.parse(this.endDate);
             console.log(this.endDate);
             if (this.name=="" || this.type=="" || this.time=="" || this.number=="" || this.startDate=="" || this.endDate=="")
                 alert("有空项目，请检查!");
