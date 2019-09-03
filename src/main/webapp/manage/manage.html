@@ -107,11 +107,17 @@
 							</div>
 							<div class="col-md-12">
 								<fieldset>
-									<input name="type" v-model="type" type="text" placeholder="比赛类型...(预赛/预决赛)">
+									<h5>比赛类型...</h5>
+									<select name="type" v-model="type" placeholder="比赛类型...(预赛/预决赛)">
+										<option value="预赛">---------------------预赛---------------------</option>
+										<option value="预决赛">--------------------预决赛-------------------</option>
+									</select>
 								</fieldset>
 							</div>
 							<div class="col-md-12">
 								<fieldset>
+									</br>
+									<h5>比赛时间...</h5>
 									<input name="time" v-model="time" type="datetime-local" placeholder="比赛时间...">
 								</fieldset>
 							</div>
@@ -166,11 +172,16 @@
 						  </div>
 						  <div class="col-md-12">
 							  <fieldset>
-								  <input name="type" v-model="type" type="text" placeholder="裁判类型...(主裁判/项目裁判/普通裁判)">
+								  <h5>裁判类型...(主裁判/项目裁判/普通裁判)</h5>
+								  <select name="type" v-model="type">
+									  <option value="主裁判">---------------------主裁判---------------------</option>
+									  <option value="项目裁判">---------------------项目裁判---------------------</option>
+									  <option value="普通裁判">---------------------普通裁判---------------------</option>
+								  </select>
 							  </fieldset>
 						  </div>
 						  <div class="col-md-12">
-							  <fieldset>
+							  <fieldset></br>
 								  <button v-on:click="check" type="submit">任命裁判</button>
 							  </fieldset>
 						  </div>

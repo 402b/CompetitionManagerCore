@@ -60,8 +60,8 @@ var login = new Vue({
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        window.open("/home"/* 主页面 */);
                         alert("登录成功！");
+                        window.location.href="home.html";
                     }
                     else{
                         alert("登陆失败"+rep.data.reason)
@@ -125,9 +125,9 @@ var register = new Vue({
                         console.log(rep)
                         console.log(rep.data.status)
                         if(rep.data.status=="success"){
-                            window.open("loginX.html"/* 登陆界面 */);
                             setCookie("token",rep.data.token);
                             alert("注册成功！");
+                            window.location.href="loginX.html";
                         } else{
                             alert("注册失败"+rep.data.reason)
                         }

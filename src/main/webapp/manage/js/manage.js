@@ -54,11 +54,13 @@ var userInfo = new Vue({    //获取用户信息
             }
         else
             {
-                alert("获取用户信息失败！" + rep.reason)
+                alert("获取用户信息失败！" + rep.data.reason)
             }
         })
         }
-    }})
+    }
+})
+
 var createGame = new Vue({  //创建比赛
     el: "#createGame",
     data: {
@@ -109,7 +111,7 @@ var createGame = new Vue({  //创建比赛
                     alert("创建比赛成功！");
                     location.reload(true);
                 } else{
-                    alert("创建比赛失败"+rep.reason)
+                    alert("创建比赛失败"+rep.data.reason)
                 }
             }
             ,
@@ -164,7 +166,7 @@ var setUmpire = new Vue({   //任命裁判
                     alert("任命成功！");
                     location.reload(true);
                 } else{
-                    alert("任命失败"+rep.reason);
+                    alert("任命失败"+rep.data.reason);
                 }
             }
                     ,

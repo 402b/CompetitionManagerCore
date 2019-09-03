@@ -538,6 +538,16 @@ nav a:hover::before {
 	background-color: #fff;
 }
 
+.third-content select {
+	background: rgba(250, 250, 250, 0.15);
+	color: white;
+	height: 38px;
+	border: none;
+	text-align: center;
+	width: 280px;
+	font-size: 14px;
+}
+
 .fourth-content .container-fluid {
 	padding-left: 320px;
 	padding-right: 0px;
@@ -611,6 +621,16 @@ nav a:hover::before {
 .fourth-content button:hover {
 	color: #232323;
 	background-color: #fff;
+}
+
+.fourth-content select {
+	background: rgba(250, 250, 250, 0.15);
+	color: white;
+	height: 38px;
+	border: none;
+	text-align: center;
+	width: 280px;
+	font-size: 14px;
 }
 
 .fifth-content .container-fluid {
