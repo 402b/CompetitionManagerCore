@@ -23,9 +23,9 @@ public class ContextManager implements ServletContextListener {
         servletContext = evt.getServletContext();
         Logger.getLogger(ContextManager.class).info("开始初始化模块");
         Module.loadModules();
-        SQLManager.INSTANCE.init();
-        DataServlet.Companion.init();
-        TokenManager.INSTANCE.init();
+        SQLManager.init();
+        DataServlet.initDataService();
+        TokenManager.init();
     }
 
     @Override

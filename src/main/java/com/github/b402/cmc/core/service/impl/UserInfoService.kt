@@ -13,10 +13,10 @@ object UserInfoService : DataService<SubmitData>(
         Permission.USER,
         SubmitData::class.java
 ) {
-    override suspend fun readData(data: SubmitData): ReturnData {
+    override suspend fun onRequest(data: SubmitData): ReturnData {
         val token = data.token!!
         val ru = User.getUser(token.uid)
-        val user = ru.receive() ?: return returnData(ERROR, "找不到用户数据")
+        val user = ru.await() ?: return returnData(ERROR, "找不到用户数据")
         return returnData(SUCCESS, token) {
             json.addProperty("realName", user.realName)
             json.addProperty("gender", user.gender.key)

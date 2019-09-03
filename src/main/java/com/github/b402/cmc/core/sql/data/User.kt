@@ -5,6 +5,7 @@ import com.github.b402.cmc.core.configuration.MemorySection
 import com.github.b402.cmc.core.service.impl.RegisterData
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.token.Token
+import com.github.b402.cmc.core.util.Data
 import com.github.b402.cmc.core.util.asyncSend
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -31,13 +32,11 @@ enum class UserGender(val key: String) {
 
 class User(
         val uid: Int,
-        val name: String
+        val name: String,
+        data: String
 ) {
-    lateinit var data: ConfigurationSection
+    val data: ConfigurationSection = MemorySection.readFromJson(data)
 
-    constructor(uid: Int, name: String, data: String) : this(uid, name) {
-        this.data = MemorySection.readFromJson(data)
-    }
 
     val gender: UserGender
         get() {
@@ -49,100 +48,83 @@ class User(
             val name = data.getString("realName")!!
             return name
         }
-    val id:String
-        get() =  data.getString("id")!!
+    val id: String
+        get() = data.getString("id")!!
 
 
-    fun checkPassword(password:String):Boolean{
+    fun checkPassword(password: String): Boolean {
         val pw = data.getString("password")
         return pw == password
     }
 
     companion object UserManager {
-        val cacheUser: MutableMap<Int, User> = ConcurrentHashMap()
+//        val cacheUser: MutableMap<Int, User> = ConcurrentHashMap()
 
-        fun syncUser(uid: Int) {
+        fun syncUser(user: User) {
             GlobalScope.launch {
-                val user = cacheUser[uid] ?: return@launch
                 SQLManager.coroutinesConnection {
                     val ps = this.prepareStatement("UPDATE User SET Data = ? WHERE UID = ? LIMIT 1")
                     ps.setString(1, user.data.toJson())
-                    ps.setInt(2, uid)
+                    ps.setInt(2, user.uid)
                     ps.executeUpdate()
                 }
             }
         }
 
-        suspend fun createUser(rd: RegisterData, resp: Channel<String?>): User? {
+        suspend fun createUser(rd: RegisterData): Data<User?, String?> {
             val hasUser = getUserByName(rd.userName)
-            val uid = Channel<User?>()
+            var user: User? = null
+            var resp: String? = null
             SQLManager.coroutinesConnection {
-                if (hasUser.receive() == null) {
+                if (hasUser.await() == null) {
+                    val data = MemorySection()
+                    data["realName"] = rd.realName
+                    data["id"] = rd.id
+                    data["gender"] = rd.gender.name
+                    data["password"] = rd.password
                     val insert = this.prepareStatement("INSERT INTO User (Name,Data) VALUES (?,?)")
                     insert.setString(1, rd.userName)
-                    insert.setString(2, "{}")
+                    insert.setString(2, data.toJson())
                     insert.execute()
-                    val sqluser = getUserByName(rd.userName).receive()
+                    val sqluser = getUserByName(rd.userName).await()
                     if (sqluser == null) {
-                        uid.asyncSend(null)
-                        resp.asyncSend("数据库异常")
+                        user = sqluser
+                        resp = "数据库异常"
                     } else {
-                        uid.asyncSend(sqluser)
-                        cacheUser[sqluser.uid] = sqluser
-                        resp.asyncSend(null)
+                        user = sqluser
                     }
                 } else {
-                    uid.asyncSend(null)
-                    resp.asyncSend("用户名重复")
+                    user = null
+                    resp = "用户名重复"
                 }
             }
-            return uid.receive()
+            return Data(user, resp)
         }
 
-        suspend fun getUser(uid: Int): Channel<User?> {
-            val channel = Channel<User?>()
-            GlobalScope.launch(coroutineContext) {
-                val cache = cacheUser[uid]
-                if (cache != null) {
-                    channel.asyncSend(cache)
-                    return@launch
-                }
-                SQLManager.coroutinesConnection {
-                    val ps = this.prepareStatement("SELECT * FROM User WHERE UID = ? LIMIT 1")
-                    ps.setInt(1, uid)
-                    val rs = ps.executeQuery()
-                    if (rs.next()) {
-                        val name = rs.getString("Name")
-                        val data = rs.getString("Data")
-                        val u = User(uid, name, data)
-                        channel.asyncSend(u)
-                    } else {
-                        channel.asyncSend(null)
-                    }
-                }
+        suspend fun getUser(uid: Int) = SQLManager.asyncConnection {
+            val ps = this.prepareStatement("SELECT * FROM User WHERE UID = ? LIMIT 1")
+            ps.setInt(1, uid)
+            val rs = ps.executeQuery()
+            if (rs.next()) {
+                val name = rs.getString("Name")
+                val data = rs.getString("Data")
+                User(uid, name, data)
+            } else {
+                null
             }
-            return channel
         }
 
-        suspend fun getUserByName(name: String): Channel<User?> {
-            val channel = Channel<User?>()
-            GlobalScope.launch(coroutineContext) {
-                SQLManager.coroutinesConnection {
-                    val ps = this.prepareStatement("SELECT * FROM User WHERE Name = ? LIMIT 1")
-                    ps.setString(1, name)
-                    val rs = ps.executeQuery()
-                    if (rs.next()) {
-                        val uid = rs.getInt("UID")
-                        val data = rs.getString("Data")
-                        val u = User(uid, name, data)
-                        channel.asyncSend(u)
-                        cacheUser[u.uid] = u
-                    } else {
-                        channel.asyncSend(null)
-                    }
-                }
+        suspend fun getUserByName(name: String) = SQLManager.asyncConnection {
+            val ps = this.prepareStatement("SELECT * FROM User WHERE Name = ? LIMIT 1")
+            ps.setString(1, name)
+            val rs = ps.executeQuery()
+            if (rs.next()) {
+                val uid = rs.getInt("UID")
+                val data = rs.getString("Data")
+                User(uid, name, data)
+            } else {
+                null
             }
-            return channel
         }
     }
 

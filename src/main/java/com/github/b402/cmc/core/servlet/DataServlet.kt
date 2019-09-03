@@ -70,7 +70,8 @@ class DataServlet : HttpServlet() {
             dataService["/${ds.path}"] = ds
         }
 
-        fun init() {
+        @JvmStatic
+        fun initDataService() {
             register(RegisterService)
             register(LoginService)
             register(UserInfoService)

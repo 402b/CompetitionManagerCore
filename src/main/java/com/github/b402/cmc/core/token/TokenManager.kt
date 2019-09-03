@@ -9,12 +9,13 @@ import java.util.*
 import kotlin.random.Random
 
 object TokenManager {
-//    const val TOURIST_TOKEN = ""
+    //    const val TOURIST_TOKEN = ""
     lateinit var Signature: String
 
+    @JvmStatic
     fun init() {
-        val f = File(FileManager.getBaseFolder(),"TokenSignature")
-        if(!f.exists()){
+        val f = File(FileManager.getBaseFolder(), "TokenSignature")
+        if (!f.exists()) {
             f.createNewFile()
             val fw = FileWriter(f)
             fw.write("${UUID.randomUUID()}/${Math.random()}/${Random.nextLong()}".md5Hash())

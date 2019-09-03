@@ -13,9 +13,9 @@ object LoginService : DataService<LoginData>(
         Permission.ANY,
         LoginData::class.java
 ) {
-    override suspend fun readData(data: LoginData): ReturnData {
+    override suspend fun onRequest(data: LoginData): ReturnData {
         val cuser = User.getUserByName(data.userName)
-        val user = cuser.receive() ?: return returnData(INVALID_USER_OR_PASSWORD, "错误的用户名或密码")
+        val user = cuser.await() ?: return returnData(INVALID_USER_OR_PASSWORD, "错误的用户名或密码")
         return if (user.checkPassword(data.password)) {
             val token = Token(user.uid)
             returnData(SUCCESS) {

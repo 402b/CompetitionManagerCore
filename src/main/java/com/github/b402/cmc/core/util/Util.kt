@@ -1,3 +1,4 @@
+@file:JvmName("Util")
 package com.github.b402.cmc.core.util
 
 import com.github.b402.cmc.core.token.TokenManager

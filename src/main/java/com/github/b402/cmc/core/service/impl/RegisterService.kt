@@ -16,21 +16,15 @@ object RegisterService : DataService<RegisterData>(
         Permission.ANY,
         RegisterData::class.java
 ) {
-    override suspend fun readData(data: RegisterData): ReturnData {
+    override suspend fun onRequest(data: RegisterData): ReturnData {
         if (!data.userName.matches("[\\u4e00-\\u9fa5a-zA-Z0-9]{4,12}".toRegex())) {
             return returnData(ILLEGAL_INPUT, "输入的用户名不合法")
         }
-        val resp = Channel<String?>()
-        val user = User.createUser(data, resp)
+        val (user, resp) = User.createUser(data)
         if (user == null) {
-            val reason = resp.receive() ?: ""
-            return returnData(ERROR,  "创建用户时发生错误: ${reason}")
+            val reason = resp ?: ""
+            return returnData(ERROR, "创建用户时发生错误: ${reason}")
         }
-        user.data["realName"] = data.realName
-        user.data["id"] = data.id
-        user.data["gender"] = data.gender.name
-        user.data["password"] = data.password
-        User.syncUser(user.uid)
         val token = Token(user.uid)
         return returnData(SUCCESS) {
             this.json.addProperty("token", token.toTokenString())

@@ -4,33 +4,38 @@ import com.github.b402.cmc.core.FileManager
 import com.github.b402.cmc.core.configuration.Configuration
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.apache.log4j.Logger
 import java.io.File
 import java.sql.Connection
 import java.sql.SQLException
+import kotlin.coroutines.coroutineContext
 
 object SQLManager {
     private lateinit var connectPool: HikariDataSource
     private var init = false
+    @JvmStatic
     fun init() {
         if (init) return
         init = true
         Logger.getLogger(SQLManager::class.java).info("开始初始化数据库连接池")
         try {
             val configs = Thread.currentThread().contextClassLoader.getResourceAsStream("config.json")!!
-            val file = File(FileManager.getBaseFolder(), "config.yml")
+            val file = File(FileManager.getBaseFolder(), "config.json")
             if (!file.exists()) {
                 FileManager.saveResources(file, configs)
             }
             val config = Configuration(file).getConfigurationSection("SQL")!!
             val url = "jdbc:${
-            config.getString("jdbc")
+                config.getString("jdbc")
             }://${
-            config.getString("host")
+                config.getString("host")
             }:${
-            config.getInt("port", 3306)
+                config.getInt("port", 3306)
             }/${config.getString("database")}?user=${config.getString("user")}&password=${
-            config.getString("password")
+                config.getString("password")
             }"
             val cfg = HikariConfig()
             try {
@@ -68,6 +73,15 @@ object SQLManager {
                  Data Json NOT NULL
                 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
+            stn.execute("""
+                CREATE TABLE IF NOT EXISTS Game(
+                    ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                    Name VARCHAR(80) NOT NULL,
+                    Type VARCHAR(16) NOT NULL,
+                    Data Json NOT NULL,
+                    Archive  BOOLEAN NOT NULL DEFAULT FALSE
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+            """.trimIndent())
         }
     }
 
@@ -96,6 +110,23 @@ object SQLManager {
             if (conn != null) {
                 connectPool.evictConnection(conn)
             }
+        }
+    }
+
+    suspend fun <R> asyncConnection(func: suspend Connection.() -> R?): Deferred<R?> {
+        return GlobalScope.async(coroutineContext) {
+            var conn: Connection? = null
+            try {
+                conn = connectPool.connection
+                return@async conn.func()
+            } catch (e: SQLException) {
+                Logger.getLogger(SQLManager::class.java).error("执行数据库回调中发生错误", e)
+            } finally {
+                if (conn != null) {
+                    connectPool.evictConnection(conn)
+                }
+            }
+            null
         }
     }
 }

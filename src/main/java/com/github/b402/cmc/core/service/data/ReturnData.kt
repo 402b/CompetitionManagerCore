@@ -22,8 +22,8 @@ open class ReturnData(
         json.addProperty("status", this.status)
     }
 
-    override fun toJson(): String = Configuration.gson.toJson(json)
-    override fun toString(): String {
+    open override fun toJson(): String = Configuration.gson.toJson(json)
+    open override fun toString(): String {
         return "ReturnData(json=$json)"
     }
 }
