@@ -68,7 +68,7 @@ function register(){
 //检查是否有token存在
 var token = getCookie("token");
 if(token!=null){
-
+    //window.open("./home.html")
 }
 
 

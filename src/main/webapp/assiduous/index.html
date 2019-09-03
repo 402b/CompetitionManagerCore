@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+找模板就上免费模板网
+http://www.865171.cn/
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Assiduous   by www.865171.cn</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />；
+<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+	<script src = "../resourceJs/home.js"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+</head>
+<body>
+<div id="header-wrapper">
+	<div id="header">
+		<div id="menu">
+			<ul>
+				<li><a href="http://www.865171.cn/" class="first">Home</a></li>
+				<li class="current_page_item"><a href="http://www.865171.cn/">Blog</a></li>
+				<li><a href="http://www.865171.cn/">About</a></li>
+				<li><a href="http://www.865171.cn/">Contact</a></li>
+			</ul>
+		</div>
+		<!-- end #menu -->
+		<div id="search">
+			<form method="get" action="">
+				<fieldset>
+					<input type="text" name="s" id="search-text" size="15" />
+					<input type="submit" id="search-submit" value="GO" />
+				</fieldset>
+			</form>
+		</div>
+		<!-- end #search -->
+	</div>
+</div>
+<!-- end #header -->
+<!-- end #header-wrapper -->
+<div id="logo">
+	<h1><a href="http://www.865171.cn/">Assiduous  </a></h1>
+	<p><em> template design by <a href="http://www.865171.cn/">www.865171.cn</a></em></p>
+</div>
+<hr />
+<!-- end #logo -->
+<div id="page">
+	<div id="page-bgtop">
+		<div id="content">
+			<div class="post" v-for="competition in joinAsAthle">
+				<p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p>
+				<h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2>
+				<div class="entry">
+					<p>This is <strong>Assiduous  </strong>, a free, fully standards-compliant CSS template designed by <a href="http://www.865171.cn/">www.865171.cn</a>, released for free under the <a href="http://www.865171.cn/">Creative Commons Attribution 2.5</a> license.  You're free to use this template for anything as long as you link back to <a href="http://www.865171.cn/">my site</a>. Enjoy :)</p>
+					<p>Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum ipsum. Proin imperdiet est. Phasellus dapibus semper urna. Pellentesque ornare, orci in felis. </p>
+					<p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
+				</div>
+			</div>
+			<div class="post" v-for="competition in joinAsJudge">
+				<p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p>
+				<h2 class="title"><a href="http://www.865171.cn/">Lorem ipsum sed aliquam</a></h2>
+				<div class="entry">
+					<p>Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum vel, tempor at, varius non, purus. Mauris vitae nisl nec   consectetuer. Donec ipsum. Proin imperdiet est. Phasellus <a href="http://www.865171.cn/">dapibus semper urna</a>. Pellentesque ornare, orci in consectetuer hendrerit, urna elit eleifend nunc, ut consectetuer nisl felis ac diam. Etiam non felis. Donec ut ante. In id eros.</p>
+					<p v-for="(value,key) in competition"> {{key}}:{{value}}</p>
+
+				</div>
+			</div>
+			<div class="post">
+				<p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p>
+				<h2 class="title"><a href="http://www.865171.cn/">Lorem ipsum sed aliquam</a></h2>
+				<div class="entry">
+					<p>Mauris vitae nisl nec metus placerat consectetuer. Donec ipsum. Proin imperdiet est. Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum vel, tempor at, varius non, purus. Mauris vitae nisl nec metus placerat consectetuer. Donec ipsum. Proin imperdiet est. Phasellus <a href="http://www.865171.cn/">dapibus semper urna</a>. Pellentesque ornare, orci in consectetuer hendrerit, urna elit eleifend nunc, ut consectetuer nisl felis ac diam. </p>
+				</div>
+			</div>
+		</div>
+		<!-- end #content -->
+		<div id="sidebar">
+			<ul>
+				<li>
+					<h2>Aliquam tempus</h2>
+					<p>Mauris vitae nisl nec metus placerat perdiet est. Phasellus dapibus semper urna. Pellentesque ornare, orci in consectetuer hendrerit, volutpat.</p>
+				</li>
+				<li>
+					<h2>Pellenteque ornare </h2>
+					<ul>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+						<li><a href="http://www.865171.cn/">Magna lacus bibendum mauris</a></li>
+						<li><a href="http://www.865171.cn/">Velit semper nisi molestie</a></li>
+						<li><a href="http://www.865171.cn/">Eget tempor eget nonummy</a></li>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+						<li><a href="http://www.865171.cn/">Velit semper nisi molestie</a></li>
+						<li><a href="http://www.865171.cn/">Eget tempor eget nonummy</a></li>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+					</ul>
+				</li>
+				<li>
+					<h2>Turpis nulla</h2>
+					<ul>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+						<li><a href="http://www.865171.cn/">Magna lacus bibendum mauris</a></li>
+						<li><a href="http://www.865171.cn/">Velit semper nisi molestie</a></li>
+						<li><a href="http://www.865171.cn/">Eget tempor eget nonummy</a></li>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+						<li><a href="http://www.865171.cn/">Magna lacus bibendum mauris</a></li>
+						<li><a href="http://www.865171.cn/">Velit semper nisi molestie</a></li>
+						<li><a href="http://www.865171.cn/">Eget tempor eget nonummy</a></li>
+						<li><a href="http://www.865171.cn/">Nec metus sed donec</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<!-- end #sidebar -->
+		<div style="clear: both;">&nbsp;</div>
+	</div>
+	<!-- end #page -->
+	<div id="footer">
+		<p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p>
+	</div>
+	<!-- end #footer -->
+</div>
+
+<script>
+	var vm = new Vue({
+		el: '#page',
+		data: {
+			showAthle: true,
+			showJudge: false,
+			joinAsAthle: {
+				_2019run800:{
+					date:"2019.10.30",
+					location:"运动场",
+					time:"10:00"
+				},
+				_2019run3000:{
+					date:"2019.11.2",
+					location:"篮球场",
+					time:"9:00"
+				}
+			},
+			joinAsJudge: {
+				_2019run1000:{
+					date:"2019.10.28",
+					location:"运动场",
+					time:"8:30"
+				}
+			}
+		},
+		methods:{
+			showAth:function(){vm.$data.showAthle = true;vm.$data.showJudge = false},
+			showJud:function(){vm.$data.showAthle = false;vm.$data.showJudge = true}
+		}
+	})
+</script>
+</body>
+</html>

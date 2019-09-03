@@ -30,7 +30,11 @@ function setCookie(name,value){
 //检查是否有token存在
 var token = getCookie("token");
 if(token!=null){
+    //token非空则隐式登录
+    //axios({
 
+
+    //})
 }
 
 var login = new Vue({
