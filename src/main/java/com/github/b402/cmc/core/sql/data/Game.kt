@@ -32,9 +32,39 @@ class Game(
         data: String
 ) {
     val data: ConfigurationSection = MemorySection.readFromJson(data)
+    val amount: Int
+        get() = data.getInt("amount")
+    val time: Long
+        get() = data.getLong("time")
+    val startTime:Long
+        get() = data.getLong("startTime")
+    val endTime:Long
+        get() = data.getLong("endTime")
+
+    suspend fun sync() = SQLManager.async {
+        val ps = this.prepareStatement("UPDATE Game SET Data = ? WHERE ID = ? LIMIT 1")
+        ps.setString(1, data.toJson())
+        ps.setInt(2, id)
+        ps.executeUpdate()
+    }
+
+    override fun toString(): String {
+        return "Game(id=$id, name='$name', type=$type, data=${data.toJson()})"
+    }
 
     companion object GameManager {
         val cacheGame: MutableMap<Int, Game> = ConcurrentHashMap()
+
+        suspend fun getAllGames(archive:Boolean) = SQLManager.asyncDeferred {
+            val games = mutableListOf<Int>()
+            val ps = this.prepareStatement("SELECT ID FROM Game WHERE Archive = ?")
+            ps.setBoolean(1,archive)
+            val rs = ps.executeQuery()
+            while(rs.next()){
+                games += rs.getInt("ID")
+            }
+            games
+        }
 
         suspend fun createGame(data: CreateGameData): Data<Game?, String?> {
             val dg = getGameByName(data.name)
@@ -57,7 +87,7 @@ class Game(
             return Data(game, null)
         }
 
-        suspend fun getGameByName(name: String) = SQLManager.asyncConnection<Game> {
+        suspend fun getGameByName(name: String) = SQLManager.asyncDeferred<Game> {
             val ps = this.prepareStatement("SELECT * FROM Game WHERE Name = ? LIMIT 1")
             ps.setString(1, name)
             val rs = ps.executeQuery()
@@ -70,5 +100,21 @@ class Game(
                 null
             }
         }
+
+        suspend fun getGame(id: Int) = SQLManager.asyncDeferred {
+            val ps = prepareStatement("SELECT * FROM Game WHERE ID = ? LIMIT 1")
+            ps.setInt(1, id)
+            val rs = ps.executeQuery()
+            if (rs.next()) {
+                val name = rs.getString("Name")
+                val type = GameType.valueOf(rs.getString("Type"))
+                val data = rs.getString("Data")
+                Game(id, name, type, data)
+            } else {
+                null
+            }
+        }
     }
+
+
 }

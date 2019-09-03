@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.apache.log4j.Logger
 import java.io.File
 import java.sql.Connection
@@ -29,13 +30,13 @@ object SQLManager {
             }
             val config = Configuration(file).getConfigurationSection("SQL")!!
             val url = "jdbc:${
-                config.getString("jdbc")
+            config.getString("jdbc")
             }://${
-                config.getString("host")
+            config.getString("host")
             }:${
-                config.getInt("port", 3306)
+            config.getInt("port", 3306)
             }/${config.getString("database")}?user=${config.getString("user")}&password=${
-                config.getString("password")
+            config.getString("password")
             }"
             val cfg = HikariConfig()
             try {
@@ -62,7 +63,7 @@ object SQLManager {
         }
     }
 
-    private fun checkTable() {
+     fun checkTable() {
         Logger.getLogger(SQLManager::class.java).info("正在检查数据表")
         operateConnection {
             val stn = this.createStatement()
@@ -71,7 +72,7 @@ object SQLManager {
                  UID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                  Name VARCHAR(30) NOT NULL,
                  Data Json NOT NULL
-                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8
             """.trimIndent())
             stn.execute("""
                 CREATE TABLE IF NOT EXISTS Game(
@@ -80,7 +81,7 @@ object SQLManager {
                     Type VARCHAR(16) NOT NULL,
                     Data Json NOT NULL,
                     Archive  BOOLEAN NOT NULL DEFAULT FALSE
-                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8
             """.trimIndent())
         }
     }
@@ -113,7 +114,25 @@ object SQLManager {
         }
     }
 
-    suspend fun <R> asyncConnection(func: suspend Connection.() -> R?): Deferred<R?> {
+    suspend fun async(func: suspend Connection.() -> Unit): Deferred<Boolean> {
+        return GlobalScope.async(coroutineContext) {
+            var conn: Connection? = null
+            try {
+                conn = connectPool.connection
+                conn.func()
+                return@async true
+            } catch (e: SQLException) {
+                Logger.getLogger(SQLManager::class.java).error("执行数据库回调中发生错误", e)
+            } finally {
+                if (conn != null) {
+                    connectPool.evictConnection(conn)
+                }
+            }
+            false
+        }
+    }
+
+    suspend fun <R> asyncDeferred(func: suspend Connection.() -> R?): Deferred<R?> {
         return GlobalScope.async(coroutineContext) {
             var conn: Connection? = null
             try {

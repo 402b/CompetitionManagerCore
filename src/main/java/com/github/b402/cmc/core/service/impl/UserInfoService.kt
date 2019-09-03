@@ -15,8 +15,9 @@ object UserInfoService : DataService<SubmitData>(
 ) {
     override suspend fun onRequest(data: SubmitData): ReturnData {
         val token = data.token!!
-        val ru = User.getUser(token.uid)
-        val user = ru.await() ?: return returnData(ERROR, "找不到用户数据")
+        val user = token.getUser()
+//        val ru = User.getUser(token.uid)
+//        val user = ru.await() ?: return returnData(ERROR, "找不到用户数据 uid:${token.uid}")
         return returnData(SUCCESS, token) {
             json.addProperty("realName", user.realName)
             json.addProperty("gender", user.gender.key)

@@ -10,11 +10,11 @@ import java.util.*
 import kotlin.coroutines.coroutineContext
 
 fun String.toBase64(): String {
-    return String(Base64.getEncoder().encode(this.toByteArray()))
+    return String(Base64.getUrlEncoder().withoutPadding().encode(this.toByteArray()))
 }
 
 fun String.deBase64(): String {
-    return String(Base64.getDecoder().decode(this))
+    return String(Base64.getUrlDecoder().decode(this))
 }
 
 val instance = MessageDigest.getInstance("MD5")
@@ -28,7 +28,7 @@ fun String.md5HashWithSalt(salt: String = TokenManager.Signature): String {
     return byteArrayToHexString(ba)
 }
 
-private val hexDigIts = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
+private val hexDigIts = "0123456789ABCDEF".toCharArray()
 fun byteArrayToHexString(b: ByteArray): String {
     val resultSb = StringBuffer()
     for (i in b.indices) {
@@ -46,7 +46,7 @@ fun byteToHexString(b: Byte): String {
     val d2 = n % 16
     return hexDigIts[d1] + "" + hexDigIts[d2]
 }
-
+@Deprecated("已经不需要使用Channel了")
 suspend fun <E> Channel<E>.asyncSend(e: E) {
     val c = this
     GlobalScope.launch(coroutineContext) {

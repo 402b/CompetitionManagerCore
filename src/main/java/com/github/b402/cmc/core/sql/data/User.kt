@@ -1,19 +1,13 @@
 package com.github.b402.cmc.core.sql.data
 
+import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.configuration.ConfigurationSection
 import com.github.b402.cmc.core.configuration.MemorySection
 import com.github.b402.cmc.core.service.impl.RegisterData
 import com.github.b402.cmc.core.sql.SQLManager
-import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.util.Data
-import com.github.b402.cmc.core.util.asyncSend
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import java.util.concurrent.ConcurrentHashMap
-import kotlin.coroutines.coroutineContext
 
 enum class UserGender(val key: String) {
     MALE("M"), FEMALE("F");
@@ -51,6 +45,12 @@ class User(
     val id: String
         get() = data.getString("id")!!
 
+    var permission: Permission
+        get() = Permission.valueOf(data.getString("permission", "User")!!)
+        set(value){
+            data["permission"] = value.name
+        }
+
 
     fun checkPassword(password: String): Boolean {
         val pw = data.getString("password")
@@ -82,6 +82,7 @@ class User(
                     data["id"] = rd.id
                     data["gender"] = rd.gender.name
                     data["password"] = rd.password
+                    data["permission"] = Permission.USER.name
                     val insert = this.prepareStatement("INSERT INTO User (Name,Data) VALUES (?,?)")
                     insert.setString(1, rd.userName)
                     insert.setString(2, data.toJson())
@@ -101,7 +102,8 @@ class User(
             return Data(user, resp)
         }
 
-        suspend fun getUser(uid: Int) = SQLManager.asyncConnection {
+
+        suspend fun getUser(uid: Int) = SQLManager.asyncDeferred {
             val ps = this.prepareStatement("SELECT * FROM User WHERE UID = ? LIMIT 1")
             ps.setInt(1, uid)
             val rs = ps.executeQuery()
@@ -114,7 +116,7 @@ class User(
             }
         }
 
-        suspend fun getUserByName(name: String) = SQLManager.asyncConnection {
+        suspend fun getUserByName(name: String) = SQLManager.asyncDeferred {
             val ps = this.prepareStatement("SELECT * FROM User WHERE Name = ? LIMIT 1")
             ps.setString(1, name)
             val rs = ps.executeQuery()

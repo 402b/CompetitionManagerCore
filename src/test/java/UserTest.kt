@@ -20,9 +20,16 @@ class UserTest {
     }
 
     @Test
+    fun getUser() = runBlocking {
+        val user = User.getUserByName("Bryanlzh")
+        val u = user.await()
+        println(u!!.data.toJson())
+    }
+
+    @Test
     fun createUser() = runBlocking<Unit> {
         withTimeout(3000L) {
-            SQLManager.coroutinesConnection{
+            SQLManager.coroutinesConnection {
                 this.prepareStatement("DELETE FROM User WHERE Name = 'Bryanlzh'").executeUpdate()
             }
             val rs = RegisterService

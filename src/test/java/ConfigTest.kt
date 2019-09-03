@@ -101,7 +101,8 @@ class ConfigTest {
       "rewriteBatchedStatements": "true",
       "cachePrepStmts": "true",
       "prepStmtCacheSize": "250",
-      "prepStmtCacheSqlLimit": "2048"
+      "prepStmtCacheSqlLimit": "2048",
+      "useSSL": "true"
     },
     "HikariCP": {
       "IdleTimeout": 60000,

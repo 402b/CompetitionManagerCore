@@ -3,6 +3,7 @@ package com.github.b402.cmc.core.servlet
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.service.impl.*
+import com.github.b402.cmc.core.service.impl.game.*
 import kotlinx.coroutines.*
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
@@ -33,6 +34,8 @@ class DataServlet : HttpServlet() {
         val async = req.startAsync(req, response)
         Logger.getLogger(DataServlet::class.java).debug("GlobalScope.launch ")
         GlobalScope.launch {
+            response.characterEncoding = "utf-8";
+            response.setHeader("Content-type", "application/json;charset=UTF-8");
             Logger.getLogger(DataServlet::class.java).debug("async")
             val resp = async.response
             resp.characterEncoding = "utf-8";
@@ -42,7 +45,7 @@ class DataServlet : HttpServlet() {
                     return@withTimeoutOrNull ds.input(json)
                 } catch (timeout: TimeoutCancellationException) {
                     Logger.getLogger(DataServlet::class.java).error("@/Data/${ds.path}}处理数据${json}时超时", timeout)
-                    return@withTimeoutOrNull returnData(ERROR_TIMTOUT, "请求超时")
+                    return@withTimeoutOrNull returnData(ERROR_TIMEOUT, "请求超时")
                 } catch (t: RuntimeException) {
                     Logger.getLogger(DataServlet::class.java).error("@/Data/${ds.path}}处理数据${json}发生异常", t)
                     return@withTimeoutOrNull returnData(ERROR, "请求异常")
@@ -52,13 +55,11 @@ class DataServlet : HttpServlet() {
                     ?: "=null"}")
             val writer = resp.writer
             if (returndata == null) {
-                val rd = returnData(ERROR_TIMTOUT, "请求超时")
+                val rd = returnData(ERROR_TIMEOUT, "请求超时")
                 writer.write(rd.toJson())
             } else {
                 writer.write(returndata.toJson())
             }
-            response.characterEncoding = "utf-8";
-            response.setHeader("Content-type", "application/json;charset=UTF-8");
             async.complete()
         }
     }
@@ -75,6 +76,9 @@ class DataServlet : HttpServlet() {
             register(RegisterService)
             register(LoginService)
             register(UserInfoService)
+            register(CreateGameService)
+            register(GameListService)
+            register(GameInfoService)
         }
     }
 }

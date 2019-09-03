@@ -1,10 +1,12 @@
 package com.github.b402.cmc.core.token
 
+import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.configuration.Configuration
 import com.github.b402.cmc.core.sql.data.User
 import com.github.b402.cmc.core.util.deBase64
 import com.github.b402.cmc.core.util.md5HashWithSalt
 import com.github.b402.cmc.core.util.toBase64
+import kotlinx.coroutines.*
 import java.util.*
 import kotlin.random.Random
 
@@ -16,8 +18,14 @@ class Token(
         val jti: Long = Random.Default.nextLong()
 ) {
 
+    suspend fun getUser() = getUserCache(uid)
+
+    init {
+        cache(uid)
+    }
 
     fun toTokenString(): String {
+        println("生成token: ${"""{"uid":$uid,"exp":$exp,"iat":$iat,"jti":$jti}"""}")
         val json = """{"uid":$uid,"exp":$exp,"iat":$iat,"jti":$jti}""".trimIndent().toBase64()
         val auth = "$HEADER,$json".md5HashWithSalt()
         return "$HEADER.$json.$auth"
@@ -50,6 +58,38 @@ class Token(
     }
 
     companion object {
+        private val userCache = mutableMapOf<Int, UserCache>()
+        private fun cache(uid: Int) {
+            GlobalScope.launch {
+                val cache = userCache[uid]
+                if (cache != null) {
+                    if (System.currentTimeMillis() - cache.time <= 30000) {
+                        return@launch
+                    }
+                }
+                val user = User.getUser(uid).await()
+                if (user != null) {
+                    userCache[uid] = UserCache(user, System.currentTimeMillis())
+                }
+            }
+        }
+
+        private suspend fun getUserCache(uid: Int): User {
+            val cache = userCache[uid]
+            if (cache != null) {
+                if (System.currentTimeMillis() - cache.time <= 30000) {
+                    return cache.user
+                }
+            }
+            val user = User.getUser(uid).await()
+            if (user != null) {
+                userCache[uid] = UserCache(user, System.currentTimeMillis())
+                return user
+            } else {
+                throw IllegalStateException("数据库状态异常")
+            }
+        }
+
         const val HEADER = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 
         fun deToken(token: String): Token? {
@@ -79,3 +119,5 @@ class Token(
 
 
 }
+
+data class UserCache(val user: User, val time: Long)

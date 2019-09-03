@@ -27,6 +27,17 @@ abstract class DataService<in S : SubmitData>(
             return returnData(NO_TOKEN, "状态异常,未传入token")
         }
         val data = json.getAsJsonObject("Data") ?: return returnData(ERROR, "状态异常,未传入数据")
+        var token: Token? = null
+        if (this.permission != Permission.ANY) {
+            token = Token.deToken(json.get("token").asString)
+                    ?: return returnData(ERROR_TOKEN, "token校验失败")
+            if (this.permission != Permission.USER) {
+                val per = token.getUser().permission
+                if (per.contains(this.permission)) {
+                    return returnData(ILLEGAL_PERMISSION, "权限不足")
+                }
+            }
+        }
         val c = sClass.getConstructor(JsonObject::class.java)
         val input: S
         try {
@@ -35,11 +46,7 @@ abstract class DataService<in S : SubmitData>(
             Logger.getLogger(DataService::class.java).debug("传入的参数异常", e)
             return returnData(ILLEGAL_INPUT, "传入的参数异常")
         }
-        if (this.permission != Permission.ANY) {
-            val token = Token.deToken(json.get("token").asString)
-                    ?: return returnData(ERROR_TOKEN, "token校验失败")
-            input.token = token
-        }
+        input.token = token
         return onRequest(input)
     }
 
