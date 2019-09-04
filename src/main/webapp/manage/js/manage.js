@@ -315,7 +315,7 @@ var checkPlayer = new Vue({ //审查运动员资格
         pageNow: 1, //当前所在页面
         pageAmount: 0, //页面总数
         recordAmount: 0,
-        pageEach: 3,   //每页显示的记录数
+        pageEach: 10,   //每页显示的记录数
         enterNumber:0, //用户键盘输入的页码数
     },
     created(){
