@@ -2,8 +2,8 @@ package com.github.b402.cmc.core.servlet
 
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
-import com.github.b402.cmc.core.service.impl.*
 import com.github.b402.cmc.core.service.impl.game.*
+import com.github.b402.cmc.core.service.impl.user.*
 import kotlinx.coroutines.*
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
@@ -79,6 +79,7 @@ class DataServlet : HttpServlet() {
             register(CreateGameService)
             register(GameListService)
             register(GameInfoService)
+            register(UnverifiedUsersService)
         }
     }
 }

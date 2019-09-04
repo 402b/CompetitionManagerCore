@@ -25,7 +25,7 @@ open class ReturnData(
 
     open override fun toJson(): String = Configuration.gson.toJson(json)
     open override fun toString(): String {
-        return "ReturnData(json=$json)"
+        return "ReturnData(json=${toJson()})"
     }
 }
 

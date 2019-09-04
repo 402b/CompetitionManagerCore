@@ -84,6 +84,8 @@ open class MemorySection(
         }
     }
 
+    override fun contains(path: String): Boolean = getJson(path) != null
+
     private fun getArray(path: String): JsonArray? {
         val json = getJson(path) ?: return null
         return if (json.isJsonArray) {

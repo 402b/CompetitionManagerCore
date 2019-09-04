@@ -3,11 +3,10 @@ package com.github.b402.cmc.core.sql.data
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.configuration.ConfigurationSection
 import com.github.b402.cmc.core.configuration.MemorySection
-import com.github.b402.cmc.core.service.impl.RegisterData
+import com.github.b402.cmc.core.service.impl.user.RegisterData
 import com.github.b402.cmc.core.sql.SQLManager
+import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.util.Data
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 enum class UserGender(val key: String) {
     MALE("M"), FEMALE("F");
@@ -47,28 +46,41 @@ class User(
 
     var permission: Permission
         get() = Permission.valueOf(data.getString("permission", "User")!!)
-        set(value){
+        set(value) {
             data["permission"] = value.name
         }
 
+    var verified: Boolean
+        get() = data.getBoolean("verified", false)
+        set(value) = data.set("verified", value)
 
     fun checkPassword(password: String): Boolean {
         val pw = data.getString("password")
         return pw == password
     }
 
-    companion object UserManager {
-//        val cacheUser: MutableMap<Int, User> = ConcurrentHashMap()
 
-        fun syncUser(user: User) {
-            GlobalScope.launch {
-                SQLManager.coroutinesConnection {
-                    val ps = this.prepareStatement("UPDATE User SET Data = ? WHERE UID = ? LIMIT 1")
-                    ps.setString(1, user.data.toJson())
-                    ps.setInt(2, user.uid)
-                    ps.executeUpdate()
-                }
+    suspend fun sync() = SQLManager.async {
+        val user = this@User
+        val ps = this.prepareStatement("UPDATE User SET Data = ? WHERE UID = ? LIMIT 1")
+        ps.setString(1, user.data.toJson())
+        ps.setInt(2, user.uid)
+        ps.executeUpdate()
+        Token.clearCache(user.uid)
+    }
+
+    companion object UserManager {
+
+        suspend fun getUnverifiedUsers() = SQLManager.asyncDeferred {
+            val list = mutableListOf<Int>()
+            val ps = this.prepareStatement("""
+                SELECT UID FROM User WHERE JSON_EXTRACT(Data,'$.verified') IS NULL OR JSON_EXTRACT(Data,'$.verified') = FALSE
+            """.trimIndent())
+            val rs = ps.executeQuery()
+            while(rs.next()){
+                list += rs.getInt("UID")
             }
+            list
         }
 
         suspend fun createUser(rd: RegisterData): Data<User?, String?> {

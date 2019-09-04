@@ -58,6 +58,10 @@ class Token(
     }
 
     companion object {
+        fun clearCache(uid: Int){
+            userCache.remove(uid)
+        }
+
         private val userCache = mutableMapOf<Int, UserCache>()
         private fun cache(uid: Int) {
             GlobalScope.launch {

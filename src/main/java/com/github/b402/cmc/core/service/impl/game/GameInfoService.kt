@@ -47,20 +47,20 @@ object GameInfoService : DataService<SubmitData>(
         }
         /*
         * {
-        *   "info":[
+        *   "info": [
         *       {
-        *       "id": 1,
-        *       "status": "error",
-        *       "reason": "找不到这个比赛"
+        *           "id": 1,
+        *           "status": "error",
+        *           "reason": "找不到这个比赛"
         *       },
         *       {
-        *       "id": 2,
-        *       "status": "success",
-        *       "name": "项目名字",
-        *       "time": 时间(long),
-        *       "startTime": 开始时间(long),
-        *       "endTime": 结束时间(long),
-        *       "amount": 最多参赛名额(int),
+        *           "id": 2,
+        *           "status": "success",
+        *           "name": "项目名字",
+        *           "time": 时间(long),
+        *           "startTime": 开始时间(long),
+        *           "endTime": 结束时间(long),
+        *           "amount": 最多参赛名额(int)
         *       }
         *   ]
         * }

@@ -1,4 +1,4 @@
-package com.github.b402.cmc.core.service.impl
+package com.github.b402.cmc.core.service.impl.user
 
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.service.DataService
@@ -8,8 +8,6 @@ import com.github.b402.cmc.core.sql.data.UserGender
 import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.util.md5HashWithSalt
 import com.google.gson.JsonObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 
 object RegisterService : DataService<RegisterData>(
         "register",

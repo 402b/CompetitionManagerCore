@@ -1,12 +1,10 @@
-import com.github.b402.cmc.core.service.impl.RegisterData
-import com.github.b402.cmc.core.service.impl.RegisterService
+import com.github.b402.cmc.core.service.data.SubmitData
+import com.github.b402.cmc.core.service.impl.user.RegisterService
+import com.github.b402.cmc.core.service.impl.user.UnverifiedUsersService
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.sql.data.User
 import com.github.b402.cmc.core.token.TokenManager
 import com.google.gson.JsonParser
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.Before
@@ -24,6 +22,12 @@ class UserTest {
         val user = User.getUserByName("Bryanlzh")
         val u = user.await()
         println(u!!.data.toJson())
+    }
+
+    @Test
+    fun unverified() = runBlocking {
+        val d = UnverifiedUsersService.onRequest(SubmitData(JsonParser().parse("{}").asJsonObject))
+        println(d.toString())
     }
 
     @Test

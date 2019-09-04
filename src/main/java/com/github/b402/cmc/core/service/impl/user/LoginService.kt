@@ -1,4 +1,4 @@
-package com.github.b402.cmc.core.service.impl
+package com.github.b402.cmc.core.service.impl.user
 
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.service.DataService

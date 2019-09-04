@@ -21,16 +21,18 @@ interface ConfigurationSection {
 
     fun getList(path: String): List<Any>?
 
-    fun getNumberList(path:String):List<Number>?
+    fun getNumberList(path: String): List<Number>?
 
     fun getConfigurationSection(path: String): ConfigurationSection?
+
+    fun contains(path: String): Boolean
 
     operator fun get(path: String): Any?
 
     operator fun set(path: String, data: Any?)
 
     fun save(): JsonObject
-    fun toJson():String {
+    fun toJson(): String {
         val jo = save()
         return Configuration.gson.toJson(jo)
     }
