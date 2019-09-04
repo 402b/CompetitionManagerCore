@@ -224,20 +224,19 @@
 					<div class="col-md-6">
 						<div id="checkPlayer">
 							<h2>运动员资格申请表</h2>
-								<table border="4" id="idData2">
+								<table border="4">
 									<tr>
-										<th>申请人ID</th><th>UID</th><th>用户名</th><th>真实姓名</th><th>性别</th>
+										<th>申请人ID</th><th>UID</th><th>真实姓名</th><th>性别</th>
 										<th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
 									</tr>
 									<tr v-for="player in player">
-										<td>{{player.uid}}</td><td>{{player.id}}</td><td>{{player.userName}}</td><td>{{player.realName}}</td><td>{{player.gender}}</td>
+										<td>{{player.uid}}</td><td>{{player.id}}</td><td>{{player.realName}}</td><td>{{player.gender}}</td>
 										<td><input type="checkbox" :checked="check(player.uid)" @click="checkOne(player.uid)"><h6>选择</h6></td>
 									</tr>
 								</table>
-							<table>
-								<tr><td><div id="barcon2" name="barcon2"></div></td></tr>
-							</table>
-							</br><button v-on:click="agree" type="submit">同意</button>----<button v-on:click="disagree" type="submit">拒绝</button>
+							<h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+							</br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+							</br></br><button v-on:click="agree" type="submit">同意</button>----<button v-on:click="disagree" type="submit">拒绝</button>
 						</div>
 					</div>
 				</div>
@@ -305,6 +304,5 @@ if (typeof console === "undefined") {
 <script type="text/javascript" language="javascript">
 	window.onload = function(){
 		goPage(1,8);
-		goPage2(1,8);
 	};
 </script>

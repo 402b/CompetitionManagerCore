@@ -737,7 +737,7 @@ nav a:hover::before {
 
 .sixth-content input {
 	border-radius: 0px;
-	padding-left: 15px;
+	padding-left: 5px;
 	font-size: 13px;
 	font-weight: 300;
 	color: #fff;
@@ -747,7 +747,7 @@ nav a:hover::before {
 	box-shadow: none;
 	line-height: 40px;
 	height: 40px;
-	width: 100%;
+	width: 25px;
 }
 
 .sixth-content textarea {

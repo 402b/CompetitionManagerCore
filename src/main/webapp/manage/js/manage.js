@@ -298,24 +298,63 @@ var checkPlayer = new Vue({ //审查运动员资格
     el: "#checkPlayer",
     data: {
         player: [
-            ],
+            ],//当前应该展示的用户信息
         tests: [
-            {uid:"001",id:"1243",userName:"是的",realName:"Tony",gender:"F"},
-            {uid:"002",id:"1243",userName:"风扇",realName:"Tony",gender:"M"},
-            {uid:"003",id:"1243",userName:"分割",realName:"Tony",gender:"F"},
-            {uid:"004",id:"1243",userName:"格式",realName:"Tony",gender:"M"},
+            {uid:"001",id:"1243",realName:"Tony",gender:"F"},
+            {uid:"002",id:"1243",realName:"Tony",gender:"M"},
+            {uid:"003",id:"1243",realName:"Tony",gender:"F"},
+            {uid:"004",id:"1243",realName:"Tony",gender:"M"},
+            {uid:"005",id:"1243",realName:"Tony",gender:"M"},
+            {uid:"006",id:"1243",realName:"Tony",gender:"M"},
+            {uid:"007",id:"1243",realName:"Tony",gender:"M"},
         ],
+        users:[],   //所有申请但未认证资格的用户
         isCheckAll: false,
         checked: [],
         isAgree: false,
+        pageNow: 1, //当前所在页面
+        pageAmount: 0, //页面总数
+        recordAmount: 0,
+        pageEach: 3,   //每页显示的记录数
+        enterNumber:0, //用户键盘输入的页码数
     },
     created(){
-        this.getPlayer();
+        this.start();
     },
     methods: {
-        getPlayer: function() {
+        prePage: function() {
+            if (this.pageNow >= 2) {
+                this.pageNow--;
+                this.changePage();
+            }
+        },
+        nextPage: function() {
+            if (this.pageNow < this.pageAmount) {
+                this.pageNow++;
+                this.changePage();
+            }
+        },
+        enter: function() {
+            var patrn = /^\d+$/;
+            if (this.enterNumber > this.pageAmount || this.enterNumber <= 0) {
+                alert("你想前往的页面已超出上限!");
+            }
+            else if (!patrn.exec(this.enterNumber)){
+                alert("请输入正确数字!")
+            }
+            else {
+                console.log(this.enterNumber);
+                this.pageNow = this.enterNumber;
+                this.changePage();
+            }
+        },
+        start: function() {
+            //测试用代码
+            // this.recordAmount = this.tests.length;
+            // this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
+            // this.changePage();
             axios({
-                url: '/Data/checkPlayer',
+                url: '/Data/unverifiedusers',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -327,9 +366,51 @@ var checkPlayer = new Vue({ //审查运动员资格
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        this.player = rep.data.player;
+                        this.users = rep.data.users;
+                        this.recordAmount = this.users.length;
+                        this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
+                        this.changePage();
                     } else{
                         alert("获取运动员申请表失败!");
+                    }
+                })
+        },
+        changePage: function() {
+            //测试用代码
+            // this.checked = [];
+            // console.log("2222");
+            // this.player = [];
+            // var start = (this.pageNow-1) * this.pageEach;
+            // var end = Math.min(start+this.pageEach, this.recordAmount);
+            // console.log(end);
+            // for (var i = start; i < end; i++) {
+            //     this.player.push(this.tests[i]);
+            // }
+            // console.log(this.player.length);
+            var start = (this.pageNow-1) * this.pageEach;
+            var end = Math.min(start+this.pageEach, this.recordAmount);
+            var usersX = [];    //需要请求的用户id列表
+            for (var i = start; i < end; i++) {
+                usersX.push(this.users[i]);
+            }
+            axios({
+                url: '/Data/userinfo',
+                params: {
+                    param: {
+                        token: getCookie("token"),
+                        Data: {
+                            uid: usersX,
+                        }
+                    }
+                }
+            }).then(
+                rep=>{
+                    if(rep.data.status=="success"){
+                        setCookie("token",rep.data.token);
+                        this.check = [];
+                        this.player = rep.data.info;
+                    } else{
+                        alert("获取用户数据表失败!");
                     }
                 })
         },
@@ -372,7 +453,7 @@ var checkPlayer = new Vue({ //审查运动员资格
             else {
                 isAgree = true;
                 axios({
-                    url: '/Data/checkPlayer',
+                    url: '/Data/verifiedusers',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -405,7 +486,7 @@ var checkPlayer = new Vue({ //审查运动员资格
             else {
                 isAgree = false;
                 axios({
-                    url: '/Data/checkPlayer',
+                    url: '/Data/verifiedusers',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -431,7 +512,6 @@ var checkPlayer = new Vue({ //审查运动员资格
                         console.log(rep)
                     })
             }
-
         }
     }
 })
