@@ -453,7 +453,7 @@ var checkPlayer = new Vue({ //审查运动员资格
             else {
                 isAgree = true;
                 axios({
-                    url: '/Data/verifiedusers',
+                    url: '/Data/verifyusers',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -486,7 +486,7 @@ var checkPlayer = new Vue({ //审查运动员资格
             else {
                 isAgree = false;
                 axios({
-                    url: '/Data/verifiedusers',
+                    url: '/Data/verifyusers',
                     params: {
                         param: {
                             token: getCookie("token"),
