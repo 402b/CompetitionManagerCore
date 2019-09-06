@@ -8,7 +8,7 @@ import com.google.gson.JsonArray
 import kotlinx.coroutines.Job
 
 object GameListService : DataService<SubmitData>(
-        "gamelist",
+        "game_list",
         Permission.ANY,
         SubmitData::class.java
 ) {

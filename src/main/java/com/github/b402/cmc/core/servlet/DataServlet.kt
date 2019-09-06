@@ -4,6 +4,7 @@ import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.service.impl.game.*
 import com.github.b402.cmc.core.service.impl.user.*
+import com.github.b402.cmc.core.service.impl.judge.*
 import kotlinx.coroutines.*
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
@@ -67,8 +68,12 @@ class DataServlet : HttpServlet() {
     companion object {
         val dataService = mutableMapOf<String, DataService<*>>()
 
-        fun register(ds: DataService<*>) {
+        fun register(ds: DataService<*>) { 65
             dataService["/${ds.path}"] = ds
+        }
+
+        fun unregister(path:String):DataService<*>?{
+            return dataService.remove("/${path}")
         }
 
         @JvmStatic
@@ -80,6 +85,12 @@ class DataServlet : HttpServlet() {
             register(GameListService)
             register(GameInfoService)
             register(UnverifiedUsersService)
+            register(VerifyUserService)
+            register(JoinedGameService)
+            register(ApplyJudgeService)
+            register(JudgeInfoService)
+            register(UnverifiedJudgeService)
+            register(VerifyJudgeService)
         }
     }
 }

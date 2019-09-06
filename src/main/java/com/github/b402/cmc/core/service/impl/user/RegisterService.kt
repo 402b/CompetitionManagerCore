@@ -10,7 +10,7 @@ import com.github.b402.cmc.core.util.md5HashWithSalt
 import com.google.gson.JsonObject
 
 object RegisterService : DataService<RegisterData>(
-        "register",
+        "user_register",
         Permission.ANY,
         RegisterData::class.java
 ) {

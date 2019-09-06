@@ -9,7 +9,7 @@ import com.github.b402.cmc.core.util.md5HashWithSalt
 import com.google.gson.JsonObject
 
 object LoginService : DataService<LoginData>(
-        "login",
+        "user_login",
         Permission.ANY,
         LoginData::class.java
 ) {

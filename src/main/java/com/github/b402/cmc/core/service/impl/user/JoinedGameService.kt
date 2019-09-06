@@ -2,10 +2,8 @@ package com.github.b402.cmc.core.service.impl.user
 
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.service.DataService
-import com.github.b402.cmc.core.service.data.ReturnData
 import com.github.b402.cmc.core.service.data.*
-import com.github.b402.cmc.core.service.data.SubmitData
-import com.github.b402.cmc.core.service.data.returnData
+import com.github.b402.cmc.core.sql.data.JoinGame
 import com.github.b402.cmc.core.sql.data.User
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -15,36 +13,34 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
-object UserInfoService : DataService<SubmitData>(
-        "user_info",
+object JoinedGameService :DataService<SubmitData>(
+        "game_getJoined",
         Permission.USER,
         SubmitData::class.java
 ) {
     override suspend fun onRequest(data: SubmitData): ReturnData {
-        val token = data.token!!
-        val user = token.getUser()
-        if (data.json.contains("uid")) {
-            if (!user.permission.contains(Permission.JUDGE)) {
+        if(data.json.contains("ids")){
+            val user = data.token?.getUser() ?: return returnData(ILLEGAL_PERMISSION, "权限不足")
+            if(!user.permission.contains(Permission.ADMIN)){
                 return returnData(ILLEGAL_PERMISSION, "权限不足")
             }
+            val ids = data.json.getNumberList("ids")!!
             val array = JsonArray()
             val jobs = mutableListOf<Job>()
-            val ids = data.json.getNumberList("uid")!!
             for (i in 0 until min(ids.size, 10)) {
                 val id = ids[i].toInt()
                 jobs += GlobalScope.launch(coroutineContext) {
-                    val user = User.getUser(id).await()
                     val json = JsonObject()
                     json.addProperty("uid", id)
-                    if (user == null) {
+                    val gid = JoinGame.getJoinedGame(id).await()
+                    if(gid == null){
                         json.addProperty("status", ERROR)
-                        json.addProperty("reason", "找不到用户")
-                    } else {
+                        json.addProperty("reason", "数据库异常")
+                    }else{
                         json.addProperty("status", SUCCESS)
-                        json.addProperty("realName", user.realName)
-                        json.addProperty("gender", user.gender.key)
-                        json.addProperty("uid", user.uid)
-                        json.addProperty("id", user.id)
+                        val gidArr = JsonArray()
+                        gid.forEach { gidArr.add(it) }
+                        json.add("gids",gidArr)
                     }
                     array.add(json)
                 }
@@ -55,12 +51,21 @@ object UserInfoService : DataService<SubmitData>(
             return returnData(SUCCESS) {
                 json.add("info", array)
             }
-        }
-        return returnData(SUCCESS, token) {
-            json.addProperty("realName", user.realName)
-            json.addProperty("gender", user.gender.key)
-            json.addProperty("uid", user.uid)
-            json.addProperty("id", user.id)
+        }else{
+            val gid = JoinGame.getJoinedGame(data.token?.uid ?: return returnData(ERROR,"用户异常")
+            ).await()
+            return returnData(SUCCESS){
+                if(gid == null){
+                    json.addProperty("status", ERROR)
+                    json.addProperty("reason", "数据库异常")
+                }else{
+                    json.addProperty("status", SUCCESS)
+                    val gidArr = JsonArray()
+                    gid.forEach { gidArr.add(it) }
+                    json.add("gids",gidArr)
+                }
+            }
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.github.b402.cmc.core.sql.data
 
+import com.github.b402.cmc.core.JudgeType
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.configuration.ConfigurationSection
 import com.github.b402.cmc.core.configuration.MemorySection
@@ -7,6 +8,8 @@ import com.github.b402.cmc.core.service.impl.user.RegisterData
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.util.Data
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 enum class UserGender(val key: String) {
     MALE("M"), FEMALE("F");
@@ -59,6 +62,16 @@ class User(
         return pw == password
     }
 
+    suspend fun getPermission(gid: Int) =
+            GlobalScope.async(GlobalScope.coroutineContext) {
+                val ji = JudgeInfo.getJudgeInfo(uid, gid, true).await()
+                if (ji == null) {
+                    Permission.VERIFIED
+                } else {
+                    ji.type.permission
+                }
+            }
+
 
     suspend fun sync() = SQLManager.async {
         val user = this@User
@@ -77,7 +90,7 @@ class User(
                 SELECT UID FROM User WHERE JSON_EXTRACT(Data,'$.verified') IS NULL OR JSON_EXTRACT(Data,'$.verified') = FALSE
             """.trimIndent())
             val rs = ps.executeQuery()
-            while(rs.next()){
+            while (rs.next()) {
                 list += rs.getInt("UID")
             }
             list

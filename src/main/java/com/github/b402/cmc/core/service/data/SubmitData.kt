@@ -2,6 +2,7 @@ package com.github.b402.cmc.core.service.data
 
 import com.github.b402.cmc.core.configuration.Configuration
 import com.github.b402.cmc.core.configuration.ConfigurationSection
+import com.github.b402.cmc.core.sql.data.User
 import com.github.b402.cmc.core.token.Token
 import com.google.gson.JsonObject
 
@@ -15,6 +16,7 @@ open class SubmitData(
 
     fun getTokenString(): String? = json.getString("token")
 
+    suspend fun getUser(): User? = this.token?.getUser()
 
     override fun toJson(): String = json.toJson()
 }

@@ -10,8 +10,8 @@ import com.github.b402.cmc.core.sql.data.User
 import com.google.gson.JsonArray
 
 object UnverifiedUsersService : DataService<SubmitData>(
-        "unverifiedusers",
-        Permission.MAIN_JUDGE,
+        "admin_unverifiedUsers",
+        Permission.ADMIN,
         SubmitData::class.java
 ) {
     override suspend fun onRequest(data: SubmitData): ReturnData {

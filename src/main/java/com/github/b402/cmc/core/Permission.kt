@@ -5,10 +5,10 @@ enum class Permission(
 ) {
     ANY(),
     USER("ANY"),
-    JUDGE("USER"),
+    VERIFIED("USER"),
+    JUDGE("VERIFIED"),
     PROJECT_JUDGE("JUDGE"),
-    MAIN_JUDGE("PROJECT_JUDGE"),
-    ADMIN("MAIN_JUDGE");
+    ADMIN("PROJECT_JUDGE");
     val extend = mutableListOf<Permission>()
     fun init() {
         for(t in ext){

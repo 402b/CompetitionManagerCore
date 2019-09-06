@@ -29,6 +29,7 @@ class Game(
         val id: Int,
         val name: String,
         val type: GameType,
+        val archive:Boolean,
         data: String
 ) {
     val data: ConfigurationSection = MemorySection.readFromJson(data)
@@ -95,7 +96,8 @@ class Game(
                 val id = rs.getInt("ID")
                 val type = GameType.valueOf(rs.getString("Type"))
                 val data = rs.getString("Data")
-                Game(id, name, type, data)
+                val archive = rs.getBoolean("Archive")
+                Game(id, name, type,archive, data)
             } else {
                 null
             }
@@ -109,7 +111,8 @@ class Game(
                 val name = rs.getString("Name")
                 val type = GameType.valueOf(rs.getString("Type"))
                 val data = rs.getString("Data")
-                Game(id, name, type, data)
+                val archive = rs.getBoolean("Archive")
+                Game(id, name, type,archive, data)
             } else {
                 null
             }

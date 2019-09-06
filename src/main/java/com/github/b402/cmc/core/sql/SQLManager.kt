@@ -72,7 +72,7 @@ object SQLManager {
                  UID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                  Name VARCHAR(30) NOT NULL,
                  Data Json NOT NULL
-                ) ENGINE = InnoDB DEFAULT CHARSET=utf8
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
             stn.execute("""
                 CREATE TABLE IF NOT EXISTS Game(
@@ -81,7 +81,29 @@ object SQLManager {
                     Type VARCHAR(16) NOT NULL,
                     Data Json NOT NULL,
                     Archive  BOOLEAN NOT NULL DEFAULT FALSE
-                ) ENGINE = InnoDB DEFAULT CHARSET=utf8
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+            """.trimIndent())
+            stn.execute("""
+                CREATE TABLE IF NOT EXISTS JoinGame(
+                    UID INT NOT NULL,
+                    GID INT NOT NULL,
+                    Time LONG NOT NULL,
+                    Verified BOOLEAN NOT NULL DEFAULT FALSE,
+                    PRIMARY KEY (UID,GID),
+                    FOREIGN KEY (UID) REFERENCES User(UID),
+                    FOREIGN KEY (GID) REFERENCES Game(ID)
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+            """.trimIndent())
+            stn.execute("""
+                CREATE TABLE IF NOT EXISTS Judge(
+                    UID INT NOT NULL,
+                    GID INT NOT NULL,
+                    Type VARCHAR(10) NOT NULL,
+                    Verified BOOLEAN NOT NULL DEFAULT FALSE,
+                    PRIMARY KEY (UID,GID),
+                    FOREIGN KEY (UID) REFERENCES User(UID),
+                    FOREIGN KEY (GID) REFERENCES Game(ID)
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
         }
     }

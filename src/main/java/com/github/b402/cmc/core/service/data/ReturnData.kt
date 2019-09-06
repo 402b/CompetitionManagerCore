@@ -36,7 +36,7 @@ inline fun returnData(status: String, token: Token, func: ReturnData.() -> Unit)
     return rd
 }
 
-inline fun returnData(status: String, func: ReturnData.() -> Unit): ReturnData {6
+inline fun returnData(status: String, func: ReturnData.() -> Unit = {}): ReturnData {
     val rd = ReturnData(status)
     rd.func()
     return rd

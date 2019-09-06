@@ -11,7 +11,7 @@ import com.github.b402.cmc.core.sql.data.GameType
 import com.google.gson.JsonObject
 
 object CreateGameService : DataService<CreateGameData>(
-        "createGame",
+        "game_create",
         Permission.ADMIN,
         CreateGameData::class.java
 ) {

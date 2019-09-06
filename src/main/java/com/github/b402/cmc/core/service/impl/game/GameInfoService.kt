@@ -13,7 +13,7 @@ import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
 object GameInfoService : DataService<SubmitData>(
-        "gameinfo",
+        "game_info",
         Permission.ANY,
         SubmitData::class.java
 ) {
