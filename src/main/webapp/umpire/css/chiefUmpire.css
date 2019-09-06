@@ -7,6 +7,7 @@
     opacity: 0;
   }
 }
+
 .tableX {
 	margin: 0px auto;
 	white-space: nowrap;
@@ -464,15 +465,17 @@ nav a:hover::before {
 
 
 .third-content .container-fluid {
-	padding-left: 320px;
+	padding-left: 300px;
 	padding-right: 0px;
 	margin-top: 60px;
 	margin-bottom: 60px;
+	color: white;
 }
 
 .third-content .container-fluid .col-md-6 {
 	padding-left: 0px;
 	padding-right: 0px;
+	width: 70%;
 }
 
 .third-content #map {
@@ -489,14 +492,12 @@ nav a:hover::before {
 	font-size: 13px;
 	font-weight: 300;
 	color: #fff;
-	background-color: rgba(250, 250, 250, 0.15);
+	background-color: transparent;
 	outline: none;
 	border: none;
 	box-shadow: none;
-	line-height: 40px;
-	height: 40px;
-	width: 100%;
-	margin-bottom: 25px;
+	line-height: 30px;
+	width: 60px;
 }
 
 .third-content textarea {
@@ -519,7 +520,6 @@ nav a:hover::before {
 
 .third-content button {
 	max-width: 100%;
-	width: 100%;
 	display: inline-block;
 	border: 2px solid #fff;
 	padding: 8px 15px;
@@ -539,13 +539,8 @@ nav a:hover::before {
 }
 
 .third-content select {
-	background: rgba(250, 250, 250, 0.15);
-	color: white;
-	height: 38px;
+	background-color: rgba(250, 250, 250, 0.15);
 	border: none;
-	text-align: center;
-	width: 280px;
-	font-size: 14px;
 }
 
 .fourth-content .container-fluid {
@@ -661,12 +656,12 @@ nav a:hover::before {
 	font-size: 13px;
 	font-weight: 300;
 	color: #fff;
-	background-color: transparent;
+	background-color: rgba(250, 250, 250, 0.15);
 	outline: none;
 	border: none;
 	box-shadow: none;
-	line-height: 30px;
-	width: 60px;
+	line-height: 40px;
+	width: 100%;
 }
 
 .fifth-content textarea {
@@ -707,28 +702,9 @@ nav a:hover::before {
 	background-color: #fff;
 }
 
-.fifth-content select {
-	background-color: rgba(250, 250, 250, 0.15);
-	border: none;
-}
-
-.sixth-content table {
-	margin-left: 70px;
-	white-space: nowrap;
-	font-size: 15px;
-}
-.sixth-content .container-fluid {
-	padding-left: 280px;
-	padding-right: 0px;
-	margin-top: 60px;
-	margin-bottom: 60px;
-	color: white;
-}
-
 .sixth-content .container-fluid .col-md-6 {
 	padding-left: 0px;
 	padding-right: 0px;
-	width: 70%;
 }
 
 .sixth-content #map {
@@ -741,7 +717,7 @@ nav a:hover::before {
 
 .sixth-content input {
 	border-radius: 0px;
-	padding-left: 5px;
+	padding-left: 15px;
 	font-size: 13px;
 	font-weight: 300;
 	color: #fff;
@@ -751,7 +727,8 @@ nav a:hover::before {
 	box-shadow: none;
 	line-height: 40px;
 	height: 40px;
-	width: 25px;
+	width: 100%;
+	margin-bottom: 25px;
 }
 
 .sixth-content textarea {
@@ -774,6 +751,7 @@ nav a:hover::before {
 
 .sixth-content button {
 	max-width: 100%;
+	width: 100%;
 	display: inline-block;
 	border: 2px solid #fff;
 	padding: 8px 15px;
