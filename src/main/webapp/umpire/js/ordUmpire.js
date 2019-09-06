@@ -103,7 +103,7 @@ var enterScore = new Vue({    //查看某裁判所负责的项目信息，并录
             // this.changePage();
 
             axios({
-                url: '/Data/judgeGame',
+                url: '/Data/game_list',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -163,12 +163,12 @@ var enterScore = new Vue({    //查看某裁判所负责的项目信息，并录
 
             var start = (this.pageNow-1) * this.pageEach;
             var end = Math.min(start+this.pageEach, this.recordAmount);
-            var gameidX = [];    //需要请求的用户id列表
+            var gameidX = [];    //需要请求的项目id列表
             for (var i = start; i < end; i++) {
                 gameidX.push(this.gameid[i]);
             }
             axios({
-                url: '/Data/gameinfo',
+                url: '/Data/game_info',
                 params: {
                     param: {
                         token: getCookie("token"),

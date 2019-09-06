@@ -656,12 +656,12 @@ nav a:hover::before {
 	font-size: 13px;
 	font-weight: 300;
 	color: #fff;
-	background-color: rgba(250, 250, 250, 0.15);
+	background-color: transparent;
 	outline: none;
 	border: none;
 	box-shadow: none;
-	line-height: 40px;
-	width: 100%;
+	line-height: 30px;
+	width: 60px;
 }
 
 .fifth-content textarea {
@@ -700,6 +700,11 @@ nav a:hover::before {
 .fifth-content button:hover {
 	color: #232323;
 	background-color: #fff;
+}
+
+.fifth-content select {
+	background-color: rgba(250, 250, 250, 0.15);
+	border: none;
 }
 
 .sixth-content .container-fluid .col-md-6 {

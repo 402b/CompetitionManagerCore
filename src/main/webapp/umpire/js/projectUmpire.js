@@ -106,7 +106,7 @@ var enterScore = new Vue({    //录入成绩
             // this.changePage();
 
             axios({
-                url: '/Data/judgeGame',
+                url: '/Data/game_list',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -408,7 +408,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             // this.changePage();
 
             axios({
-                url: '/Data/judgeGame',
+                url: '/Data/game_list',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -636,7 +636,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             // this.changePage();
 
             axios({
-                url: '/Data/judgeGame',
+                url: '/Data/game_list',
                 params: {
                     param: {
                         token: getCookie("token"),

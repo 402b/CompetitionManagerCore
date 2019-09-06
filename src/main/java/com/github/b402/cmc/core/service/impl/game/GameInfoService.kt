@@ -26,14 +26,14 @@ object GameInfoService : DataService<SubmitData>(
             jobs += GlobalScope.launch(coroutineContext) {
                 val game = Game.getGame(id).await()
                 val jo = JsonObject()
-                jo.addProperty("id", id)
+                jo.addProperty("gameID", id)
                 if (game == null) {
                     jo.addProperty("status", ERROR)
                     jo.addProperty("reason", "找不到这个比赛")
                 } else {
                     jo.addProperty("status", SUCCESS)
-                    jo.addProperty("name", game.name)
-                    jo.addProperty("type", game.type.key)
+                    jo.addProperty("gameName", game.name)
+                    jo.addProperty("gameType", game.type.key)
                     jo.addProperty("time", game.time)
                     jo.addProperty("startTime", game.startTime)
                     jo.addProperty("endTime", game.endTime)

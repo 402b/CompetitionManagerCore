@@ -103,7 +103,7 @@ var enterScore = new Vue({    //查看某裁判所负责的项目信息，并录
             // this.changePage();
 
             axios({
-                url: '/Data/judgeGame',
+                url: '/Data/game_list',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -345,28 +345,48 @@ var setUmpire = new Vue({   //任命裁判
     }
 })
 
-var UmpireInfo = new Vue({
-    el: "#UmpireInfo",
+var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用于取消普通裁判资格
+    el: "#cancelUmpire",
     data: {
-        tests:[
-            {uid:"001",realName:"Tony",umpireType:"项目裁判",game:"男子100米",gameType:"预赛",gameID:"002"},
-            {uid:"002",realName:"Linda",umpireType:"普通裁判",game:"女子800米",gameType:"决赛",gameID:"003"},
-            {uid:"004",realName:"Linda",umpireType:"普通裁判",game:"女子800米",gameType:"决赛",gameID:"004"}
+        game: [],   //某裁判负责的所有项目信息
+        umpire: [],  //某项赛事所有的普通裁判信息
+        gameid: [],  //用户从后端获取的所有比赛id
+        gameNow: [],    //当前应该展示的比赛信息
+        isCheckAll: false,  //是否全选
+        checked: [],       //选择取消裁判后，传给后台的裁判id列表
+        tests: [
+            {gameName: "男子100米", gameID: "001", gameType: "预赛"},
+            {gameName: "女子100米", gameID: "002", gameType: "决赛"},
+            {gameName: "男子100米", gameID: "003", gameType: "预赛"},
+            {gameName: "男子1500米", gameID: "004", gameType: "预赛"},
         ],
-        umpire:[
+        tests2:[
+            {uid:"001",realName:"张三",gender:"男",umpireType:"普通裁判"},
+            {uid:"002",realName:"李四",gender:"女",umpireType:"普通裁判"},
+            {uid:"003",realName:"Tony",gender:"男",umpireType:"普通裁判"},
+            {uid:"004",realName:"Lisa",gender:"女",umpireType:"普通裁判"},
         ],
-        isCheckAll: false,
-        checked:[
-        ],
-        asd:"",
+        gameID: "", //选择取消裁判的赛事ID
+        gameName: "",   //选择取消裁判的赛事名称
+        show: false, //false展示赛事选择界面，true展示删除裁判界面
+        pageNow: 1, //当前所在页面
+        pageAmount: 0, //页面总数
+        recordAmount: 0,
+        pageEach: 1,   //每页显示的记录数
+        enterNumber: 0, //用户键盘输入的页码数
     },
     created() {
-        this.getUmpire();
+        this.start();
     },
     methods: {
-        getUmpire: function() {
+        start: function () {
+            //测试用代码
+            // this.recordAmount = this.tests.length;
+            // this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
+            // this.changePage();
+
             axios({
-                url: '/Data/umpire',
+                url: '/Data/game_list',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -378,19 +398,118 @@ var UmpireInfo = new Vue({
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        this.umpire = rep.data.umpire;
+                        this.gameid = rep.data.gamelist;  //比赛id列表
+                        this.recordAmount = this.gameid.length;
+                        this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
+                        this.changePage();
+                    } else{
+                        alert("获取裁判员负责的项目id列表失败!");
+                    }
+                })
+        },
+        prePage: function () {
+            if (this.pageNow >= 2) {
+                this.pageNow--;
+                this.changePage();
+            }
+        },
+        nextPage: function () {
+            if (this.pageNow < this.pageAmount) {
+                this.pageNow++;
+                this.changePage();
+            }
+        },
+        enter: function () {
+            var patrn = /^\d+$/;
+            if (this.enterNumber > this.pageAmount || this.enterNumber <= 0) {
+                alert("你想前往的页面已超出上限!");
+            } else if (!patrn.exec(this.enterNumber)) {
+                alert("请输入正确数字!")
+            } else {
+                console.log(this.enterNumber);
+                this.pageNow = this.enterNumber;
+                this.changePage();
+            }
+        },
+        changePage: function () {
+            // 测试用代码
+            // this.game = [];
+            // var start = (this.pageNow - 1) * this.pageEach;
+            // var end = Math.min(start + this.pageEach, this.recordAmount);
+            // console.log(end);
+            // for (var i = start; i < end; i++) {
+            //     this.game.push(this.tests[i]);
+            // }
+
+            var start = (this.pageNow-1) * this.pageEach;
+            var end = Math.min(start+this.pageEach, this.recordAmount);
+            var gameidX = [];    //需要请求的比赛id列表
+            for (var i = start; i < end; i++) {
+                gameidX.push(this.gameid[i]);
+            }
+            axios({
+                url: '/Data/gameinfo',
+                params: {
+                    param: {
+                        token: getCookie("token"),
+                        Data: {
+                            gameId: gameidX,
+                        }
+                    }
+                }
+            }).then(
+                rep=>{
+                    if(rep.data.status=="success"){
+                        setCookie("token",rep.data.token);
+                        this.game = rep.data.info;
+                    } else{
+                        alert("获取赛事表失败!");
+                    }
+                })
+        }
+        ,
+        change: function (gameName, gameID) {   //进入裁判取消页面
+            this.show = true;
+            this.gameID = gameID;
+            this.gameName = gameName;
+
+            //测试用代码
+            // this.umpire = this.tests2;
+            // console.log(this.tests2.length);
+
+            axios({
+                url: '/Data/umpireinfo',
+                params: {
+                    param: {
+                        token: getCookie("token"),
+                        Data: {
+                            gameID: this.gameID,
+                        }
+                    }
+                }
+            }).then(
+                rep=>{
+                    if(rep.data.status=="success"){
+                        setCookie("token",rep.data.token);
+                        this.umpire = rep.data.info;
                     } else{
                         alert("获取裁判列表失败!");
                     }
                 })
+        },
+        back: function () {
+            this.show = false;
+            this.gameID = "";
+            this.gameName = "";
+            this.checked = [];
+            this.umpire = [];
         },
         checkAll: function() {
             this.isCheckAll = !this.isCheckAll;
             if(this.isCheckAll == true) {
                 this.checked = [];
                 for (var i = 0; i < this.umpire.length; i++) {
-                    var obj = {uid:this.umpire[i].uid,gameID:this.umpire[i].gameID};
-                    this.checked.push(obj);
+                    this.checked.push(this.tests2[i].uid);
                 }
             }
             else {
@@ -398,28 +517,19 @@ var UmpireInfo = new Vue({
             }
             console.log(this.checked.length);
         },
-        checkOne: function(uid, gameID) {
-            console.log(uid + gameID);
-            var obj = {uid:uid,gameID:gameID};
-            var x = -1;
-            for (var i = 0; i < this.checked.length; i++) {
-                if (this.checked[i].uid == uid && this.checked[i].gameID == gameID) {
-                    x = i;
-                    break;
-                }
-            }
+        checkOne: function(uid) {
+            var x = this.checked.indexOf(uid);
             if (x>-1) {
                 this.checked.splice(x,1)
                 console.log(this.checked.length);
             }
             else {
-                this.checked.push(obj);
+                this.checked.push(uid);
             }
         },
-        check: function(uid, gameID) {
+        check: function(uid) {
             this.isCheckAll = (this.checked.length == this.umpire.length);
-            var obj = {uid:uid,gameID:gameID};
-            var x = JSON.stringify(this.checked).indexOf(JSON.stringify(obj));
+            var x = this.checked.indexOf(uid);
             console.log(uid+":"+x);
             console.log(this.checked.length);
             if (x>-1)
@@ -428,15 +538,17 @@ var UmpireInfo = new Vue({
                 return false;
         },
         send: function () {
-            if (this.checked.length < 1)
-                alert("你未选择任何项目！");
+            if (this.checked.length == 0) {
+                alert("你未选择任何裁判！");
+            }
             else {
                 axios({
-                    url: '/Data/recUmpire',
+                    url: '/Data/cancelUmpire',
                     params: {
                         param: {
                             token: getCookie("token"),
-                            Data: {checked:this.checked,
+                            Data: {
+                                uid: this.check(),
                             }
                         }
                     }
@@ -444,16 +556,12 @@ var UmpireInfo = new Vue({
                     rep=>{
                         if(rep.data.status=="success"){
                             setCookie("token",rep.data.token);
-                            alert("取消裁判资格成功！");
+                            alert("成功相应裁判的资格！");
                             location.reload(true);
                         } else{
                             alert("取消裁判资格失败!");
+                            location.reload(true);
                         }
-                    }
-                    ,
-                    rep=>{
-                        alert("抱歉，网页当前不可用");
-                        console.log(rep)
                     })
             }
         }
