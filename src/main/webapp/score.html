@@ -89,7 +89,7 @@ http://www.865171.cn/
             //pageIndex
             pageIndex:0,
             //储存得到的所有比赛项目的id
-            gameIds:[],
+            gameJoinedId:[],
             //储存要展示的比赛项目的信息
             gameToShow:{},
             token:getCookie("token"),
@@ -114,8 +114,8 @@ http://www.865171.cn/
             }
         },
         computed:{
-            //获取参加的比赛的id
-            computeGameIds:{
+            //获取参加过的所有比赛的id
+            /*computeGameIds:{
                 get:function(){
                     return this.gameIds
                 },
@@ -135,8 +135,14 @@ http://www.865171.cn/
                     }).then()
                 }
             },
-            //得到个人参加的项目的成绩
-            gameJoined:function () {
+             */
+
+            //得到个人参加的项目的列表
+            computeGameJoinedId:{
+                get:function () {
+                    return this.gameJoinedId;
+                },
+                set:function () {
                 axios({
                     params:{
                         url:"/Data/",
@@ -149,18 +155,19 @@ http://www.865171.cn/
                         }
                     }
                 }).then(
-                    rep=>{console.log(rep)}
+                    rep=>{console.log(rep); this.gameJoinedId = rep;}
                     ,
                     rep=>{console.log(rep)}
                 )
+                }
             },
             //获取列表 包含每个比赛的gameid和用户的成绩
             gameScoreToShow:function(){
                 var index = (vm.$data.pageIndex-1)*10;
                 index = index>-1?index:0;
                 var list = [];
-                for(var i =0;i<10 && index+i<this.gameIds.length;i++){
-                    list[i] = this.gameIds[index+i];
+                for(var i =0;i<10 && index+i<this.gameJoinedId.length;i++){
+                    list[i] = this.gameJoinedId[index+i];
                 }
                 //获取比赛分数
                 axios({
@@ -169,6 +176,7 @@ http://www.865171.cn/
                         param:{
                             token:getCookie("token"),
                             Data:{
+                                uid:userInfo.uid,
                                 gameId:list
                             }
                         }
@@ -176,10 +184,9 @@ http://www.865171.cn/
                 }).then(
                     rep=>{
                         console.log("请求送出");
-
                     }
                     ,
-                    rep=>{console.log(rep)}
+                    rep=>{console.log("请求送出未成功")}
                 )
             }
         },
