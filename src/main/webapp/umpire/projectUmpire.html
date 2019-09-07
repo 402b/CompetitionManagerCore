@@ -208,18 +208,18 @@
                             <h2>{{gameName}}</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>UID</th><th>裁判员姓名</th><th>性别</th><th>裁判类型</th>
+                                    <th>UID</th><th>ID</th><th>裁判员姓名</th><th>性别</th>
                                     <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
                                 </tr>
                                 <tr v-for="umpire in umpire">
-                                    <td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td><td>{{umpire.umpireType}}</td>
+                                    <td>{{umpire.uid}}</td><td>{{umpire.id}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
                                     <td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
                                 </tr>
                             </table>
                             <div class="col-md-12">
                                 <fieldset></br>
                                     <button v-on:click="back" type="submit">返回</button>
-                                    <button v-on:click="send" type="submit">取消裁判资格</button>
+                                    <button v-on:click="disagree" type="submit">取消裁判资格</button>
                                 </fieldset>
                             </div>
                         </div>
