@@ -6,7 +6,7 @@ http://www.865171.cn/
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Assiduous   by www.865171.cn</title>
+    <title>Home</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />；
     <link href="assiduous/style.css" rel="stylesheet" type="text/css" media="screen" />
@@ -21,29 +21,29 @@ http://www.865171.cn/
     <div id="header">
         <div id="menu">
             <ul>
-                <li><a href="http://www.865171.cn/" class="first">Home</a></li>
-                <li class="current_page_item"><a href="http://www.865171.cn/">Blog</a></li>
-                <li><a href="http://www.865171.cn/">About</a></li>
-                <li><a href="http://www.865171.cn/">Contact</a></li>
+                <li><a href="http://www.865171.cn/" class="first">主页</a></li>
+                <li class="current_page_item"><a href="http://www.865171.cn/">报名</a></li>
+                <li><a href="http://www.865171.cn/">消息</a></li>
+                <li><a href="http://www.865171.cn/">管理</a></li>
             </ul>
         </div>
         <!-- end #menu -->
-        <div id="search">
+        <!-- div id="search">
             <form method="get" action="">
                 <fieldset>
                     <input type="text" name="s" id="search-text" size="15" />
                     <input type="submit" id="search-submit" value="GO" />
                 </fieldset>
             </form>
-        </div>
+        </div -->
         <!-- end #search -->
     </div>
 </div>
 <!-- end #header -->
 <!-- end #header-wrapper -->
 <div id="logo">
-    <h1><a href="http://www.865171.cn/">Message</a></h1>
-    <p><em> template design by <a href="http://www.865171.cn/">www.865171.cn</a></em></p>
+    <h1><a href="http://www.865171.cn/">消息</a></h1>
+    <!-- p><em> template design by <a href="http://www.865171.cn/">www.865171.cn</a></em></p -->
 </div>
 <hr />
 <!-- end #logo -->
@@ -51,16 +51,15 @@ http://www.865171.cn/
     <div id="page-bgtop">
         <div id="content">
             <div class="post" v-for="competition in joinAsAthle">
-                <!--p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/" >Someone</a></p -->
-                <p class="meta">{{competition.hasJoined}} <!-- 检查是否已经参赛 --></p>
-                <h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2>
+                <p class ="meta">已参加</p>
+                <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
+                <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
                     <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
-                    <button onclick="signUp(competition)"></button>
+                    <button onclick="signUp(competition)">放弃报名</button>
                 </div>
             </div>
-
-            <div class="post" v-for="competition in joinAsJudge">
+            <!--div class="post" v-for="competition in joinAsJudge">
                 <p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p>
                 <h2 class="title"><a href="http://www.865171.cn/">Lorem ipsum sed aliquam</a></h2>
                 <div class="entry">
@@ -68,15 +67,14 @@ http://www.865171.cn/
                     <p v-for="(value,key) in competition"> {{key}}:{{value}}</p>
 
                 </div>
-            </div>
-
-            <div class="post">
+            </div-->
+            <!--div class="post">
                 <p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p>
                 <h2 class="title"><a href="http://www.865171.cn/">Lorem ipsum sed aliquam</a></h2>
                 <div class="entry">
                     <p>Mauris vitae nisl nec metus placerat consectetuer. Donec ipsum. Proin imperdiet est. Sed lacus. Donec lectus. Nullam pretium nibh ut turpis. Nam bibendum. In nulla tortor, elementum vel, tempor at, varius non, purus. Mauris vitae nisl nec metus placerat consectetuer. Donec ipsum. Proin imperdiet est. Phasellus <a href="http://www.865171.cn/">dapibus semper urna</a>. Pellentesque ornare, orci in consectetuer hendrerit, urna elit eleifend nunc, ut consectetuer nisl felis ac diam. </p>
                 </div>
-            </div>
+            </div-->
         </div>
         <!-- end #content -->
         <div id="sidebar">
@@ -84,6 +82,9 @@ http://www.865171.cn/
                 <li>
                     <h2>用户</h2>
                     <p v-for="(value,key) in userInfo">{{key}}:{{value}}</p>
+                </li>
+                <li>
+                    <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
                 </li>
                 <!-- li>
                     <h2>Pellenteque ornare </h2>
@@ -134,8 +135,20 @@ http://www.865171.cn/
                 age:20,
                 authority:"athlete"
             },
+            messageNum:0,
             showAthle: true,
             showJudge: false,
+            message:{
+              //接收消息
+
+            },
+            //pageIndex
+            pageIndex:0,
+            //储存得到的所有比赛项目的id
+            gameIds:{},
+            
+            //储存要展示的比赛项目的信息
+            gameToShow:{},
             joinAsAthle: {
                 _2019run800:{
                     date:"2019.10.30",
@@ -156,6 +169,19 @@ http://www.865171.cn/
                 }
             }
         },
+        computed:{
+            gameToShowById: function () {
+                var index = (vm.$data.pageIndex-1)*10;
+                index = index>-1?index:0;
+                var list = {};
+                for(var i =0;i < 10;i++){
+                    list.append();
+                }
+            },
+            gameToShow:function(){
+
+            }
+        },
         methods:{
             showAth:function(){vm.$data.showAthle = true;vm.$data.showJudge = false},
             showJud:function(){vm.$data.showAthle = false;vm.$data.showJudge = true}
@@ -164,3 +190,4 @@ http://www.865171.cn/
 </script>
 </body>
 </html>
+
