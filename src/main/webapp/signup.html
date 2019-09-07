@@ -1,9 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
+<!--
+找模板就上免费模板网
+http://www.865171.cn/
+-->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Home</title>
+    <title>报名</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />；
     <link href="assiduous/style.css" rel="stylesheet" type="text/css" media="screen" />
@@ -12,6 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
 </head>
 <body>
 <div id="header-wrapper">
@@ -25,15 +29,12 @@
                 <li><a href="manage/manage.html">管理</a></li>
             </ul>
         </div>
-        <!-- end #menu -->
-
-        <!-- end #search -->
     </div>
 </div>
 <!-- end #header -->
 <!-- end #header-wrapper -->
 <div id="logo">
-    <h1><a href="http://www.865171.cn/">消息</a></h1>
+    <h1><a href="http://www.865171.cn/">报名</a></h1>
     <!-- p><em> template design by <a href="http://www.865171.cn/">www.865171.cn</a></em></p -->
 </div>
 <hr />
@@ -42,15 +43,15 @@
     <div id="page-bgtop">
         <div id="content">
             <div class="post" v-for="competition in joinAsAthle">
-                <p class ="meta">已参加</p>
+                <p class ="meta">未参加</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
                     <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
-                    <button onclick="signUp(competition)">放弃报名</button>
+                    <button v-on:click="signUp(competition)">报名参赛</button>
+                    <button v-on:click="applyJudge(competition)">申请裁判</button>
                 </div>
             </div>
-
         </div>
         <!-- end #content -->
         <div id="sidebar">
@@ -62,6 +63,7 @@
                 <li>
                     <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
                 </li>
+
 
             </ul>
         </div>
@@ -75,7 +77,7 @@
     <!-- end #footer -->
 </div>
 
-<script>
+<!-- script>
     var vm = new Vue({
         el: '#page',
         data: {
@@ -85,19 +87,16 @@
                 authority:"athlete"
             },
             messageNum:0,
-            showAthle: true,
-            showJudge: false,
             message:{
-              //接收消息
+                //接收消息
 
             },
             //pageIndex
             pageIndex:0,
             //储存得到的所有比赛项目的id
-            gameIds:{},
-            
+            gameIds:[],
             //储存要展示的比赛项目的信息
-            gameToShow:{},
+            //gemeToShow:{},
             joinAsAthle: {
                 _2019run800:{
                     date:"2019.10.30",
@@ -119,23 +118,87 @@
             }
         },
         computed:{
+            //获取所有比赛的信息
+            computeGameIds:{
+                get:function(){
+                    return this.gameIds
+                },
+                set:function(value){
+                    this.gameIds = value;
+                }
+            },
+            //获取要展示的比赛的gameId
             gameToShowById: function () {
                 var index = (vm.$data.pageIndex-1)*10;
                 index = index>-1?index:0;
-                var list = {};
-                for(var i =0;i<10;i++){
-                    list.append();
+                var list = [];
+                for(var i =0;i<10 && index+i<this.gameIds.length;i++){
+                    list[i] = this.gameIds[index+i];
                 }
+                return list;
             },
             gameToShow:function(){
-
+                //获取可报名的比赛项目
+                var games = {};
+                axios({
+                    params:{
+                        url:"/Data/game",
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                //有歧义 并非真正gameId 而是比赛在列表中的序号
+                                gameId:this.gameToShowById
+                            },
+                        }
+                    }
+                }).then(
+                   rep=>{
+                       //格式存疑
+                       return rep;
+                   },
+                    rep=>{console.log("获取可报名的项目失败")}
+                );
             }
         },
         methods:{
-
+            //报名某个比赛
+            signUp(competition){
+                axios({
+                    params: {
+                        url:"/Data/",
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                gameId:competition.gameId
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{ console.log("success")},
+                    rep=>{console.log("fail")}
+                );
+            },
+            //申请成为某个比赛的裁判
+            applyJudge(competition){
+                axios({
+                    params: {
+                        url:"/Data/judge_apply",
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                gameId:competition.gameId
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{ console.log("success")},
+                    rep=>{ console.log("fail")}
+                );
+            }
         }
     })
-</script>
+</script -->
+<script src = "./resourceJs/signUp.js"> </script>
 </body>
 </html>
 

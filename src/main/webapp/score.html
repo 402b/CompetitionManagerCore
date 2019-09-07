@@ -1,17 +1,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
+<!--
+找模板就上免费模板网
+http://www.865171.cn/
+-->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Home</title>
+    <title>Score</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />；
     <link href="assiduous/style.css" rel="stylesheet" type="text/css" media="screen" />
     <script src = "./resourceJs/home.js"> </script>
-
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
 </head>
 <body>
 <div id="header-wrapper">
@@ -25,15 +28,13 @@
                 <li><a href="manage/manage.html">管理</a></li>
             </ul>
         </div>
-        <!-- end #menu -->
 
-        <!-- end #search -->
     </div>
 </div>
 <!-- end #header -->
 <!-- end #header-wrapper -->
 <div id="logo">
-    <h1><a href="http://www.865171.cn/">消息</a></h1>
+    <h1><a href="http://www.865171.cn/">成绩</a></h1>
     <!-- p><em> template design by <a href="http://www.865171.cn/">www.865171.cn</a></em></p -->
 </div>
 <hr />
@@ -42,12 +43,12 @@
     <div id="page-bgtop">
         <div id="content">
             <div class="post" v-for="competition in joinAsAthle">
-                <p class ="meta">已参加</p>
+                <p class ="meta">已完成</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
                     <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
-                    <button onclick="signUp(competition)">放弃报名</button>
+                    <!-- button v-on:click="cancelSignUp(competition)">放弃报名</button -->
                 </div>
             </div>
 
@@ -85,19 +86,13 @@
                 authority:"athlete"
             },
             messageNum:0,
-            showAthle: true,
-            showJudge: false,
-            message:{
-              //接收消息
-
-            },
             //pageIndex
             pageIndex:0,
             //储存得到的所有比赛项目的id
-            gameIds:{},
-            
+            gameIds:[],
             //储存要展示的比赛项目的信息
             gameToShow:{},
+            token:getCookie("token"),
             joinAsAthle: {
                 _2019run800:{
                     date:"2019.10.30",
@@ -119,16 +114,73 @@
             }
         },
         computed:{
-            gameToShowById: function () {
-                var index = (vm.$data.pageIndex-1)*10;
-                index = index>-1?index:0;
-                var list = {};
-                for(var i =0;i<10;i++){
-                    list.append();
+            //获取参加的比赛的id
+            computeGameIds:{
+                get:function(){
+                    return this.gameIds
+                },
+                function(){
+                    //接口定义参数等待定
+                    axios({
+                        params:{
+                            url:"/Data/game",
+                            param: {
+                                token:getCookie("token"),
+                                Data:{
+                                    uid:userInfo.uid,
+                                    finished:true
+                                },
+                            }
+                        }
+                    }).then()
                 }
             },
-            gameToShow:function(){
+            //得到个人参加的项目的成绩
+            gameJoined:function () {
+                axios({
+                    params:{
+                        url:"/Data/",
+                        param:{
+                            token:getCookie("token"),
+                            Data:{
+                                uid:userInfo.uid,
+                                finished: true
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{console.log(rep)}
+                    ,
+                    rep=>{console.log(rep)}
+                )
+            },
+            //获取列表 包含每个比赛的gameid和用户的成绩
+            gameScoreToShow:function(){
+                var index = (vm.$data.pageIndex-1)*10;
+                index = index>-1?index:0;
+                var list = [];
+                for(var i =0;i<10 && index+i<this.gameIds.length;i++){
+                    list[i] = this.gameIds[index+i];
+                }
+                //获取比赛分数
+                axios({
+                    params:{
+                        url:"/Data/",
+                        param:{
+                            token:getCookie("token"),
+                            Data:{
+                                gameId:list
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("请求送出");
 
+                    }
+                    ,
+                    rep=>{console.log(rep)}
+                )
             }
         },
         methods:{
@@ -138,4 +190,3 @@
 </script>
 </body>
 </html>
-

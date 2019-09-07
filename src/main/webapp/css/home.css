@@ -1,0 +1,11 @@
+.competition {
+    background-color:lightgray;
+    background-repeat:no-repeat;
+    color: #0ca3d2;
+    width:500px;
+    padding:10px;
+    border:3px gray;
+    margin:0px;
+    text-align: center;
+}
+
