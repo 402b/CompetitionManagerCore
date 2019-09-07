@@ -214,11 +214,11 @@
 								<h2>{{gameName}}</h2>
 								<table border="4" class="tableX">
 									<tr>
-										<th>UID</th><th>ID</th><th>裁判员姓名</th><th>性别</th>
+										<th>ID</th><th>UID</th><th>裁判员姓名</th><th>性别</th>
 										<th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
 									</tr>
 									<tr v-for="umpire in umpire">
-										<td>{{umpire.uid}}</td><td>{{umpire.id}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
+										<td>{{umpire.id}}</td><td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
 										<td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
 									</tr>
 								</table>
