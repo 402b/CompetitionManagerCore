@@ -47,6 +47,7 @@ object JudgeInfoService : DataService<SubmitData>(
                 val arr = JsonArray()
                 for (ji in infos) {
                     val obj = JsonObject()
+                    obj.addProperty("uid",ji.uid)
                     obj.addProperty("gid", ji.gid)
                     obj.addProperty("type", ji.type.display)
                     obj.addProperty("verified", ji.verified)
@@ -62,6 +63,7 @@ object JudgeInfoService : DataService<SubmitData>(
             val ja = JsonArray()
             for (ji in judgeInfos) {
                 val obj = JsonObject()
+                obj.addProperty("uid",ji.uid)
                 obj.addProperty("gid", ji.gid)
                 obj.addProperty("type", ji.type.display)
                 obj.addProperty("verified", ji.verified)
