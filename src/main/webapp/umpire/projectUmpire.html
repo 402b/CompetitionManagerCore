@@ -39,14 +39,16 @@
     </div>
     <div class="logo">
         <img src="img/projectUmpire.png" alt="">
-    </div></br></br>
+    </div></br></br></br></br>
     <ul>
         <li><a href="#1"><i class="fa fa-home"></i> <em>Home</em></a></li>
         <li><a href="#2"><i class="fa fa-user"></i> <em>相关信息</em></a></li>
         <li><a href="#3"><i class="fa fa-pencil"></i><em>录入成绩</em></a></li>
-        <li><a href="#4"><i class="fa fa-pencil"></i> <em>任命裁判</em></a></li>
+        <div hidden><li><a href="#4"><i class="fa fa-pencil"></i> <em>任命裁判</em></a></li></div>
         <li><a href="#5"><i class="fa fa-image"></i> <em>取消裁判</em></a></li>
         <li><a href="#6"><i class="fa fa-envelope"></i> <em>审核裁判申请</em></a></li>
+        <li><a href="#7"><i class="fa fa-envelope"></i> <em>审核运动员报名</em></a></li>
+        <li><a href="#8"><i class="fa fa-envelope"></i> <em>审核成绩</em></a></li>
     </ul>
 </nav>
 
@@ -76,7 +78,7 @@
                         <p>  在本页面中，你可以进行裁判资格审核，登记成绩等操作。</p>
                         <p>  作为项目裁判，你对相应项目负有重大责任，请你恪守体育职业道德，遵守运动竞赛规则。严格执法，公正裁判，努力为运动员提供良好的竞技氛围和高效优质服务，维护公正的体育裁决信誉。为保证大会的圆满成功，作出裁判员应有的贡献！</p>
                         <div class="main-btn"><a href="#3">录入成绩</a></div></br>
-                        <div class="main-btn"><a href="#4">任命裁判</a></div></br>
+                        <!--<div class="main-btn"><a href="#4">任命裁判</a></div></br>-->
                         <div class="main-btn"><a href="#5">取消裁判</a></div></br>
                         <div class="main-btn"><a href="#6">审核裁判申请</a></div>
                     </div>
@@ -208,11 +210,11 @@
                             <h2>{{gameName}}</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>UID</th><th>ID</th><th>裁判员姓名</th><th>性别</th>
+                                    <th>ID</th><th>UID</th><th>裁判员姓名</th><th>性别</th>
                                     <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
                                 </tr>
                                 <tr v-for="umpire in umpire">
-                                    <td>{{umpire.uid}}</td><td>{{umpire.id}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
+                                    <td>{{umpire.id}}</td><td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
                                     <td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
                                 </tr>
                             </table>
@@ -256,7 +258,7 @@
                                     <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
                                 </tr>
                                 <tr v-for="umpire in umpire">
-                                    <td>{{umpire.uid}}</td><td>{{umpire.id}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
+                                    <td>{{umpire.id}}</td><td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
                                     <td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
                                 </tr>
                             </table>
@@ -264,11 +266,97 @@
                             </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
                             </br></br><button v-on:click="agree" type="submit">同意</button>----<button v-on:click="disagree" type="submit">拒绝</button>
                                     <button v-on:click="back" type="submit">返回</button>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="slide" id="7">
+        <div class="content seventh-content">
+            <div class="container-fluid">
+                <div class="col-md-6">
+                    <div id="checkPlayer">
+                        <div v-bind:hidden="show">
+                            <h2>我负责的比赛</h2>
+                            <table border="4" class="tableX">
+                                <tr>
+                                    <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>审核运动员报名</th>
+                                </tr>
+                                <tr v-for="game in game">
+                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td>
+                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">审核</button></td>
+                                </tr>
+                            </table>
+                            <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+                            </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+                        </div>
+                        <div v-bind:hidden="!show">
+                            <h2>{{gameName}}</h2>
+                            <h2>运动员报名表</h2>
+                            <table border="4" class="tableX">
+                                <tr>
+                                    <th>申请人id</th><th>UID</th><th>真实姓名</th><th>性别</th>
+                                    <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
+                                </tr>
+                                <tr v-for="player in player">
+                                    <td>{{player.id}}</td><td>{{player.uid}}</td><td>{{player.realName}}</td><td>{{player.gender}}</td>
+                                    <td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
+                                </tr>
+                            </table>
+                            <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+                            </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+                            </br></br><button v-on:click="agree" type="submit">同意</button>----<button v-on:click="disagree" type="submit">拒绝</button>
+                            <button v-on:click="back" type="submit">返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide" id="8">
+        <div class="content seventh-content">
+            <div class="container-fluid">
+            <div class="col-md-6">
+                <div id="checkScore">
+                    <div v-bind:hidden="show">
+                        <h2>我负责的比赛</h2>
+                        <table border="4" class="tableX">
+                            <tr>
+                                <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>已经录入</th><th>已经审核</th><th>审核成绩</th>
+                            </tr>
+                            <tr v-for="game in game">
+                                <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td><td>{{game.isReg}}</td><td>{{game.isCheck}}</td>
+                                <td><button type="button" v-on:click="change(game.gameName,game.gameID,game.isReg)">进行审核</button></td>
+                            </tr>
+                        </table>
+                        <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+                        </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+                    </div>
+                    <div v-bind:hidden="!show">
+                        <h2>{{gameName}}</h2>
+                        <h5>比赛成绩的单位</h5>
+                        {{scoreType}}
+                        <table border="4" class="tableX">
+                            <tr>
+                                <th>UID</th><th>运动员姓名</th><th>是否犯规</th><th>成绩</th>
+                            </tr>
+                            <tr v-for="score in score">
+                                <td>{{score.uid}}</td><td>{{score.realName}}</td>
+                                <td>{{score.foul}}</td><td>{{score.score}}</td>
+                            </tr>
+                        </table>
+                        <div class="col-md-12">
+                            <fieldset></br>
+                                <button v-on:click="back" type="submit">返回</button></br></br>
+                                <button v-on:click="agree" type="submit">审核通过</button>
+                                <button v-on:click="disagree" type="submit">不通过</button>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
 </div>
 

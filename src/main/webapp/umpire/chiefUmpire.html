@@ -74,7 +74,7 @@
 						<p>  本页面为运动会管理系统的主裁判员专属页面。</p>
 						<p>  在本页面中，你可以进行裁判资格审核，登记成绩等操作。</p>
 						<p>  作为主裁判，你担负的责任重大，请你恪守体育职业道德，遵守运动竞赛规则。严格执法，公正裁判，努力为运动员提供良好的竞技氛围和高效优质服务，维护公正的体育裁决信誉。为保证大会的圆满成功，作出裁判员应有的贡献！</p>
-						<div class="main-btn"><a href="#3">创建比赛</a></div></br>
+						<div class="main-btn"><a href="#3">登记成绩</a></div></br>
 						<div class="main-btn"><a href="#4">任命裁判</a></div></br>
 						<div class="main-btn"><a href="#5">取消裁判</a></div></br>
 				  </div>
@@ -207,11 +207,11 @@
 								<h2>{{gameName}}</h2>
 								<table border="4" class="tableX">
 									<tr>
-										<th>UID</th><th>ID</th><th>裁判员姓名</th><th>性别</th>
+										><th>ID</th><th>UID</th<th>裁判员姓名</th><th>性别</th>
 										<th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
 									</tr>
 									<tr v-for="umpire in umpire">
-										<td>{{umpire.uid}}</td><td>{{umpire.id}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
+										<td>{{umpire.id}}</td><td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
 										<td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
 									</tr>
 								</table>

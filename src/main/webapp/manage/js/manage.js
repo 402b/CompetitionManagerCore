@@ -146,7 +146,7 @@ var setUmpire = new Vue({   //任命裁判
                 alert("有空项目，请检查!");
             else if(this.type!="主裁判" && this.type!="项目裁判" && this.type!="普通裁判")
                 alert("请填写正确的裁判类型");
-            else {
+            else if (this.type != "主裁判"){
                 axios({
                     url:'/Data/setUmpire',
                     params: {
@@ -169,6 +169,33 @@ var setUmpire = new Vue({   //任命裁判
                     alert("任命失败"+rep.data.reason);
                 }
             }
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
+            else {
+                axios({
+                    url:'/Data/admin_appointMainJudge',
+                    params: {
+                        param: {
+                            Data:{
+                                uid: this.UID,
+                                appoint: true,
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("任命主裁判成功！");
+                            location.reload(true);
+                        } else{
+                            alert("任命失败"+rep.data.reason);
+                        }
+                    }
                     ,
                     rep=>{
                         alert("抱歉，网页当前不可用");
