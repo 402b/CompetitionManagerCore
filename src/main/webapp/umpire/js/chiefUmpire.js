@@ -168,7 +168,7 @@ var enterScore = new Vue({    //查看某裁判所负责的项目信息，并录
                 gameidX.push(this.gameid[i]);
             }
             axios({
-                url: '/Data/gameinfo',
+                url: '/Data/game_info',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -448,7 +448,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 gameidX.push(this.gameid[i]);
             }
             axios({
-                url: '/Data/gameinfo',
+                url: '/Data/game_info',
                 params: {
                     param: {
                         token: getCookie("token"),

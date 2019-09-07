@@ -636,7 +636,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             // this.changePage();
 
             axios({
-                url: '/Data/game_list',
+                url: '/Data/judge_info',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -648,7 +648,9 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        this.gameid = rep.data.gamelist;  //比赛id列表
+                        for (var info of rep.data.infos) {
+                            this.gameid.push(info.gid);
+                        }
                         this.recordAmount = this.gameid.length;
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
@@ -712,7 +714,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                     gameidX.push(this.gameid[i]);
                 }
                 axios({
-                    url: '/Data/gameinfo',
+                    url: '/Data/game_info',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -727,7 +729,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                             setCookie("token", rep.data.token);
                             this.game = rep.data.info;
                         } else {
-                            alert("获取赛事表失败!");
+                            alert("获取赛事id表失败!");
                         }
                     })
             }
@@ -740,7 +742,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                     useridX.push(this.users[i]);
                 }
                 axios({
-                    url: '/Data/userinfo',
+                    url: '/Data/user_info',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -766,12 +768,13 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             this.gameID = gameID;
             this.gameName = gameName;
             axios({
-                url: '/Data/umpireinfo',
+                url: '/Data/judge_verify',
                 params: {
                     param: {
                         token: getCookie("token"),
                         Data: {
-                            gameID: this.gameID,
+                            gid: this.gameID,
+                            verify: false,
                         }
                     }
                 }
@@ -779,7 +782,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 rep => {
                     if (rep.data.status == "success") {
                         setCookie("token", rep.data.token);
-                        this.users = rep.data.info;
+                        this.users = rep.data.uid;
                     } else {
                         alert("获取申请裁判的用户id列表失败!");
                     }
