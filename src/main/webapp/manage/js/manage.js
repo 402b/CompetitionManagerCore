@@ -69,9 +69,40 @@ var createGame = new Vue({  //创建比赛
         time: "",
         startDate: "",
         endDate: "",
-        number: ""
+        number: "",
+        tests3: [
+            {sortName:"123",display:"顺序"},
+            {sortName:"321",display:"倒序"},
+        ],
+        sorts: [],   //从后端接收排序方式列表
+        sortName: "",
+    },
+    created() {
+        this.start();
     },
     methods: {
+        start:function() {
+            axios({
+                url: '/Data/sort_list',
+                params: {
+                    param: {
+                        token: getCookie("token"),
+                        Data: {}
+                    }
+                }
+            }).then(
+                rep=>{
+                    if(rep.data.status == "success")
+                    {
+                        setCookie("token", rep.data.token);
+                        this.sorts = rep.data.sorts;
+                    }
+                    else
+                    {
+                        alert("获取排序方式列表失败！" + rep.data.reason)
+                    }
+                })
+        },
         check:function () {
             console.log(this.name);
             console.log(this.type);
@@ -82,6 +113,7 @@ var createGame = new Vue({  //创建比赛
             console.log(this.startDate);
             this.endDate = Date.parse(this.endDate);
             console.log(this.endDate);
+            console.log(this.sortName);
             if (this.name=="" || this.type=="" || this.time=="" || this.number=="" || this.startDate=="" || this.endDate=="")
                 alert("有空项目，请检查!");
             else if(this.type!="预赛" && this.type!="预决赛")
@@ -101,6 +133,7 @@ var createGame = new Vue({  //创建比赛
                                 number: this.number,
                                 startDate: this.startDate,
                                 endDate: this.endDate,
+                                sortName: this.sortName,
                             }
                         }
                     }

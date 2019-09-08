@@ -114,6 +114,14 @@
 									</select>
 								</fieldset>
 							</div>
+								<div class="col-md-12">
+									<fieldset>
+										<h5>排序类型...</h5>
+										<select name="type" v-model="sortName">
+											<option v-for="sort in tests3" :value=sort.sortName>---------------------{{sort.display}}---------------------</option>
+										</select>
+									</fieldset>
+								</div>
 							<div class="col-md-12">
 								<fieldset>
 									</br>
