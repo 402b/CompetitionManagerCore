@@ -50,11 +50,11 @@ applyJudge(){
 var vm = new Vue({
     el: '#page',
     data: {
-        userInfo:{
+        /*userInfo:{
             name:"smc",
             age:20,
             authority:"athlete"
-        },
+        },*/
         messageNum:0,
         message:{
             //接收消息
@@ -68,6 +68,23 @@ var vm = new Vue({
         //gameToShow
     },
     computed:{
+        userInfo:function(){
+            axios({
+                params:{
+                    url:"/Data/user_info",
+                    param:{
+                        token:getCookie("token"),
+                        Data:{
+
+                        }
+                    }
+                }
+            }).then(
+                rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                ,
+                rep=>{console.log("请求个人信息失败")}
+            )
+        },
         //获取所有可报名比赛的信息
         computeGameIds:{
             get:function(){
@@ -138,6 +155,7 @@ var vm = new Vue({
                     param: {
                         token:getCookie("token"),
                         Data:{
+                            uid:this.userInfo.uid,
                             gid:competition.gameId
                         }
                     }

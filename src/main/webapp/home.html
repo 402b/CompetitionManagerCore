@@ -41,13 +41,13 @@
 <div id="page">
     <div id="page-bgtop">
         <div id="content">
-            <div class="post" v-for="competition in joinAsAthle">
+            <div class="post" v-for="game in gameToShow">
                 <p class ="meta">已参加</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
-                    <button v-on:click="cancelSignUp(competition)">放弃报名</button>
+                    <p v-for="(value,key) in game"> {{key}}:{{value}} </p>
+                    <button v-on:click="cancelSignUp(game)">放弃报名</button>
                 </div>
             </div>
         </div>
@@ -81,38 +81,43 @@
     var vm = new Vue({
         el: '#page',
         data: {
-            userInfo:{
+            /*userInfo:{
                 name:"smc",
                 age:20,
                 authority:"athlete"
-            },
+            },*/
             messageNum:0,
             pageIndex:0,
             token:getCookie("token"),
-            joinAsAthle: {
-                _2019run800:{
-                    date:"2019.10.30",
-                    location:"运动场",
-                    time:"10:00"
-                },
-                _2019run3000:{
-                    date:"2019.11.2",
-                    location:"篮球场",
-                    time:"9:00"
-                }
-            }
+
         },
         computed:{
-            //得到个人已经报名的项目
-            gameToJoin:function () {
+            userInfo:function(){
                 axios({
                     params:{
-                        url:"/Data/",
+                        url:"/Data/user_info",
                         param:{
                             token:getCookie("token"),
                             Data:{
-                                uid:userInfo.uid,
-                                finished: false
+
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                    ,
+                    rep=>{console.log("请求个人信息失败")}
+                )
+            },
+            //得到个人已经报名的项目
+            gameToJoinId:function () {
+                axios({
+                    params:{
+                        url:"/Data/game_getJoined",
+                        param:{
+                            token:getCookie("token"),
+                            Data:{
+
                             }
                         }
                     }
@@ -121,6 +126,30 @@
                     ,
                     rep=>{console.log("网络问题请求个人参加的项目失败")}
                 )
+            },
+            //请求要展示的比赛信息
+            gameToShow:function(){
+
+
+                axios({
+                    params:{
+                        url:"/Data/game_list",
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+
+                                gids:this.gameToJoinId
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取已参加的项目信息成功");
+                        //格式存疑
+                        return rep;
+                    },
+                    rep=>{console.log("获取已参加的项目信息失败")}
+                );
             }
         },
         methods:{
@@ -128,12 +157,13 @@
             cancelSignUp(competition){
                 axios({
                     params:{
-                        url:"/Data/cancel",
+                        url:"/Data/game_join",
                         param:{
                             token:getCookie("token"),
                             Data:{
                                 uid:this.userInfo.uid,
-                                gameId:competition.gameId
+                                gid:competition.gameId,
+                                cancel:true
                             }
                         }
                     }
