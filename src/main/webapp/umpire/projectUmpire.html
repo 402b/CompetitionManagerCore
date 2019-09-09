@@ -49,6 +49,7 @@
         <li><a href="#6"><i class="fa fa-envelope"></i> <em>审核裁判申请</em></a></li>
         <li><a href="#7"><i class="fa fa-envelope"></i> <em>审核运动员报名</em></a></li>
         <li><a href="#8"><i class="fa fa-envelope"></i> <em>审核成绩</em></a></li>
+        <li><a href="#9"><i class="fa fa-envelope"></i> <em>发布成绩</em></a></li>
     </ul>
 </nav>
 
@@ -100,11 +101,11 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" id="idData1" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>已经录入</th><th>录入成绩</th>
+                                    <th>比赛名称</th><th>比赛ID</th><th>录入成绩</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td><td>{{game.isReg}}</td>
-                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID,game.isReg)">录入</button></td>
+                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
+                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">录入</button></td>
                                 </tr>
                             </table>
                             <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
@@ -112,24 +113,13 @@
                         </div>
                         <div v-bind:hidden="!show">
                             <h2>{{gameName}}</h2>
-                            <h5>请选择该比赛成绩的单位</h5>
-                            <select v-model="scoreType">
-                                <option value="秒">秒(例:12.33)</option>
-                                <option value="分秒">分秒(例:3:42.12)</option>
-                                <option value="米">米(例:12.55)</option>
-                                <option value="个">个(例:15)</option>
-                                <option value="分数">分数(例200.2)</option>
-                            </select></br></br>
+                            </br></br>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>UID</th><th>运动员姓名</th><th>是否犯规</th><th>成绩</th>
+                                    <th>UID</th><th>运动员姓名</th><th>成绩</th>
                                 </tr>
                                 <tr v-for="player in player">
                                     <td>{{player.uid}}</td><td>{{player.realName}}</td>
-                                    <td><select name="foul">
-                                        <option value = "false" selected>否</option>
-                                        <option value = "true">是</option>
-                                    </select></td>
                                     <td>
                                         <input type="text" name="score">
                                     </td>
@@ -196,10 +186,10 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>取消裁判资格</th>
+                                    <th>比赛名称</th><th>比赛ID</th>><th>取消裁判资格</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td>
+                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
                                     <td><button type="button" v-on:click="change(game.gameName,game.gameID)">取消裁判资格</button></td>
                                 </tr>
                             </table>
@@ -239,10 +229,10 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>审核裁判申请</th>
+                                    <th>比赛名称</th><th>比赛ID</th><th>审核裁判申请</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td>
+                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
                                     <td><button type="button" v-on:click="change(game.gameName,game.gameID)">审核</button></td>
                                 </tr>
                             </table>
@@ -281,10 +271,10 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>审核运动员报名</th>
+                                    <th>比赛名称</th><th>比赛ID</th><th>审核运动员报名</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td>
+                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
                                     <td><button type="button" v-on:click="change(game.gameName,game.gameID)">审核</button></td>
                                 </tr>
                             </table>
@@ -315,7 +305,7 @@
         </div>
     </div>
     <div class="slide" id="8">
-        <div class="content seventh-content">
+        <div class="content eighth-content">
             <div class="container-fluid">
             <div class="col-md-6">
                 <div id="checkScore">
@@ -323,10 +313,10 @@
                         <h2>我负责的比赛</h2>
                         <table border="4" class="tableX">
                             <tr>
-                                <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>已经录入</th><th>已经审核</th><th>审核成绩</th>
+                                <th>比赛名称</th><th>比赛ID</th><th>已经录入</th><th>已经审核</th><th>审核成绩</th>
                             </tr>
                             <tr v-for="game in game">
-                                <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td><td>{{game.isReg}}</td><td>{{game.isCheck}}</td>
+                                <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.isReg}}</td><td>{{game.isCheck}}</td>
                                 <td><button type="button" v-on:click="change(game.gameName,game.gameID,game.isReg)">进行审核</button></td>
                             </tr>
                         </table>
@@ -339,7 +329,7 @@
                         {{scoreType}}
                         <table border="4" class="tableX">
                             <tr>
-                                <th>UID</th><th>运动员姓名</th><th>是否犯规</th><th>成绩</th>
+                                <th>UID</th><th>运动员姓名</th><th>成绩</th>
                             </tr>
                             <tr v-for="score in score">
                                 <td>{{score.uid}}</td><td>{{score.realName}}</td>
@@ -358,6 +348,52 @@
             </div>
         </div>
         </div>
+    </div>
+    <div class="slide" id="9">
+        <div class="content eighth-content">
+            <div class="container-fluid">
+                <div class="col-md-6">
+                    <div id="showScore">
+                        <div v-bind:hidden="show">
+                            <h2>我负责的比赛</h2>
+                            <table border="4" class="tableX">
+                                <tr>
+                                    <th>比赛名称</th><th>比赛ID</th><th>已经录入</th><th>已经审核</th><th>已经发布</th><th>发布成绩</th>
+                                </tr>
+                                <tr v-for="game in game">
+                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.isReg}}</td><td>{{game.isCheck}}</td><td>{{game.isShow}}</td>
+                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID,game.isReg)">进行审核</button></td>
+                                </tr>
+                            </table>
+                            <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+                            </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+                        </div>
+                        <div v-bind:hidden="!show">
+                            <h2>{{gameName}}</h2>
+                            <h5>比赛成绩的单位</h5>
+                            {{scoreType}}
+                            <table border="4" class="tableX">
+                                <tr>
+                                    <th>UID</th><th>运动员姓名</th><th>是否犯规</th><th>成绩</th>
+                                </tr>
+                                <tr v-for="score in score">
+                                    <td>{{score.uid}}</td><td>{{score.realName}}</td>
+                                    <td>{{score.foul}}</td><td>{{score.score}}</td>
+                                </tr>
+                            </table>
+                            <div class="col-md-12">
+                                <fieldset></br>
+                                    <button v-on:click="back" type="submit">返回</button></br></br>
+                                    <button v-on:click="agree" type="submit">审核通过</button>
+                                    <button v-on:click="disagree" type="submit">不通过</button>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="footer">
