@@ -42,14 +42,14 @@ http://www.865171.cn/
 <div id="page">
     <div id="page-bgtop">
         <div id="content">
-            <div class="post" v-for="competition in joinAsAthle">
+            <div class="post" v-for="game in gameToShow">
                 <p class ="meta">未参加</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
-                    <button v-on:click="signUp(competition)">报名参赛</button>
-                    <button v-on:click="applyJudge(competition)">申请裁判</button>
+                    <p v-for="(value,key) in game"> {{key}}:{{value}} </p>
+                    <button v-on:click="signUp(game)">报名参赛</button>
+                    <button v-on:click="applyJudge(game)">申请裁判</button>
                 </div>
             </div>
         </div>

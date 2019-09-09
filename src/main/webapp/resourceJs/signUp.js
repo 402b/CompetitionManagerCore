@@ -65,33 +65,39 @@ var vm = new Vue({
         //储存得到的所有比赛项目的id
         gameIds:[],
         //储存要展示的比赛项目的信息
-        //gemeToShow:{},
-        joinAsAthle: {
-            _2019run800:{
-                date:"2019.10.30",
-                location:"运动场",
-                time:"10:00"
-            },
-            _2019run3000:{
-                date:"2019.11.2",
-                location:"篮球场",
-                time:"9:00"
-            }
-        },
+        //gameToShow
     },
     computed:{
-        //获取所有比赛的信息
+        //获取所有可报名比赛的信息
         computeGameIds:{
             get:function(){
                 return this.gameIds
             },
-            set:function(value){
-                this.gameIds = value;
+            set:function(){
+                axios({
+                    params:{
+                        url:"/Data/game_info",
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                //有歧义 并非真正gameId 而是比赛在列表中的序号
+                                gameId:this.gameToShowById
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取可报名的项目成功");
+                        //格式存疑
+                        return rep;
+                    },
+                    rep=>{console.log("获取可报名的项目失败")}
+                );
             }
         },
         //获取要展示的比赛的gameId
         gameToShowById: function () {
-            var index = (vm.$data.pageIndex-1)*10;
+            var index = (this.pageIndex-1)*10;
             index = index>-1?index:0;
             var list = [];
             for(var i =0;i<10 && index+i<this.gameIds.length;i++){
@@ -104,7 +110,7 @@ var vm = new Vue({
             var games = {};
             axios({
                 params:{
-                    url:"/Data/game",
+                    url:"/Data/game_list",
                     param: {
                         token:getCookie("token"),
                         Data:{
@@ -128,11 +134,11 @@ var vm = new Vue({
         signUp(competition){
             axios({
                 params: {
-                    url:"/Data/",
+                    url:"/Data/game_join",
                     param: {
                         token:getCookie("token"),
                         Data:{
-                            gameId:competition.gameId
+                            gid:competition.gameId
                         }
                     }
                 }
