@@ -65,7 +65,6 @@ var createGame = new Vue({  //创建比赛
     el: "#createGame",
     data: {
         name: "",
-        type: "",
         time: "",
         startDate: "",
         endDate: "",
@@ -105,7 +104,6 @@ var createGame = new Vue({  //创建比赛
         },
         check:function () {
             console.log(this.name);
-            console.log(this.type);
             this.time = Date.parse(this.time);
             console.log(this.time);
             console.log(this.number);
@@ -114,10 +112,8 @@ var createGame = new Vue({  //创建比赛
             this.endDate = Date.parse(this.endDate);
             console.log(this.endDate);
             console.log(this.sortName);
-            if (this.name=="" || this.type=="" || this.time=="" || this.number=="" || this.startDate=="" || this.endDate=="")
+            if (this.name=="" || this.time=="" || this.number=="" || this.startDate=="" || this.endDate=="")
                 alert("有空项目，请检查!");
-            else if(this.type!="预赛" && this.type!="预决赛")
-                alert("请填写正确的比赛类型");
             else if(this.startDate > this.endDate || this.time < this.endDate)
                 alert("请填写正确的报名时间");
             else {
@@ -128,7 +124,6 @@ var createGame = new Vue({  //创建比赛
                             tooken: getCookie("token"),
                             Data:{
                                 name: this.name,
-                                type: this.type,
                                 time: this.time,
                                 number: this.number,
                                 startDate: this.startDate,
