@@ -41,13 +41,13 @@
 <div id="page">
     <div id="page-bgtop">
         <div id="content">
-            <div class="post" v-for="competition in joinAsAthle">
-                <p class ="meta">已参加</p>
+            <div class="post" v-for="message in messages">
+                <!-- p class ="meta">已参加</p -->
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
-                    <button onclick="signUp(competition)">放弃报名</button>
+                    <p v-for="(value,key) in message"> {{key}}:{{value}} </p>
+                    <!-- button onclick="signUp(competition)">放弃报名</button -->
                 </div>
             </div>
 
@@ -85,12 +85,28 @@
                 authority:"athlete"
             },
             messageNum:0,
-            showAthle: true,
-            showJudge: false,
-            message:{
-              //接收消息
-
+            //接收消息
+            messages: {
+                //形式1
+                applyJudge_run20191000_Success: {
+                    content:"您对 在2019年10月20日第二运动场进行的男子1000米比赛 的 报名成功",
+                    messageTimestamp:"20191.10.05"
+                },
+                //形式2
+                applyJudge_run20193000_Success:{
+                    content:"报名成功",
+                    gameInfo:{
+                        sport:"男子3000米跑",
+                        date:"2019.10.30",
+                        location:"运动场",
+                        time:"10:00"
+                    },
+                    messageTimestamp:"20191.10.05"
+                }
             },
+
+
+
             //pageIndex
             pageIndex:0,
             //储存得到的所有比赛项目的id
@@ -98,25 +114,7 @@
             
             //储存要展示的比赛项目的信息
             gameToShow:{},
-            joinAsAthle: {
-                _2019run800:{
-                    date:"2019.10.30",
-                    location:"运动场",
-                    time:"10:00"
-                },
-                _2019run3000:{
-                    date:"2019.11.2",
-                    location:"篮球场",
-                    time:"9:00"
-                }
-            },
-            joinAsJudge: {
-                _2019run1000:{
-                    date:"2019.10.28",
-                    location:"运动场",
-                    time:"8:30"
-                }
-            }
+
         },
         computed:{
             gameToShowById: function () {

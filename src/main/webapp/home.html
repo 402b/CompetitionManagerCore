@@ -50,7 +50,6 @@
                     <button v-on:click="cancelSignUp(competition)">放弃报名</button>
                 </div>
             </div>
-
         </div>
         <!-- end #content -->
         <div id="sidebar">
@@ -69,8 +68,11 @@
         <div style="clear: both;">&nbsp;</div>
     </div>
     <!-- end #page -->
+    <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第{{pageIndex}}页</p>
     <div id="footer">
-        <p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p>
+        <button onclick="vm.pageIndex++;"> 上一页</button>
+        <button onclick="vm.pageIndex++;"> 下一页</button>
+        <!--p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p -->
     </div>
     <!-- end #footer -->
 </div>
@@ -115,7 +117,7 @@
                         }
                     }
                 }).then(
-                    rep=>{console.log(rep);return rep}
+                    rep=>{console.log("请求个人参加的项目成功");console.log(rep);return rep}
                     ,
                     rep=>{console.log("网络问题请求个人参加的项目失败")}
                 )
@@ -130,7 +132,7 @@
                         param:{
                             token:getCookie("token"),
                             Data:{
-                                uid:userInfo.uid,
+                                uid:this.userInfo.uid,
                                 gameId:competition.gameId
                             }
                         }

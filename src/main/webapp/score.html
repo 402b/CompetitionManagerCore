@@ -42,12 +42,13 @@ http://www.865171.cn/
 <div id="page">
     <div id="page-bgtop">
         <div id="content">
-            <div class="post" v-for="competition in joinAsAthle">
+            <div class="post" v-for="(game,index) in gameToShowInfo">
                 <p class ="meta">已完成</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <p v-for="(value,key) in competition"> {{key}}:{{value}} </p>
+                    <p v-for="(value,key) in game"> {{key}}:{{value}} </p>
+                    <p>成绩：{{gameScoreToShow[index]}}</p>
                     <!-- button v-on:click="cancelSignUp(competition)">放弃报名</button -->
                 </div>
             </div>
@@ -93,50 +94,39 @@ http://www.865171.cn/
             //储存要展示的比赛项目的信息
             gameToShow:{},
             token:getCookie("token"),
-            joinAsAthle: {
-                _2019run800:{
-                    date:"2019.10.30",
-                    location:"运动场",
-                    time:"10:00"
-                },
-                _2019run3000:{
-                    date:"2019.11.2",
-                    location:"篮球场",
-                    time:"9:00"
-                }
-            },
-            joinAsJudge: {
-                _2019run1000:{
-                    date:"2019.10.28",
-                    location:"运动场",
-                    time:"8:30"
-                }
-            }
+            //gameToShowId:[],
         },
         computed:{
-            //获取参加过的所有比赛的id
-            /*computeGameIds:{
-                get:function(){
-                    return this.gameIds
-                },
-                function(){
-                    //接口定义参数等待定
-                    axios({
-                        params:{
-                            url:"/Data/game",
-                            param: {
-                                token:getCookie("token"),
-                                Data:{
-                                    uid:userInfo.uid,
-                                    finished:true
-                                },
-                            }
-                        }
-                    }).then()
-                }
+            //要展示的比赛的id
+            gameToShowId: function(){
+                var index = (this.pageIndex-1)*10;
+                index = index>-1?index:0;
+                var list = [];
+                for(var i =0;i<10 && index+i<this.gameJoinedId.length;i++)
+                    list[i] = this.gameJoinedId[index+i];
+                return list;
             },
-             */
-
+            //要展示的比赛的信息
+            gameToShowInfo: function(){
+                axios({
+                    params:{
+                        url:"/Data/game",
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                gameId:this.gameToShowId
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取已完项目信息成功");
+                        //格式存疑
+                        return rep;
+                    },
+                    rep=>{console.log("获取已完成项目信息失败")}
+                );
+            },
             //得到个人参加的项目的列表
             computeGameJoinedId:{
                 get:function () {
@@ -155,20 +145,15 @@ http://www.865171.cn/
                         }
                     }
                 }).then(
-                    rep=>{console.log(rep); this.gameJoinedId = rep;}
+                    rep=>{console.log("获取个人已完成的项目列表成功"); this.gameJoinedId = rep;}
                     ,
-                    rep=>{console.log(rep)}
+                    rep=>{console.log("获取个人已完成的项目列表失败")}
                 )
                 }
             },
             //获取列表 包含每个比赛的gameid和用户的成绩
             gameScoreToShow:function(){
-                var index = (vm.$data.pageIndex-1)*10;
-                index = index>-1?index:0;
-                var list = [];
-                for(var i =0;i<10 && index+i<this.gameJoinedId.length;i++){
-                    list[i] = this.gameJoinedId[index+i];
-                }
+
                 //获取比赛分数
                 axios({
                     params:{
@@ -177,16 +162,16 @@ http://www.865171.cn/
                             token:getCookie("token"),
                             Data:{
                                 uid:userInfo.uid,
-                                gameId:list
+                                gameId:this.gameToShowId()
                             }
                         }
                     }
                 }).then(
                     rep=>{
-                        console.log("请求送出");
+                        console.log("获取已完成项目分数成功");
                     }
                     ,
-                    rep=>{console.log("请求送出未成功")}
+                    rep=>{console.log("获取已完成项目分数失败")}
                 )
             }
         },

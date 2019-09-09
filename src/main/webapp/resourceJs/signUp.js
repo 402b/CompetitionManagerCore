@@ -78,13 +78,6 @@ var vm = new Vue({
                 time:"9:00"
             }
         },
-        joinAsJudge: {
-            _2019run1000:{
-                date:"2019.10.28",
-                location:"运动场",
-                time:"8:30"
-            }
-        }
     },
     computed:{
         //获取所有比赛的信息
@@ -122,6 +115,7 @@ var vm = new Vue({
                 }
             }).then(
                 rep=>{
+                    console.log("获取可报名的项目成功");
                     //格式存疑
                     return rep;
                 },
@@ -160,8 +154,8 @@ var vm = new Vue({
                     }
                 }
             }).then(
-                rep=>{ console.log("申请请求发送成功")},
-                rep=>{ console.log("申请请求发送失败")}
+                rep=>{ console.log("申请裁判请求发送成功")},
+                rep=>{ console.log("申请裁判请求发送失败")}
             );
         }
     }
