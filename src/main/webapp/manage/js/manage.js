@@ -74,7 +74,7 @@ var createGame = new Vue({  //创建比赛
             {sortName:"321",display:"倒序"},
         ],
         sorts: [],   //从后端接收排序方式列表
-        sortName: "",
+        sortName: ""
     },
     created() {
         this.start();
@@ -121,7 +121,7 @@ var createGame = new Vue({  //创建比赛
                     url:'/Data/game_create',
                     params: {
                         param: {
-                            tooken: getCookie("token"),
+                            token: getCookie("token"),
                             Data:{
                                 name: this.name,
                                 time: this.time,

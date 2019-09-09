@@ -127,7 +127,7 @@ var register = new Vue({
                         if(rep.data.status=="success"){
                             setCookie("token",rep.data.token);
                             alert("注册成功！");
-                            window.location.href="loginX.html";
+                            window.location.href="home.html";
                         } else{
                             alert("注册失败"+rep.data.reason)
                         }

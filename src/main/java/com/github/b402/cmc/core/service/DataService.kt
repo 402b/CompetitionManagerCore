@@ -33,7 +33,7 @@ abstract class DataService<in S : SubmitData>(
                     ?: return returnData(ERROR_TOKEN, "token校验失败")
             if (this.permission != Permission.USER) {
                 val per = token.getUser().permission
-                if (per.contains(this.permission)) {
+                if (!per.contains(this.permission)) {
                     return returnData(ILLEGAL_PERMISSION, "权限不足")
                 }
             }

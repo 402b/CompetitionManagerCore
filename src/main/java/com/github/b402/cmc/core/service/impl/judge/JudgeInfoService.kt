@@ -57,6 +57,9 @@ object JudgeInfoService : DataService<SubmitData>(
             }
         }
         val uid = data.token!!.uid
+        if(data.getUser()!!.permission.contains(Permission.MAIN_JUDGE)){
+
+        }
         val judgeInfos = JudgeInfo.getJudgeInfo(uid).await() ?: return returnData(ERROR, "数据库异常")
 
         return returnData(SUCCESS) {
