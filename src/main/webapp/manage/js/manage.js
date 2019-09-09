@@ -35,7 +35,7 @@ var userInfo = new Vue({    //获取用户信息
         },
         refresh: function () {
             axios({
-                url: '/Data/userinfo',
+                url: '/Data/user_info',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -122,7 +122,7 @@ var createGame = new Vue({  //创建比赛
                 alert("请填写正确的报名时间");
             else {
                 axios({
-                    url:'/Data/createGame',
+                    url:'/Data/game_create',
                     params: {
                         param: {
                             tooken: getCookie("token"),
@@ -181,7 +181,7 @@ var setUmpire = new Vue({   //任命裁判
                 alert("请填写正确的裁判类型");
             else if (this.type != "主裁判"){
                 axios({
-                    url:'/Data/setUmpire',
+                    url:'/Data/admin_appointMainJudge',
                     params: {
                         param: {
                             Data:{
@@ -530,7 +530,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             else {
                 isAgree = false;
                 axios({
-                    url: '/Data/verifyumpire',
+                    url: '/Data/judge_verify',
                     params: {
                         param: {
                             token: getCookie("token"),

@@ -119,6 +119,15 @@ object SQLManager {
                     FOREIGN KEY (GID) REFERENCES Game(ID)
                 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
+            stn.execute("""
+                CREATE TABLE IF NOT EXISTS GameResult(
+                    GID INT NOT NULL PRIMARY KEY,
+                    Result JSON NOT NULL,
+                    Time LONG NOT NULL,
+                    FOREIGN KEY (GID) REFERENCES Game(ID)
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+            """.trimIndent())
+            stn.close()
         }
     }
 

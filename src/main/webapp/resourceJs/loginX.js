@@ -47,7 +47,7 @@ var login = new Vue({
         check:function () {
             console.log(this.userName+this.password);
             axios({
-                url:'/Data/login',
+                url:'/Data/user_login',
                 params: {
                     param: {
                         Data:{
@@ -108,7 +108,7 @@ var register = new Vue({
                 alert("两次输入的密码不一致！")
             else {
                 axios({
-                    url:'/Data/register',
+                    url:'/Data/user_register',
                     params: {
                         param: {
                             Data:{

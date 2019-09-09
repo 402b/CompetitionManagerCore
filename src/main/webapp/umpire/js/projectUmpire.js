@@ -35,7 +35,7 @@ var userInfo = new Vue({    //获取用户信息
         },
         refresh: function () {
             axios({
-                url: '/Data/userinfo',
+                url: '/Data/user_info',
                 params: {
                     param: {
                         token: getCookie("token"),

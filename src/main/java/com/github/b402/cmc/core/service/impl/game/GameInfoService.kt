@@ -33,7 +33,6 @@ object GameInfoService : DataService<SubmitData>(
                 } else {
                     jo.addProperty("status", SUCCESS)
                     jo.addProperty("gameName", game.name)
-                    jo.addProperty("gameType", game.type.key)
                     jo.addProperty("time", game.time)
                     jo.addProperty("startTime", game.startTime)
                     jo.addProperty("endTime", game.endTime)
