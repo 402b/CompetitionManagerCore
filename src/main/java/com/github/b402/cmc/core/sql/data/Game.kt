@@ -8,28 +8,10 @@ import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.util.Data
 import java.util.concurrent.ConcurrentHashMap
 
-enum class GameType(val key: String) {
-    PREGAME("预赛"),
-    PREFINAL("预决赛"),
-    FINAL("决赛"),
-    SEMIFINAL("半决赛");
-
-    companion object {
-        fun getGameType(key: String): GameType {
-            for (ug in GameType.values()) {
-                if (key == ug.key || key == ug.name) {
-                    return ug
-                }
-            }
-            throw IllegalArgumentException("错误的比赛类型")
-        }
-    }
-}
 
 class Game(
         val id: Int,
         val name: String,
-        val type: GameType,
         val archive: Boolean,
         data: String
 ) {
@@ -59,7 +41,7 @@ class Game(
     }
 
     override fun toString(): String {
-        return "Game(id=$id, name='$name', type=$type, data=${data.toJson()})"
+        return "Game(id=$id, name='$name', data=${data.toJson()})"
     }
 
     companion object GameManager {
@@ -88,10 +70,9 @@ class Game(
                 ms["startTime"] = data.startTime
                 ms["endTime"] = data.endTime
                 ms["sortType"] = data.sortType
-                val ps = this.prepareStatement("INSERT INTO Game (Name,Type,Data) VALUES (?,?,?)")
+                val ps = this.prepareStatement("INSERT INTO Game (Name,Data) VALUES (?,?)")
                 ps.setString(1, data.name)
-                ps.setString(2, data.type.name)
-                ps.setString(3, ms.toJson())
+                ps.setString(2, ms.toJson())
                 ps.executeUpdate()
             }
             val game = getGameByName(data.name).await() ?: return Data(null, "数据库异常")
@@ -104,10 +85,9 @@ class Game(
             val rs = ps.executeQuery()
             if (rs.next()) {
                 val id = rs.getInt("ID")
-                val type = GameType.valueOf(rs.getString("Type"))
                 val data = rs.getString("Data")
                 val archive = rs.getBoolean("Archive")
-                Game(id, name, type, archive, data)
+                Game(id, name, archive, data)
             } else {
                 null
             }
@@ -119,10 +99,9 @@ class Game(
             val rs = ps.executeQuery()
             if (rs.next()) {
                 val name = rs.getString("Name")
-                val type = GameType.valueOf(rs.getString("Type"))
                 val data = rs.getString("Data")
                 val archive = rs.getBoolean("Archive")
-                Game(id, name, type, archive, data)
+                Game(id, name, archive, data)
             } else {
                 null
             }

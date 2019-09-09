@@ -25,7 +25,6 @@ class GameTest {
         val json = """
             {
                 "name": "测试",
-                "type": "预决赛",
                 "time" : ${1567499043847},
                 "number": 6,
                 "startDate": ${1567499043847 + 100000},
@@ -34,7 +33,7 @@ class GameTest {
         """.trimIndent()
         val j = JsonParser().parse(json)
         val game = Game.createGame(CreateGameData(j.asJsonObject))
-        Assert.assertEquals("Data(data1=Game(id=1, name='测试', type=PREFINAL, data={\"amount\":6,\"startTime\":1567499143847,\"time\":1567499043847,\"endTime\":1567509043847}), data2=null)",game.toString())
+        Assert.assertEquals("Data(data1=Game(id=1, name='测试', data={\"amount\":6,\"startTime\":1567499143847,\"time\":1567499043847,\"endTime\":1567509043847}), data2=null)",game.toString())
         Unit
     }
 

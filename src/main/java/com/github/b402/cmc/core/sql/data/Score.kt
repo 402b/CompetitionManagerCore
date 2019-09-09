@@ -42,6 +42,13 @@ data class Score(
         ps.executeUpdate()
     }
 
+    suspend fun remove() = SQLManager.async{
+        val ps = this.prepareStatement("DELETE FROM Score WHERE UID = ? AND GID = ? LIMIT 1")
+        ps.setInt(1,uid)
+        ps.setInt(2,gid)
+        ps.executeUpdate()
+    }
+
     companion object {
         suspend fun getScore(uid: Int, gid: Int) = SQLManager.asyncDeferred {
             val ps = this.prepareStatement("SELECT * FROM Score WHERE UID = ? AND GID = ? LIMIT 1")

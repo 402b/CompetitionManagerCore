@@ -8,7 +8,6 @@ import com.github.b402.cmc.core.service.data.SubmitData
 import com.github.b402.cmc.core.service.data.returnData
 import com.github.b402.cmc.core.sort.Sort
 import com.github.b402.cmc.core.sql.data.Game
-import com.github.b402.cmc.core.sql.data.GameType
 import com.google.gson.JsonObject
 
 object CreateGameService : DataService<CreateGameData>(
@@ -34,7 +33,6 @@ object CreateGameService : DataService<CreateGameData>(
 class CreateGameData(json: JsonObject) : SubmitData(json) {
     val name = json.get("name").asString
     val sortType = json.get("sortType").asString
-    val type = GameType.getGameType(json.get("type").asString)
     val time = json.get("time").asLong
     val amount = json.get("number").asInt
     val startTime = json.get("startDate").asLong

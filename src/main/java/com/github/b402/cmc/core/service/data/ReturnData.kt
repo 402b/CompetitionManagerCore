@@ -12,6 +12,7 @@ const val ERROR = "error"
 const val ERROR_TOKEN = "error_token"
 const val ERROR_TIMEOUT = "error_timeout"
 const val ILLEGAL_INPUT = "illegal_input"
+const val ILLEGAL_STATE = "illegal_state"
 const val INVALID_USER_OR_PASSWORD = "invalid_user_or_password"
 const val ILLEGAL_PERMISSION = "illegal_permission"
 

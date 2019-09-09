@@ -78,7 +78,6 @@ object SQLManager {
                 CREATE TABLE IF NOT EXISTS Game(
                     ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                     Name VARCHAR(80) NOT NULL,
-                    Type VARCHAR(16) NOT NULL,
                     Data Json NOT NULL,
                     Archive  BOOLEAN NOT NULL DEFAULT FALSE
                 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4

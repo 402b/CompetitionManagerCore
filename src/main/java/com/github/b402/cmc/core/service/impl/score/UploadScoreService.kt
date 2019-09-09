@@ -19,6 +19,7 @@ object UploadScoreService : DataService<SubmitData>(
         if (!permission.contains(Permission.JUDGE)) {
             return returnData(ILLEGAL_PERMISSION, "权限不足")
         }
+        val dgame = Game.getGame(gid)
         var update = data.json.getBoolean("update", false)
         val uid = data.json.getInt("uid")
         val scoreStr = data.json.getString("score") ?: return returnData(ERROR, "参数不足")
@@ -29,6 +30,10 @@ object UploadScoreService : DataService<SubmitData>(
         }
         if (djoined.await() != true) {
             return returnData(ERROR, "此用户未参加过该比赛")
+        }
+        val game = dgame.await() ?: return returnData(ERROR, "找不到比赛")
+        if (game.closeUpload) {
+            return returnData(ILLEGAL_STATE, "该比赛已停止成绩上传")
         }
         val score: Score// = Score(uid,gid,scoreStr,data.token!!.uid)
         if (update) {
@@ -49,7 +54,7 @@ object UploadScoreService : DataService<SubmitData>(
                 return returnData(SUCCESS)
             }
         } else {
-            if(score.create().await()){
+            if (score.create().await()) {
                 return returnData(SUCCESS)
             }
         }
