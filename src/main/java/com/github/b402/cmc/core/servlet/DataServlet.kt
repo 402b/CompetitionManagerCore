@@ -5,6 +5,7 @@ import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.service.impl.game.*
 import com.github.b402.cmc.core.service.impl.user.*
 import com.github.b402.cmc.core.service.impl.judge.*
+import com.github.b402.cmc.core.service.impl.score.*
 import kotlinx.coroutines.*
 import org.apache.log4j.Logger
 import javax.servlet.annotation.WebServlet
@@ -91,6 +92,11 @@ class DataServlet : HttpServlet() {
             register(JudgeInfoService)
             register(UnverifiedJudgeService)
             register(VerifyJudgeService)
+            register(AppointMainJudgeService)
+            register(UploadScoreService)
+            register(ScoreDataService)
+            register(GameJoinInfoService)
+            register(SortListService)
         }
     }
 }

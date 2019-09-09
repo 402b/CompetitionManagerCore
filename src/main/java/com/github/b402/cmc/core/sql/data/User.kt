@@ -48,7 +48,14 @@ class User(
         get() = data.getString("id")!!
 
     var permission: Permission
-        get() = Permission.valueOf(data.getString("permission", "User")!!)
+        get() {
+            val p = Permission.valueOf(data.getString("permission", "User")!!)
+            if (!p.contains(Permission.VERIFIED) && this.verified) {
+                data["permission"] = Permission.VERIFIED.name
+                return Permission.VERIFIED
+            }
+            return p
+        }
         set(value) {
             data["permission"] = value.name
         }

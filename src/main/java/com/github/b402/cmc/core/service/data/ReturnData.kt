@@ -7,6 +7,7 @@ import com.google.gson.JsonObject
 
 const val SUCCESS = "success"
 const val NO_TOKEN = "no_token"
+const val NO_DATA = "no_data"
 const val ERROR = "error"
 const val ERROR_TOKEN = "error_token"
 const val ERROR_TIMEOUT = "error_timeout"

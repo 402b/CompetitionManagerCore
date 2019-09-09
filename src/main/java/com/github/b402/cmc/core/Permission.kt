@@ -8,7 +8,8 @@ enum class Permission(
     VERIFIED("USER"),
     JUDGE("VERIFIED"),
     PROJECT_JUDGE("JUDGE"),
-    ADMIN("PROJECT_JUDGE");
+    MAIN_JUDGE("PROJECT_JUDGE"),
+    ADMIN("MAIN_JUDGE");
     val extend = mutableListOf<Permission>()
     fun init() {
         for(t in ext){
@@ -29,7 +30,6 @@ enum class Permission(
 
     }
     operator fun contains(pre: Permission):Boolean{
-//        checkInit()
         if(this == pre){
             return true
         }
@@ -48,14 +48,5 @@ enum class Permission(
                 t.init()
             }
         }
-//        var init = false
-//        fun checkInit(){
-//            if(!init){
-//                for(t in Permission.values()){
-//                    t.init()
-//                }
-//                init = true
-//            }
-//        }
     }
 }

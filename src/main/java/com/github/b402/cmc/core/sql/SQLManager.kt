@@ -105,6 +105,21 @@ object SQLManager {
                     FOREIGN KEY (GID) REFERENCES Game(ID)
                 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
             """.trimIndent())
+            stn.execute("""
+                CREATE TABLE IF NOT EXISTS Score(
+                    UID INT NOT NULL,
+                    GID INT NOT NULL,
+                    Score VARCHAR(255) NOT NULL,
+                    SubmitJudge INT NOT NULL,
+                    Verified BOOLEAN NOT NULL DEFAULT FALSE,
+                    VerifiedJudge INT DEFAULT NULL,
+                    PRIMARY KEY (UID,GID),
+                    FOREIGN KEY (UID) REFERENCES User(UID),
+                    FOREIGN KEY (SubmitJudge) REFERENCES User(UID),
+                    FOREIGN KEY (VerifiedJudge) REFERENCES User(UID),
+                    FOREIGN KEY (GID) REFERENCES Game(ID)
+                ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4
+            """.trimIndent())
         }
     }
 

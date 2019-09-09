@@ -33,7 +33,7 @@ object JudgeInfoService : DataService<SubmitData>(
                             ?: return returnData(ERROR, "数据库异常")
                 }
                 "user" -> {
-                    if(!user.permission.contains(Permission.ADMIN)){
+                    if(!user.permission.contains(Permission.MAIN_JUDGE)){
                         return returnData(ERROR, "权限不足")
                     }
                     infos = JudgeInfo.getJudgeInfo(id, verified).await()

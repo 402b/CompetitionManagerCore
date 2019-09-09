@@ -6,6 +6,7 @@ import com.github.b402.cmc.core.service.data.ReturnData
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.service.data.SubmitData
 import com.github.b402.cmc.core.service.data.returnData
+import com.github.b402.cmc.core.sort.Sort
 import com.github.b402.cmc.core.sql.data.Game
 import com.github.b402.cmc.core.sql.data.GameType
 import com.google.gson.JsonObject
@@ -16,6 +17,9 @@ object CreateGameService : DataService<CreateGameData>(
         CreateGameData::class.java
 ) {
     override suspend fun onRequest(data: CreateGameData): ReturnData {
+        if (data.sortType !in Sort.getAllSortName()) {
+            return returnData(ILLEGAL_INPUT, "找不到排序方式")
+        }
         val (g, e) = Game.createGame(data)
         if (g != null) {
             return returnData(SUCCESS) {
@@ -29,6 +33,7 @@ object CreateGameService : DataService<CreateGameData>(
 
 class CreateGameData(json: JsonObject) : SubmitData(json) {
     val name = json.get("name").asString
+    val sortType = json.get("sortType").asString
     val type = GameType.getGameType(json.get("type").asString)
     val time = json.get("time").asLong
     val amount = json.get("number").asInt

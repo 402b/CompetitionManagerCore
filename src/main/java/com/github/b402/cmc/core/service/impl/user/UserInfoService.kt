@@ -45,6 +45,7 @@ object UserInfoService : DataService<SubmitData>(
                         json.addProperty("gender", user.gender.key)
                         json.addProperty("uid", user.uid)
                         json.addProperty("id", user.id)
+                        json.addProperty("permission", user.permission.name)
                     }
                     array.add(json)
                 }
@@ -61,6 +62,7 @@ object UserInfoService : DataService<SubmitData>(
             json.addProperty("gender", user.gender.key)
             json.addProperty("uid", user.uid)
             json.addProperty("id", user.id)
+            json.addProperty("permission", user.permission.name)
         }
     }
 }

@@ -3,6 +3,7 @@ package com.github.b402.cmc.core;
 import com.github.b402.cmc.core.module.Module;
 import com.github.b402.cmc.core.module.ModuleClassLoader;
 import com.github.b402.cmc.core.servlet.DataServlet;
+import com.github.b402.cmc.core.sort.Sort;
 import com.github.b402.cmc.core.sql.SQLManager;
 import com.github.b402.cmc.core.token.TokenManager;
 
@@ -26,6 +27,7 @@ public class ContextManager implements ServletContextListener {
         SQLManager.init();
         DataServlet.initDataService();
         TokenManager.init();
+        Sort.init();
     }
 
     @Override

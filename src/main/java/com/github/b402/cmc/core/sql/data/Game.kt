@@ -3,6 +3,7 @@ package com.github.b402.cmc.core.sql.data
 import com.github.b402.cmc.core.configuration.ConfigurationSection
 import com.github.b402.cmc.core.configuration.MemorySection
 import com.github.b402.cmc.core.service.impl.game.CreateGameData
+import com.github.b402.cmc.core.sort.Sort
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.util.Data
 import java.util.concurrent.ConcurrentHashMap
@@ -29,7 +30,7 @@ class Game(
         val id: Int,
         val name: String,
         val type: GameType,
-        val archive:Boolean,
+        val archive: Boolean,
         data: String
 ) {
     val data: ConfigurationSection = MemorySection.readFromJson(data)
@@ -37,10 +38,18 @@ class Game(
         get() = data.getInt("amount")
     val time: Long
         get() = data.getLong("time")
-    val startTime:Long
+    val startTime: Long
         get() = data.getLong("startTime")
-    val endTime:Long
+    val endTime: Long
         get() = data.getLong("endTime")
+    var closeUpload: Boolean
+        get() = data.getBoolean("closeUpload", false)
+        set(value) = data.set("closeUpload", value)
+
+    val sortType:String
+        get() = data.getString("sortType")!!
+
+
 
     suspend fun sync() = SQLManager.async {
         val ps = this.prepareStatement("UPDATE Game SET Data = ? WHERE ID = ? LIMIT 1")
@@ -56,12 +65,12 @@ class Game(
     companion object GameManager {
         val cacheGame: MutableMap<Int, Game> = ConcurrentHashMap()
 
-        suspend fun getAllGames(archive:Boolean) = SQLManager.asyncDeferred {
+        suspend fun getAllGames(archive: Boolean) = SQLManager.asyncDeferred {
             val games = mutableListOf<Int>()
             val ps = this.prepareStatement("SELECT ID FROM Game WHERE Archive = ?")
-            ps.setBoolean(1,archive)
+            ps.setBoolean(1, archive)
             val rs = ps.executeQuery()
-            while(rs.next()){
+            while (rs.next()) {
                 games += rs.getInt("ID")
             }
             games
@@ -78,6 +87,7 @@ class Game(
                 ms["time"] = data.time
                 ms["startTime"] = data.startTime
                 ms["endTime"] = data.endTime
+                ms["sortType"] = data.sortType
                 val ps = this.prepareStatement("INSERT INTO Game (Name,Type,Data) VALUES (?,?,?)")
                 ps.setString(1, data.name)
                 ps.setString(2, data.type.name)
@@ -97,7 +107,7 @@ class Game(
                 val type = GameType.valueOf(rs.getString("Type"))
                 val data = rs.getString("Data")
                 val archive = rs.getBoolean("Archive")
-                Game(id, name, type,archive, data)
+                Game(id, name, type, archive, data)
             } else {
                 null
             }
@@ -112,7 +122,7 @@ class Game(
                 val type = GameType.valueOf(rs.getString("Type"))
                 val data = rs.getString("Data")
                 val archive = rs.getBoolean("Archive")
-                Game(id, name, type,archive, data)
+                Game(id, name, type, archive, data)
             } else {
                 null
             }

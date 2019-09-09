@@ -21,7 +21,7 @@ object JoinedGameService :DataService<SubmitData>(
     override suspend fun onRequest(data: SubmitData): ReturnData {
         if(data.json.contains("ids")){
             val user = data.token?.getUser() ?: return returnData(ILLEGAL_PERMISSION, "权限不足")
-            if(!user.permission.contains(Permission.ADMIN)){
+            if(!user.permission.contains(Permission.MAIN_JUDGE)){
                 return returnData(ILLEGAL_PERMISSION, "权限不足")
             }
             val ids = data.json.getNumberList("ids")!!
