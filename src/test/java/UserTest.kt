@@ -8,8 +8,10 @@ import com.google.gson.JsonParser
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore
 class UserTest {
     @Before
     fun init() {

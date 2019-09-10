@@ -8,6 +8,7 @@ import com.github.b402.cmc.core.service.impl.user.RegisterData
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.util.Data
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
@@ -69,15 +70,19 @@ class User(
         return pw == password
     }
 
-    suspend fun getPermission(gid: Int) =
-            GlobalScope.async(GlobalScope.coroutineContext) {
-                val ji = JudgeInfo.getJudgeInfo(uid, gid, true).await()
-                if (ji == null) {
-                    Permission.VERIFIED
-                } else {
-                    ji.type.permission
-                }
+    suspend fun getPermission(gid: Int): Deferred<Permission> {
+        if (this.permission.contains(Permission.MAIN_JUDGE)) {
+            return GlobalScope.async(GlobalScope.coroutineContext) { permission }
+        }
+        return GlobalScope.async(GlobalScope.coroutineContext) {
+            val ji = JudgeInfo.getJudgeInfo(uid, gid, true).await()
+            if (ji == null) {
+                Permission.VERIFIED
+            } else {
+                ji.type.permission
             }
+        }
+    }
 
 
     suspend fun sync() = SQLManager.async {

@@ -16,7 +16,7 @@ object GameListService : DataService<SubmitData>(
         val archive = data.json.getBoolean("archive", false)
         if (archive) {
             val user = data.token?.getUser() ?: return returnData(ILLEGAL_PERMISSION, "权限不足")
-            if (user.permission.contains(Permission.MAIN_JUDGE)) {
+            if (!user.permission.contains(Permission.MAIN_JUDGE)) {
                 return returnData(ILLEGAL_PERMISSION, "权限不足")
             }
         }

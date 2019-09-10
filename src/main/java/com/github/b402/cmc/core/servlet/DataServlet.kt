@@ -99,6 +99,12 @@ class DataServlet : HttpServlet() {
             register(SortListService)
             register(UnverifiedScoreService)
             register(VerifyScoreService)
+            register(GameJoinService)
+            register(GameResultService)
+            register(AppointProjectJudgeService)
+            register(GameCompleteService)
+            register(UnverifiedJoinGameInfoService)
+            register(VerifyJoinGameService)
         }
     }
 }

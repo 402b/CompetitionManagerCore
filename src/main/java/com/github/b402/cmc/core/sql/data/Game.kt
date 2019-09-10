@@ -1,11 +1,14 @@
 package com.github.b402.cmc.core.sql.data
 
+import com.github.b402.cmc.core.configuration.Configuration
 import com.github.b402.cmc.core.configuration.ConfigurationSection
 import com.github.b402.cmc.core.configuration.MemorySection
 import com.github.b402.cmc.core.service.impl.game.CreateGameData
 import com.github.b402.cmc.core.sort.Sort
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.util.Data
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -28,9 +31,12 @@ class Game(
         get() = data.getBoolean("closeUpload", false)
         set(value) = data.set("closeUpload", value)
 
-    val sortType:String
+    val sortType: String
         get() = data.getString("sortType")!!
 
+    var complete: Boolean
+        get() = data.getBoolean("complete", false)
+        set(value) = data.set("complete", value)
 
 
     suspend fun sync() = SQLManager.async {
@@ -106,7 +112,51 @@ class Game(
                 null
             }
         }
+
+        suspend fun getGameResult(gid: Int) = SQLManager.asyncDeferred {
+            val ps = this.prepareStatement("SELECT * FROM GameResult WHERE GID = ? LIMIT 1")
+            ps.setInt(1, gid)
+            val rs = ps.executeQuery()
+            if (rs.next()) {
+                val result = rs.getString("Result")!!
+                val time = rs.getLong("Time")
+                return@asyncDeferred GameResult(gid, result, time)
+            } else {
+                null
+            }
+        }
+
+        suspend fun getAllGameResult() = SQLManager.asyncDeferred {
+            val ps = this.prepareStatement("SELECT * FROM GameResult")
+            val rs = ps.executeQuery()
+            val list = mutableListOf<GameResult>()
+            while (rs.next()) {
+                val result = rs.getString("Result")!!
+                val time = rs.getLong("Time")
+                val gid = rs.getInt("GID")
+                list += GameResult(gid, result, time)
+            }
+            list
+        }
+
+        suspend fun createResult(result: String, gid: Int) = SQLManager.async {
+            val ps = this.prepareStatement("INSERT INTO VALUES (?,?,?)")
+            ps.setInt(1, gid)
+            ps.setString(2, result)
+            ps.setLong(3, System.currentTimeMillis())
+            ps.executeUpdate()
+        }
     }
 
 
+}
+
+data class GameResult(
+        val gid: Int,
+        val result: String,
+        val time: Long
+){
+    val resultJson:JsonElement by lazy {
+        Configuration.parser.parse(result)
+    }
 }

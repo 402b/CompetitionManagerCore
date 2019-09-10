@@ -12,8 +12,9 @@ class Configuration : MemorySection {
 
     companion object{
         val gson:Gson = Gson()
+        val parser = JsonParser()
     }
-    constructor(json: String) : super(JsonParser().parse(json).asJsonObject)
+    constructor(json: String) : super(parser.parse(json).asJsonObject)
 
     constructor(file: File) : super() {
         val reader = FileReader(file)

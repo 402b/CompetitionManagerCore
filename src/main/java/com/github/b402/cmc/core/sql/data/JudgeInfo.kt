@@ -19,6 +19,16 @@ data class JudgeInfo(
     }
 
     companion object {
+        suspend fun addJudge(uid: Int, gid: Int, type: JudgeType,verified: Boolean) = SQLManager.async {
+            val ps = prepareStatement("INSERT INTO Judge VALUES (?,?,?,?)")
+            ps.setInt(1, uid)
+            ps.setInt(2, gid)
+            ps.setString(3, type.name)
+            ps.setBoolean(4, verified)
+            ps.executeUpdate()
+        }
+
+
         suspend fun addJudge(uid: Int, gid: Int, type: JudgeType) = SQLManager.asyncDeferred {
             val ps = prepareStatement("INSERT INTO Judge VALUES (?,?,?,?)")
             ps.setInt(1, uid)
@@ -27,6 +37,13 @@ data class JudgeInfo(
             ps.setBoolean(4, false)
             ps.executeUpdate()
             getJudgeInfo(uid, gid).await()
+        }
+
+        suspend fun removeJudge(uid:Int,gid:Int) = SQLManager.async {
+            val ps = this.prepareStatement("DELETE FROM Judge WHERE UID = ? AND GID = ?")
+            ps.setInt(1,uid)
+            ps.setInt(2,gid)
+            ps.executeUpdate()
         }
 
         suspend fun getJudgeInfo(uid: Int, gid: Int, verified: Boolean = true) = SQLManager.asyncDeferred {
