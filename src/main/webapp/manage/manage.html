@@ -6,6 +6,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script type="text/javascript" src="js/page.js"></script>
 	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
 	<title>管理员页面</title>
@@ -48,7 +49,7 @@
 		<li><a href="#3"><i class="fa fa-pencil"></i> <em>创建比赛</em></a></li>
 		  <li><a href="#4"><i class="fa fa-pencil"></i> <em>任命裁判</em></a></li>
 		  <li><a href="#5"><i class="fa fa-image"></i> <em>取消裁判</em></a></li>
-		  <li><a href="#6"><i class="fa fa-envelope"></i> <em>审核运动员</em></a></li>
+		  <li><a href="#6"><i class="fa fa-envelope"></i> <em>审核用户资格</em></a></li>
 		  <!--<li><a href="#4"><i class="fa fa-image"></i> <em>委任裁判</em></a></li>-->
 		<!--<li><a href="#5"><i class="fa fa-envelope"></i> <em>Contact</em></a></li>-->
 	  </ul>
@@ -82,7 +83,7 @@
 						<div class="main-btn"><a href="#3">创建比赛</a></div></br>
 						<div class="main-btn"><a href="#4">任命裁判</a></div></br>
 						<div class="main-btn"><a href="#5">取消裁判</a></div></br>
-						<div class="main-btn"><a href="#6">审核运动员</a></div>
+						<div class="main-btn"><a href="#6">审核用户资格</a></div>
 				  </div>
 				</div>
 				<div class="col-md-6">
@@ -169,13 +170,17 @@
 								  <input name="gameName" v-model="gameName" type="text" placeholder="比赛项目...">
 							  </fieldset>
 						  </div>
+							  <div class="col-md-12">
+								  <fieldset>
+									  <input name="gameID" v-model="gameID" type="text" placeholder="比赛ID...">
+								  </fieldset>
+							  </div>
 						  <div class="col-md-12">
 							  <fieldset>
-								  <h5>裁判类型...(主裁判/项目裁判/普通裁判)</h5>
+								  <h5>裁判类型...(主裁判/项目裁判)</h5>
 								  <select name="type" v-model="type">
 									  <option value="主裁判">---------------------主裁判---------------------</option>
 									  <option value="项目裁判">---------------------项目裁判---------------------</option>
-									  <option value="普通裁判">---------------------普通裁判---------------------</option>
 								  </select>
 							  </fieldset>
 						  </div>
@@ -237,8 +242,8 @@
 			<div class="content sixth-content">
 				<div class="container-fluid">
 					<div class="col-md-6">
-						<div id="checkPlayer">
-							<h2>运动员资格申请表</h2>
+						<div id="checkUser">
+							<h2>用户资格申请表</h2>
 								<table border="4">
 									<tr>
 										<th>申请人ID</th><th>UID</th><th>真实姓名</th><th>性别</th>

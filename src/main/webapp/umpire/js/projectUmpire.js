@@ -11,7 +11,9 @@ function getCookie(name){
 }
 //设置cookie的函数
 function setCookie(name,value){
-    document.cookie = name + "="+ value + "; ";
+    if (value != null) {
+        document.cookie = name + "=" + value + "; ";
+    }
 }
 //检查是否有token存在
 var token = getCookie("token");
@@ -65,7 +67,7 @@ var userInfo = new Vue({    //获取用户信息
 var enterScore = new Vue({    //录入成绩
     el: "#enterScore",
     data: {
-        game: [ //isReg表示是否已经登记成绩
+        game: [
         ],   //某裁判负责的所有项目信息
         player: [
         ],
@@ -78,7 +80,6 @@ var enterScore = new Vue({    //录入成绩
         uids:[],    //参赛选手的uid列表
         gameid: [
         ],  //用户从后端获取的所有比赛id
-        gameNow: [],    //当前应该展示的比赛信息
         score:[],       //提交成绩后传给后端比赛列表
         tests: [
             {gameName:"男子100米",gameID:"001"},
@@ -194,7 +195,7 @@ var enterScore = new Vue({    //录入成绩
                 })
         }
         ,
-        change: function(gameName, gameID, isReg) {     //进入成绩登记页面
+        change: function(gameName, gameID) {     //进入成绩登记页面
             this.show = true;
             this.gameID = gameID;
             this.gameName = gameName;
@@ -295,7 +296,7 @@ var enterScore = new Vue({    //录入成绩
     }
 })
 
-var setUmpire = new Vue({   //任命裁判
+var setUmpire = new Vue({   //任命裁判  //暂时不用这个功能
     el: "#setUmpire",
     data: {
         umpireName: "",
@@ -356,7 +357,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
         umpire:[],  //当前应该显示的用户信息
         game: [],   //当前应该显示的某裁判负责的项目信息
         gameid: [],  //用户从后端获取的所有比赛id
-        gameNow: [],    //当前应该展示的比赛信息
         tests: [
             {gameName: "男子100米", gameID: "001"},
             {gameName: "女子100米", gameID: "002"},
@@ -416,7 +416,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
                     } else{
-                        alert("获取裁判员负责的项目id列表失败!");
+                        // alert("获取裁判员负责的项目id列表失败!");
                     }
                 })
         },
@@ -549,7 +549,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                             this.users.push(info.uid);
                         }
                     } else {
-                        alert("获取申请裁判的用户id列表失败!");
+                        alert("获取当前项目裁判的id列表失败!");
                     }
                 })
             this.recordAmount = this.users.length;
@@ -641,7 +641,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             else {
                 isAgree = false;
                 axios({
-                    url: '/Data/verifyumpire',
+                    url: '/Data/judge_verify',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -679,7 +679,6 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
         umpire:[],  //当前应该显示的用户信息
         game: [],   //当前应该显示的某裁判负责的项目信息
         gameid: [],  //用户从后端获取的所有比赛id
-        gameNow: [],    //当前应该展示的比赛信息
         tests: [
             {gameName: "男子100米", gameID: "001"},
             {gameName: "女子100米", gameID: "002"},
@@ -739,7 +738,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
                     } else{
-                        alert("获取裁判员负责的项目id列表失败!");
+                        // alert("获取裁判员负责的项目id列表失败!");
                     }
                 })
         },
@@ -997,7 +996,6 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
         player:[],  //当前应该显示的运动员信息
         game: [],   //当前应该显示的某裁判负责的项目信息
         gameid: [],  //用户从后端获取的所有比赛id
-        gameNow: [],    //当前应该展示的比赛信息
         tests: [
             {gameName: "男子100米", gameID: "001"},
             {gameName: "女子100米", gameID: "002"},
@@ -1057,7 +1055,7 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
                     } else{
-                        alert("获取裁判员负责的项目id列表失败!");
+                        // alert("获取裁判员负责的项目id列表失败!");
                     }
                 })
         },
@@ -1165,7 +1163,7 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
             }
         }
         ,
-        change: function (gameName, gameID) {   //进入审核裁判员页面
+        change: function (gameName, gameID) {   //进入审核运动员报名页面
             this.show = true;
             this.gameID = gameID;
             this.gameName = gameName;
@@ -1185,7 +1183,7 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
                         setCookie("token", rep.data.token);
                         this.users = rep.data.uids;
                     } else {
-                        alert("获取申请裁判的用户id列表失败!");
+                        alert("获取报名运动员的用户id列表失败!");
                     }
                 })
             this.recordAmount = this.users.length;
@@ -1278,7 +1276,7 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
             else {
                 isAgree = false;
                 axios({
-                    url: '/Data/verifyplayer',
+                    url: '/Data/judge_verify',
                     params: {
                         param: {
                             token: getCookie("token"),
@@ -1312,35 +1310,36 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
 var checkScore = new Vue({    //审核成绩
     el: "#checkScore",
     data: {
-        game: [ //isReg表示是否已经登记成绩//isCheck表示是否已经审核成绩
-        ],   //某裁判负责的所有项目信息
-        player: [
-        ],
+        game: [
+        ],   //某裁判负责的所有项目详细信息
+        score:[],       //所有成绩的详细信息
+        list:[],
         tests2: [
             {uid:"001",realName:"张三"},
             {uid:"002",realName:"李四"},
             {uid:"003",realName:"Tony"},
             {uid:"004",realName:"Lisa"},
         ],
+        uids:[],    //参赛选手的uid列表
         gameid: [
         ],  //用户从后端获取的所有比赛id
-        gameNow: [],    //当前应该展示的比赛信息
-        score:[],       //提交成绩后传给后端比赛列表
         tests: [
-            {gameName:"男子100米",gameID:"001",isReg:false,isCheck:false},
-            {gameName:"女子100米",gameID:"002",isReg:true,isCheck:true},
-            {gameName:"男子100米",gameID:"003",isReg:true,isCheck:true},
-            {gameName:"男子1500米",gameID:"004",isReg:false,isCheck:false},
+            {gameName:"男子100米",gameID:"001"},
+            {gameName:"女子100米",gameID:"002"},
+            {gameName:"男子100米",gameID:"003"},
+            {gameName:"男子1500米",gameID:"004"},
         ],
-        gameID: "", //选择录入的赛事ID
-        gameName: "",   //选择录入赛事的名称
-        show:false, //false展示赛事选择界面，true展示成绩录入界面
-        scoreType: "", //成绩类型
+        gameID: "", //选择审核的赛事ID
+        gameName: "",   //选择审核赛事的名称
+        show:false, //false展示赛事选择界面，true展示成绩审核界面
         pageNow: 1, //当前所在页面
         pageAmount: 0, //页面总数
         recordAmount: 0,
         pageEach: 1,   //每页显示的记录数
         enterNumber:0, //用户键盘输入的页码数
+        isAgree: false,
+        isCheckAll: false,
+        checked: [], //选择的用户id
     },
     created() {
         this.start();
@@ -1373,7 +1372,7 @@ var checkScore = new Vue({    //审核成绩
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
                     } else{
-                        alert("获取裁判员负责的项目id列表失败!");
+                        // alert("获取裁判员负责的项目id列表失败!");
                     }
                 })
         },
@@ -1421,7 +1420,7 @@ var checkScore = new Vue({    //审核成绩
                 gameidX.push(this.gameid[i]);
             }
             axios({
-                url: '/Data/gameinfo',
+                url: '/Data/game_info',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -1441,22 +1440,17 @@ var checkScore = new Vue({    //审核成绩
                 })
         }
         ,
-        change: function(gameName, gameID, isReg) {     //进入成绩登记页面
-            if (isReg == true) {
-                var con = confirm("你是否要强制修改"+gameName+"的成绩？");
-                if (con == false)
-                    return;
-            }
+        change: function(gameName, gameID) {     //进入成绩登记页面
             this.show = true;
             this.gameID = gameID;
             this.gameName = gameName;
-            axios({     //向后端请求当前赛事参赛选手的信息
-                url: '/Data/playerinfo',
+            axios({     //向后端请求当前赛事的选手成绩列表
+                url: '/Data/score_unverifiedScore',
                 params: {
                     param: {
                         token: getCookie("token"),
                         Data: {
-                            gameId: this.gameID,
+                            gid: this.gameID,
                         }
                     }
                 }
@@ -1464,97 +1458,182 @@ var checkScore = new Vue({    //审核成绩
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        this.player = rep.data.player;
+                        this.list = rep.data.list;
                     } else{
-                        alert("获取用户数据表失败!");
+                        alert("获取成绩列表失败!");
                     }
                 })
+            if (this.list.length != 0) {
+                for (var i = 0; i < this.list.length; i++) {
+                    var uid = [];
+                    uid.push(this.list[i].uid);
+                    axios({     //向后端请求当前赛事参赛选手详细信息
+                        url: '/Data/user_info',
+                        params: {
+                            param: {
+                                token: getCookie("token"),
+                                Data: {
+                                    uid: uid,
+                                }
+                            }
+                        }
+                    }).then(
+                        rep=>{
+                            if(rep.data.status=="success"){
+                                setCookie("token",rep.data.token);
+                                var obj = {uid:this.list[i].uid,realName:rep.data.info[0].realName,score:this.list[i].score};
+                                this.score.push(obj);
+                            } else{
+                                alert("获取参赛用户详细信息失败!");
+                            }
+                        })
+                }
+            }
         },
         back: function(){
             this.show = false;
             this.gameID = "";
             this.gameName = "";
             this.scoreType = "";
+            this.uids = [];
+            this.player = [];
+        },
+        checkAll: function() {
+            this.isCheckAll = !this.isCheckAll;
+            if(this.isCheckAll == true) {
+                this.checked = [];
+                for (var i = 0; i < this.score.length; i++) {
+                    this.checked.push(this.score[i].uid);
+                }
+            }
+            else {
+                this.checked = [];
+            }
+            console.log(this.checked.length);
+        },
+        checkOne: function(uid) {
+            var x = this.checked.indexOf(uid);
+            if (x>-1) {
+                this.checked.splice(x,1)
+                console.log(this.checked.length);
+            }
+            else {
+                this.checked.push(uid);
+            }
+        },
+        check: function(uid) {
+            this.isCheckAll = (this.checked.length == this.player.length);
+            var x = this.checked.indexOf(uid);
+            console.log(uid+":"+x);
+            console.log(this.checked.length);
+            if (x>-1)
+                return true;
+            else
+                return false;
         },
         agree: function () {
-            axios({     //向后端请求当前赛事参赛选手的信息
-                url: '/Data/？？',
-                params: {
-                    param: {
-                        token: getCookie("token"),
-                        Data: {
-                            gameId: this.gameID,
-                            verify: true,
+            if (this.checked.length < 1)
+                alert("你未选择任何项目！");
+            else {
+                isAgree = true;
+                axios({
+                    url: '/Data/score_verify',
+                    params: {
+                        param: {
+                            token: getCookie("token"),
+                            Data: {
+                                gid:this.gameID,
+                                checked:this.checked,
+                                verify:true,
+                            }
                         }
                     }
-                }
-            }).then(
-                rep=>{
-                    if(rep.data.status=="success"){
-                        setCookie("token",rep.data.token);
-                        alert("成功通过成绩!");
-                    } else{
-                        alert("成绩通过失败!");
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("成功通过相应用户的申请！");
+                            location.reload(true);
+                        } else{
+                            alert("审核失败!");
+                            location.reload(true);
+                        }
                     }
-                })
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
         },
         disagree: function () {
-            axios({     //向后端请求当前赛事参赛选手的信息
-                url: '/Data/？？',
-                params: {
-                    param: {
-                        token: getCookie("token"),
-                        Data: {
-                            gameId: this.gameID,
-                            verify: false,
+            if (this.checked.length < 1)
+                alert("你未选择任何项目！");
+            else {
+                isAgree = false;
+                axios({
+                    url: '/Data/score_verify',
+                    params: {
+                        param: {
+                            token: getCookie("token"),
+                            Data: {
+                                gid:this.gameID,
+                                checked:this.checked,
+                                verify:false,
+                            }
                         }
                     }
-                }
-            }).then(
-                rep=>{
-                    if(rep.data.status=="success"){
-                        setCookie("token",rep.data.token);
-                        alert("成功不通过成绩!");
-                    } else{
-                        alert("成绩不通过失败!");
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("成功拒绝相应用户的申请！");
+                            location.reload(true);
+                        } else{
+                            alert("审核失败!");
+                        }
                     }
-                })
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
         }
     }
 })
 
-var showScore = new Vue({    //发布成绩
+var showScore = new Vue({    //审核成绩
     el: "#showScore",
     data: {
-        game: [ //isReg表示是否已经登记成绩//isCheck表示是否已经审核成绩//isShow表示是否已经发布成绩
-        ],   //某裁判负责的所有项目信息
-        player: [
-        ],
+        game: [
+        ],   //某裁判负责的所有项目详细信息
+        score:[],       //所有成绩的详细信息
+        list:[],
         tests2: [
             {uid:"001",realName:"张三"},
             {uid:"002",realName:"李四"},
             {uid:"003",realName:"Tony"},
             {uid:"004",realName:"Lisa"},
         ],
+        uids:[],    //参赛选手的uid列表
         gameid: [
         ],  //用户从后端获取的所有比赛id
-        gameNow: [],    //当前应该展示的比赛信息
-        score:[],       //提交成绩后传给后端比赛列表
         tests: [
-            {gameName:"男子100米",gameID:"001",isReg:false,isCheck:false},
-            {gameName:"女子100米",gameID:"002",isReg:true,isCheck:true},
-            {gameName:"男子100米",gameID:"003",isReg:true,isCheck:true},
-            {gameName:"男子1500米",gameID:"004",isReg:false,isCheck:false},
+            {gameName:"男子100米",gameID:"001"},
+            {gameName:"女子100米",gameID:"002"},
+            {gameName:"男子100米",gameID:"003"},
+            {gameName:"男子1500米",gameID:"004"},
         ],
-        gameID: "", //选择录入的赛事ID
-        gameName: "",   //选择录入赛事的名称
-        show:false, //false展示赛事选择界面，true展示成绩录入界面
-        scoreType: "", //成绩类型
+        gameID: "", //选择审核的赛事ID
+        gameName: "",   //选择审核赛事的名称
+        show:false, //false展示赛事选择界面，true展示成绩审核界面
         pageNow: 1, //当前所在页面
         pageAmount: 0, //页面总数
         recordAmount: 0,
         pageEach: 1,   //每页显示的记录数
         enterNumber:0, //用户键盘输入的页码数
+        isShow:false,
     },
     created() {
         this.start();
@@ -1587,7 +1666,7 @@ var showScore = new Vue({    //发布成绩
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
                     } else{
-                        alert("获取裁判员负责的项目id列表失败!");
+                        // alert("获取裁判员负责的项目id列表失败!");
                     }
                 })
         },
@@ -1635,7 +1714,7 @@ var showScore = new Vue({    //发布成绩
                 gameidX.push(this.gameid[i]);
             }
             axios({
-                url: '/Data/gameinfo',
+                url: '/Data/game_info',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -1655,22 +1734,17 @@ var showScore = new Vue({    //发布成绩
                 })
         }
         ,
-        change: function(gameName, gameID, isReg) {     //进入成绩登记页面
-            if (isReg == true) {
-                var con = confirm("你是否要强制修改"+gameName+"的成绩？");
-                if (con == false)
-                    return;
-            }
+        change: function(gameName, gameID) {     //进入成绩登记页面
             this.show = true;
             this.gameID = gameID;
             this.gameName = gameName;
-            axios({     //向后端请求当前赛事参赛选手的信息
-                url: '/Data/playerinfo',
+            axios({     //向后端请求当前赛事的选手成绩列表
+                url: '/Data/score_unverifiedScore',
                 params: {
                     param: {
                         token: getCookie("token"),
                         Data: {
-                            gameId: this.gameID,
+                            gid: this.gameID,
                         }
                     }
                 }
@@ -1678,61 +1752,147 @@ var showScore = new Vue({    //发布成绩
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        this.player = rep.data.player;
+                        this.list = rep.data.list;
                     } else{
-                        alert("获取用户数据表失败!");
+                        alert("获取成绩列表失败!");
                     }
                 })
+            if (this.list.length != 0) {
+                for (var i = 0; i < this.list.length; i++) {
+                    var uid = [];
+                    uid.push(this.list[i].uid);
+                    axios({     //向后端请求当前赛事参赛选手详细信息
+                        url: '/Data/user_info',
+                        params: {
+                            param: {
+                                token: getCookie("token"),
+                                Data: {
+                                    uid: uid,
+                                }
+                            }
+                        }
+                    }).then(
+                        rep=>{
+                            if(rep.data.status=="success"){
+                                setCookie("token",rep.data.token);
+                                var obj = {uid:this.list[i].uid,realName:rep.data.info[0].realName,score:this.list[i].score};
+                                this.score.push(obj);
+                            } else{
+                                alert("获取参赛用户详细信息失败!");
+                            }
+                        })
+                }
+            }
         },
         back: function(){
             this.show = false;
             this.gameID = "";
             this.gameName = "";
             this.scoreType = "";
+            this.uids = [];
+            this.player = [];
+        },
+        checkAll: function() {
+            this.isCheckAll = !this.isCheckAll;
+            if(this.isCheckAll == true) {
+                this.checked = [];
+                for (var i = 0; i < this.score.length; i++) {
+                    this.checked.push(this.score[i].uid);
+                }
+            }
+            else {
+                this.checked = [];
+            }
+            console.log(this.checked.length);
+        },
+        checkOne: function(uid) {
+            var x = this.checked.indexOf(uid);
+            if (x>-1) {
+                this.checked.splice(x,1)
+                console.log(this.checked.length);
+            }
+            else {
+                this.checked.push(uid);
+            }
+        },
+        check: function(uid) {
+            this.isCheckAll = (this.checked.length == this.player.length);
+            var x = this.checked.indexOf(uid);
+            console.log(uid+":"+x);
+            console.log(this.checked.length);
+            if (x>-1)
+                return true;
+            else
+                return false;
         },
         agree: function () {
-            axios({     //向后端请求当前赛事参赛选手的信息
-                url: '/Data/？？',
-                params: {
-                    param: {
-                        token: getCookie("token"),
-                        Data: {
-                            gameId: this.gameID,
-                            verify: true,
+            if (this.checked.length < 1)
+                alert("你未选择任何项目！");
+            else {
+                isAgree = true;
+                axios({
+                    url: '/Data/score_verify',
+                    params: {
+                        param: {
+                            token: getCookie("token"),
+                            Data: {
+                                gid:this.gameID,
+                                checked:this.checked,
+                                verify:true,
+                            }
                         }
                     }
-                }
-            }).then(
-                rep=>{
-                    if(rep.data.status=="success"){
-                        setCookie("token",rep.data.token);
-                        alert("成功通过成绩!");
-                    } else{
-                        alert("成绩通过失败!");
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("成功通过相应用户的申请！");
+                            location.reload(true);
+                        } else{
+                            alert("审核失败!");
+                            location.reload(true);
+                        }
                     }
-                })
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
         },
         disagree: function () {
-            axios({     //向后端请求当前赛事参赛选手的信息
-                url: '/Data/？？',
-                params: {
-                    param: {
-                        token: getCookie("token"),
-                        Data: {
-                            gameId: this.gameID,
-                            verify: false,
+            if (this.checked.length < 1)
+                alert("你未选择任何项目！");
+            else {
+                isAgree = false;
+                axios({
+                    url: '/Data/score_verify',
+                    params: {
+                        param: {
+                            token: getCookie("token"),
+                            Data: {
+                                gid:this.gameID,
+                                checked:this.checked,
+                                verify:false,
+                            }
                         }
                     }
-                }
-            }).then(
-                rep=>{
-                    if(rep.data.status=="success"){
-                        setCookie("token",rep.data.token);
-                        alert("成功不通过成绩!");
-                    } else{
-                        alert("成绩不通过失败!");
+                }).then(
+                    rep=>{
+                        if(rep.data.status=="success"){
+                            setCookie("token",rep.data.token);
+                            alert("成功拒绝相应用户的申请！");
+                            location.reload(true);
+                        } else{
+                            alert("审核失败!");
+                        }
                     }
-                })
+                    ,
+                    rep=>{
+                        alert("抱歉，网页当前不可用");
+                        console.log(rep)
+                    })
+            }
         }
     }
 })

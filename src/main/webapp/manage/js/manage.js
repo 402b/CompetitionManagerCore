@@ -11,7 +11,9 @@ function getCookie(name){
 }
 //设置cookie的函数
 function setCookie(name,value){
-    document.cookie = name + "="+ value + "; ";
+    if (value != null) {
+        document.cookie = name + "=" + value + "; ";
+    }
 }
 //检查是否有token存在
 var token = getCookie("token");
@@ -34,6 +36,7 @@ var userInfo = new Vue({    //获取用户信息
             this.realName = "Tony";
         },
         refresh: function () {
+            console.log(window.location.pathname);
             axios({
                 url: '/Data/user_info',
                 params: {
@@ -104,17 +107,20 @@ var createGame = new Vue({  //创建比赛
         },
         check:function () {
             console.log(this.name);
-            this.time = Date.parse(this.time);
-            console.log(this.time);
+            var TIME = Date.parse(this.time);
+            console.log(TIME);
             console.log(this.number);
-            this.startDate = Date.parse(this.startDate);
-            console.log(this.startDate);
-            this.endDate = Date.parse(this.endDate);
-            console.log(this.endDate);
+            var STARTDATE = Date.parse(this.startDate);
+            console.log(STARTDATE);
+            var ENDDATE = Date.parse(this.endDate);
+            console.log(ENDDATE);
             console.log(this.sortName);
-            if (this.name=="" || this.time=="" || this.number=="" || this.startDate=="" || this.endDate=="")
+            if (this.name=="" || this.time=="" || this.number=="" || this.startDate=="" || this.endDate=="" || this.sortName=="")
                 alert("有空项目，请检查!");
-            else if(this.startDate > this.endDate || this.time < this.endDate)
+            else if(isNaN(TIME)==true || isNaN(STARTDATE)==true || isNaN(ENDDATE) == true) {
+                alert("请检查时间是否选择正确！")
+            }
+            else if(STARTDATE > ENDDATE || TIME < ENDDATE)
                 alert("请填写正确的报名时间");
             else {
                 axios({
@@ -124,11 +130,11 @@ var createGame = new Vue({  //创建比赛
                             token: getCookie("token"),
                             Data:{
                                 name: this.name,
-                                time: this.time,
+                                time: TIME,
                                 number: this.number,
-                                startDate: this.startDate,
-                                endDate: this.endDate,
-                                sortName: this.sortName,
+                                startDate: STARTDATE,
+                                endDate: ENDDATE,
+                                sortType: this.sortName,
                             }
                         }
                     }
@@ -157,6 +163,7 @@ var setUmpire = new Vue({   //任命裁判
     data: {
         umpireName: "",
         UID: "",
+        gameID: "",
         gameName: "",
         type: "",
     },
@@ -166,24 +173,23 @@ var setUmpire = new Vue({   //任命裁判
             console.log(this.UID);
             console.log(this.gameName);
             console.log(this.type);
-            if (this.type!="主裁判" && (this.UID=="" || this.gameName=="" || this.umpireName==""))
+            if (this.type!="主裁判" && (this.UID=="" || this.gameName=="" || this.umpireName=="" || this.gameID == ""))
                 alert("有空项目，请检查!");
-            else if(this.type=="主裁判" && this.gameName!="")
+            else if(this.type=="主裁判" && this.gameID!="")
                 alert("主裁判无需指定项目！");
             else if(this.type=="主裁判" && (this.UID=="" || this.umpireName==""))
                 alert("有空项目，请检查!");
-            else if(this.type!="主裁判" && this.type!="项目裁判" && this.type!="普通裁判")
+            else if(this.type!="主裁判" && this.type!="项目裁判")
                 alert("请填写正确的裁判类型");
-            else if (this.type != "主裁判"){
+            else if (this.type == "主裁判"){
                 axios({
                     url:'/Data/admin_appointMainJudge',
                     params: {
                         param: {
+                            token: getCookie("token"),
                             Data:{
-                                umpireName: this.umpireName,
-                                UID: this.UID,
-                                gameName: this.gameName,
-                                type: this.type,
+                                uid: this.UID,
+                                appoint: true
                             }
                         }
                     }
@@ -489,7 +495,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = true;
                 axios({
                     url: '/Data/judge_verify',
                     params: {
@@ -523,7 +528,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = false;
                 axios({
                     url: '/Data/judge_verify',
                     params: {
@@ -557,8 +561,8 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
     }
 })
 
-var checkPlayer = new Vue({ //审查运动员资格
-    el: "#checkPlayer",
+var checkUser = new Vue({ //审查用户资格
+    el: "#checkUser",
     data: {
         player: [
             ],//当前应该展示的用户信息
@@ -571,7 +575,7 @@ var checkPlayer = new Vue({ //审查运动员资格
             {uid:"006",id:"1243",realName:"Tony",gender:"M"},
             {uid:"007",id:"1243",realName:"Tony",gender:"M"},
         ],
-        users:[],   //所有申请但未认证资格的用户
+        users:[],   //所有申请但未认证资格的用户id
         isCheckAll: false,
         checked: [],
         isAgree: false,
@@ -656,10 +660,12 @@ var checkPlayer = new Vue({ //审查运动员资格
             for (var i = start; i < end; i++) {
                 usersX.push(this.users[i]);
             }
+            console.log(usersX);
             axios({
                 url: '/Data/user_info',
-                params: {
-                    param: {
+                method: 'POST',
+                data: {
+                    param:{
                         token: getCookie("token"),
                         Data: {
                             uid: usersX,
@@ -670,10 +676,11 @@ var checkPlayer = new Vue({ //审查运动员资格
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        this.check = [];
+                        this.checked = [];
                         this.player = rep.data.info;
+                        console.log(this.player);
                     } else{
-                        alert("获取用户数据表失败!");
+                        alert("获取用户请求表失败!" + rep.data.reason);
                     }
                 })
         },
@@ -722,7 +729,7 @@ var checkPlayer = new Vue({ //审查运动员资格
                             token: getCookie("token"),
                             Data: {
                                 checked:this.checked,
-                                isAgree:this.isAgree,
+                                isAgree:this.isAgree
                             }
                         }
                     }

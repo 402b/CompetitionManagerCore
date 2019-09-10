@@ -258,7 +258,7 @@ nav a:hover::before {
 }
 
 .slides {
-    width: 800vw;
+    width: 900vw;
     height: 100vh;
     -webkit-transition: -webkit-transform 0.8s ease;
     transition: -webkit-transform 0.8s ease;
@@ -316,6 +316,9 @@ nav a:hover::before {
 }
 .slides .slide:nth-child(8) {
     background-image: url(../img/first_bg.jpg);
+}
+.slides .slide:nth-child(8) {
+    background-image: url(../img/fifth_bg.jpg);
 }
 .slides .slide img {
     width: 100%;

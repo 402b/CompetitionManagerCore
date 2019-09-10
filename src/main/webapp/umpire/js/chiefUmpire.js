@@ -11,7 +11,9 @@ function getCookie(name){
 }
 //设置cookie的函数
 function setCookie(name,value){
-    document.cookie = name + "="+ value + "; ";
+    if (value != null) {
+        document.cookie = name + "=" + value + "; ";
+    }
 }
 //检查是否有token存在
 var token = getCookie("token");

@@ -25,15 +25,15 @@ function getCookie(name){
 }
 //设置cookie的函数
 function setCookie(name,value){
-    document.cookie = name + "="+ value + "; ";
+    if (value != null) {
+        document.cookie = name + "=" + value + "; ";
+    }
 }
 //检查是否有token存在
 var token = getCookie("token");
 if(token!=null){
     //token非空则隐式登录
     //axios({
-
-
     //})
 }
 
@@ -60,7 +60,7 @@ var login = new Vue({
                 rep=>{
                     if(rep.data.status=="success"){
                         setCookie("token",rep.data.token);
-                        alert("登录成功！");
+                        alert("登陆成功")
                         window.location.href="home.html";
                     }
                     else{

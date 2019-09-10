@@ -6,6 +6,7 @@ import com.github.b402.cmc.core.service.data.ReturnData
 import com.github.b402.cmc.core.service.data.SubmitData
 import com.github.b402.cmc.core.service.data.returnData
 import com.github.b402.cmc.core.token.Token
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.apache.log4j.Logger
@@ -17,8 +18,7 @@ abstract class DataService<in S : SubmitData>(
 ) {
     abstract suspend fun onRequest(data: S): ReturnData
 
-    open suspend fun input(data: String): ReturnData {
-        val je = jsonParser.parse(data) ?: return returnData(ERROR, "状态异常,传入数据非json")
+    open suspend fun input(je:JsonElement) : ReturnData{
         if (!je.isJsonObject) {
             return returnData(ERROR, "状态异常,传入数据非json")
         }
@@ -48,6 +48,11 @@ abstract class DataService<in S : SubmitData>(
         }
         input.token = token
         return onRequest(input)
+    }
+
+     suspend fun input(data: String): ReturnData {
+        val je = jsonParser.parse(data) ?: return returnData(ERROR, "状态异常,传入数据非json")
+        return input(je)
     }
 
     companion object {

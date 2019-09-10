@@ -17,24 +17,13 @@ enum class Permission(
         }
     }
 
-    private fun check(from: Permission):Boolean{
-        if(from == this){
-            return true
-        }
-        for(t in extend){
-            if(t.check(from)){
-                return true
-            }
-        }
-        return false
 
-    }
     operator fun contains(pre: Permission):Boolean{
         if(this == pre){
             return true
         }
-        for(t in pre.extend){
-            if(t.check(this)){
+        for(t in this.extend){
+            if(pre in t){
                 return true
             }
         }
