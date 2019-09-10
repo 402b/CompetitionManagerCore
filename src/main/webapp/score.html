@@ -1,8 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--
-找模板就上免费模板网
-http://www.865171.cn/
--->
+
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -81,11 +79,11 @@ http://www.865171.cn/
     var vm = new Vue({
         el: '#page',
         data: {
-            userInfo:{
+            /*userInfo:{
                 name:"smc",
                 age:20,
                 authority:"athlete"
-            },
+            },*/
             messageNum:0,
             //pageIndex
             pageIndex:0,
@@ -97,6 +95,23 @@ http://www.865171.cn/
             //gameToShowId:[],
         },
         computed:{
+            userInfo:function(){
+                axios({
+                    params:{
+                        url:"/Data/user_info",
+                        param:{
+                            token:getCookie("token"),
+                            Data:{
+
+                            }
+                        }
+                    }
+                }).then(
+                    rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                    ,
+                    rep=>{console.log("请求个人信息失败")}
+                )
+            },
             //要展示的比赛的id
             gameToShowId: function(){
                 var index = (this.pageIndex-1)*10;
@@ -139,13 +154,13 @@ http://www.865171.cn/
                         param:{
                             token:getCookie("token"),
                             Data:{
-                                uid:userInfo.uid,
+                                uid:this.userInfo.uid,
                                 finished: true
                             }
                         }
                     }
                 }).then(
-                    rep=>{console.log("获取个人已完成的项目列表成功"); this.gameJoinedId = rep;}
+                    rep=>{console.log("获取个人已完成的项目列表成功"); this.gameJoinedId = rep;return this.gameJoinedId}
                     ,
                     rep=>{console.log("获取个人已完成的项目列表失败")}
                 )
