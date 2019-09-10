@@ -94,12 +94,13 @@
         computed:{
             userInfo:function(){
                 axios({
+                    url:"/Data/user_info",
                     params:{
-                        url:"/Data/user_info",
+
                         param:{
                             token:getCookie("token"),
                             Data:{
-
+                                //uid:this.userInfo.uid
                             }
                         }
                     }
@@ -112,8 +113,9 @@
             //得到个人已经报名的项目
             gameToJoinId:function () {
                 axios({
+                    url:"/Data/game_getJoined",
                     params:{
-                        url:"/Data/game_getJoined",
+
                         param:{
                             token:getCookie("token"),
                             Data:{
@@ -132,8 +134,9 @@
 
 
                 axios({
+                    url:"/Data/game_list",
                     params:{
-                        url:"/Data/game_list",
+
                         param: {
                             token:getCookie("token"),
                             Data:{
@@ -156,8 +159,9 @@
             //取消报名
             cancelSignUp(competition){
                 axios({
+                    url:"/Data/game_join",
                     params:{
-                        url:"/Data/game_join",
+
                         param:{
                             token:getCookie("token"),
                             Data:{

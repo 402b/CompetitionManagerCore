@@ -10,6 +10,17 @@ function getCookie(name){
     return null;
 }
 
+
+function check(){
+    if(!getCookie("token")){
+        alert("请先登录");
+        window.location.href = "loginX.html";
+    }
+}
+
+check();
+
+/*
 //获取作为选手参加的比赛
 function joinCompetitions(){
     axios({
@@ -44,3 +55,4 @@ function judgeCompetitions(){
     }).then()
 }
 
+*/

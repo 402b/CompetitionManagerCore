@@ -86,7 +86,7 @@
             },*/
             messageNum:0,
             //接收消息
-            messages: {
+            /*messages: {
                 //形式1
                 applyJudge_run20191000_Success: {
                     content:"您对 在2019年10月20日第二运动场进行的男子1000米比赛 的 报名成功",
@@ -103,7 +103,7 @@
                     },
                     messageTimestamp:"20191.10.05"
                 }
-            },
+            },*/
 
 
 
@@ -113,10 +113,12 @@
 
         },
         computed:{
+            //获取个人信息
             userInfo:function(){
                 axios({
+                    url:"/Data/user_info",
                     params:{
-                        url:"/Data/user_info",
+
                         param:{
                             token:getCookie("token"),
                             Data:{
@@ -130,10 +132,12 @@
                     rep=>{console.log("请求个人信息失败")}
                 )
             },
-            /*messages: {
+            //获取消息信息
+            messages: function (){
                 axios({
+                    url:"/Data/get_message",
                     params:{
-                        url:"/Data/get_message",
+
                         param:{
                             token:getCookie("token"),
                             Data:{
@@ -146,7 +150,7 @@
                     ,
                     rep=>{console.log("请求消息信息失败")}
                 )
-            },*/
+            },
 
         },
         methods:{
