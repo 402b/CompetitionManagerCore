@@ -97,8 +97,9 @@
         computed:{
             userInfo:function(){
                 axios({
+                    url:"/Data/user_info",
                     params:{
-                        url:"/Data/user_info",
+
                         param:{
                             token:getCookie("token"),
                             Data:{
@@ -124,8 +125,9 @@
             //要展示的比赛的信息
             gameToShowInfo: function(){
                 axios({
+                    url:"/Data/game",
                     params:{
-                        url:"/Data/game",
+
                         param: {
                             token:getCookie("token"),
                             Data:{
@@ -149,8 +151,9 @@
                 },
                 set:function () {
                 axios({
+                    url:"/Data/",
                     params:{
-                        url:"/Data/",
+
                         param:{
                             token:getCookie("token"),
                             Data:{
@@ -171,8 +174,9 @@
 
                 //获取比赛分数
                 axios({
+                    url:"/Data/",
                     params:{
-                        url:"/Data/",
+
                         param:{
                             token:getCookie("token"),
                             Data:{

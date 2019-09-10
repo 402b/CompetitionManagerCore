@@ -70,8 +70,9 @@ var vm = new Vue({
     computed:{
         userInfo:function(){
             axios({
+                url:"/Data/user_info",
                 params:{
-                    url:"/Data/user_info",
+
                     param:{
                         token:getCookie("token"),
                         Data:{
@@ -92,8 +93,9 @@ var vm = new Vue({
             },
             set:function(){
                 axios({
+                    url:"/Data/game_info",
                     params:{
-                        url:"/Data/game_info",
+
                         param: {
                             token:getCookie("token"),
                             Data:{
@@ -126,8 +128,9 @@ var vm = new Vue({
             //获取可报名的比赛项目
             var games = {};
             axios({
+                url:"/Data/game_list",
                 params:{
-                    url:"/Data/game_list",
+
                     param: {
                         token:getCookie("token"),
                         Data:{
@@ -150,8 +153,9 @@ var vm = new Vue({
         //报名某个比赛
         signUp(competition){
             axios({
+                url:"/Data/game_join",
                 params: {
-                    url:"/Data/game_join",
+
                     param: {
                         token:getCookie("token"),
                         Data:{
@@ -168,8 +172,9 @@ var vm = new Vue({
         //申请成为某个比赛的裁判
         applyJudge(competition){
             axios({
+                url:"/Data/judge_apply",
                 params: {
-                    url:"/Data/judge_apply",
+
                     param: {
                         token:getCookie("token"),
                         Data:{
