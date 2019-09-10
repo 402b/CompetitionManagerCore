@@ -66,14 +66,20 @@ class DataServlet : HttpServlet() {
         }
     }
 
+
+    override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
+        doGet(req, resp)
+    }
+
     companion object {
         val dataService = mutableMapOf<String, DataService<*>>()
 
-        fun register(ds: DataService<*>) { 65
+        fun register(ds: DataService<*>) {
+            65
             dataService["/${ds.path}"] = ds
         }
 
-        fun unregister(path:String):DataService<*>?{
+        fun unregister(path: String): DataService<*>? {
             return dataService.remove("/${path}")
         }
 
