@@ -70,8 +70,9 @@ var vm = new Vue({
     computed:{
         userInfo:function(){
             axios({
+                method:"POST",
                 url:"/Data/user_info",
-                params:{
+                data:{
 
                     param:{
                         token:getCookie("token"),
@@ -93,8 +94,9 @@ var vm = new Vue({
             },
             set:function(){
                 axios({
+                    method:"POST",
                     url:"/Data/game_info",
-                    params:{
+                    data:{
 
                         param: {
                             token:getCookie("token"),
@@ -128,8 +130,9 @@ var vm = new Vue({
             //获取可报名的比赛项目
             var games = {};
             axios({
+                method:"POST",
                 url:"/Data/game_list",
-                params:{
+                data:{
 
                     param: {
                         token:getCookie("token"),
