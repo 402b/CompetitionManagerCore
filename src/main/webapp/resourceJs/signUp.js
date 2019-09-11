@@ -120,7 +120,7 @@ var vm = new Vue({
             },
         */
         //获取要展示的比赛的gameId
-        computeGameToShowById: function () {
+        /*computeGameToShowById: function () {
             var index = (this.pageIndex-1)*10;
             index = index>-1?index:0;
             var list = [];
@@ -131,9 +131,22 @@ var vm = new Vue({
             }
             this.gameToShowById = list;
             return list;
-        },
+        }, */
         computeGameToShow:function(){
             //获取要展示的可报名的比赛的信息
+            var index = (this.pageIndex-1)*10;
+            index = index>-1?index:0;
+            var list = [];
+            //if(!this.gameIds)
+            //   return []
+            if(!this.gameIds.gamelist)
+                return null;
+            console.log("gamelist: "+ this.gameIds.gamelist)
+            for(var i =0;i<10 && this.gameIds.gamelist[index+i];i++){
+                list[i] = this.gameIds.gamelist[index+i];
+            }
+            this.gameToShowById = list;
+            //vm.$set()
             axios({
                 method:"POST",
                 url:"/Data/game_info",
@@ -141,7 +154,7 @@ var vm = new Vue({
                     param: {
                         token:getCookie("token"),
                         Data:{
-                            gameId:this.gameToShowById
+                            gameId:list
                         },
                     }
                 }
@@ -160,6 +173,7 @@ var vm = new Vue({
     methods:{
         //报名某个比赛
         signUp(competition){
+            console.log(competition);
             axios({
                 method:"POST",
                 url:"/Data/game_join",
@@ -169,7 +183,7 @@ var vm = new Vue({
                         token:getCookie("token"),
                         Data:{
                             uid:this.userInfo.uid,
-                            gid:competition.gameId
+                            gid:competition.gameID
                         }
                     }
                 }
@@ -180,6 +194,7 @@ var vm = new Vue({
         },
         //申请成为某个比赛的裁判
         applyJudge(competition){
+            console.log(competition);
             axios({
                 method:"POST",
                 url:"/Data/judge_apply",
@@ -188,7 +203,7 @@ var vm = new Vue({
                     param: {
                         token:getCookie("token"),
                         Data:{
-                            gameId:competition.gameId
+                            gameId:competition.gameID
                         }
                     }
                 }
@@ -224,3 +239,4 @@ axios({
     },
     rep=>{console.log("获取可报名的比赛id失败")}
 );
+//console.log(vm.computeGameToShow);
