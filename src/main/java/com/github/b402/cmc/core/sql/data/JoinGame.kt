@@ -4,7 +4,7 @@ import com.github.b402.cmc.core.sql.SQLManager
 
 object JoinGame {
     suspend fun joinGame(uid: Int, gid: Int) = SQLManager.async {
-        val ps = this.prepareStatement("INSERT INTO JoinGame VALUES (?,?,?)")
+        val ps = this.prepareStatement("INSERT INTO JoinGame （UID,GID,Time) VALUES (?,?,?)")
         ps.setInt(1, uid)
         ps.setInt(2, gid)
         ps.setLong(3, System.currentTimeMillis())
