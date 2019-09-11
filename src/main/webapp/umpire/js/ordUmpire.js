@@ -19,6 +19,27 @@ function setCookie(name,value){
 var token = getCookie("token");
 if(token!=null){
 }
+function formatNumber (n) {
+    n = n.toString()
+    return n[1] ? n : '0' + n;
+}
+function formatTime (number, format) {
+    let time = new Date(number)
+    let newArr = []
+    let formatArr = ['Y', 'M', 'D', 'h', 'm', 's']
+    newArr.push(time.getFullYear())
+    newArr.push(formatNumber(time.getMonth() + 1))
+    newArr.push(formatNumber(time.getDate()))
+
+    newArr.push(formatNumber(time.getHours()))
+    newArr.push(formatNumber(time.getMinutes()))
+    newArr.push(formatNumber(time.getSeconds()))
+
+    for (let i in newArr) {
+        format = format.replace(formatArr[i], newArr[i])
+    }
+    return format;
+}
 
 var userInfo = new Vue({    //获取用户信息
     el: "#userInfo",
@@ -51,8 +72,8 @@ var userInfo = new Vue({    //获取用户信息
                         setCookie("token", rep.data.token);
                         this.realName = rep.data.realName;
                         this.gender = rep.data.gender;
-                        this.uid = rep.data.gender;
-                        this.id = rep.data.gender;
+                        this.uid = rep.data.uid;
+                        this.id = rep.data.id;
                     }
                     else
                     {

@@ -39,7 +39,7 @@
     </div>
     <div class="logo">
         <img src="img/projectUmpire.png" alt="">
-    </div></br></br></br></br>
+    </div></br></br></br></br></br></br>
     <ul>
         <li><a href="#1"><i class="fa fa-home"></i> <em>Home</em></a></li>
         <li><a href="#2"><i class="fa fa-user"></i> <em>相关信息</em></a></li>
@@ -101,10 +101,10 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" id="idData1" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>录入成绩</th>
+                                    <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>录入成绩</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
+                                    <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
                                     <td><button type="button" v-on:click="change(game.gameName,game.gameID)">录入</button></td>
                                 </tr>
                             </table>
@@ -186,11 +186,11 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>取消裁判资格</th>
+                                    <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>取消资格</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
-                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">取消裁判资格</button></td>
+                                    <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
+                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">取消</button></td>
                                 </tr>
                             </table>
                             <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
@@ -229,10 +229,10 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>审核裁判申请</th>
+                                    <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>审核申请</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
+                                    <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
                                     <td><button type="button" v-on:click="change(game.gameName,game.gameID)">审核</button></td>
                                 </tr>
                             </table>
@@ -271,10 +271,10 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>审核运动员报名</th>
+                                    <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>审核报名</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
+                                    <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
                                     <td><button type="button" v-on:click="change(game.gameName,game.gameID)">审核</button></td>
                                 </tr>
                             </table>
@@ -313,11 +313,11 @@
                         <h2>我负责的比赛</h2>
                         <table border="4" class="tableX">
                             <tr>
-                                <th>比赛名称</th><th>比赛ID</th><th>审核成绩</th>
+                                <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>审核成绩</th>
                             </tr>
                             <tr v-for="game in game">
-                                <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.isReg}}</td><td>{{game.isCheck}}</td>
-                                <td><button type="button" v-on:click="change(game.gameName,game.gameID,game.isReg)">进行审核</button></td>
+                                <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
+                                <td><button type="button" v-on:click="change(game.gameName,game.gameID)">审核</button></td>
                             </tr>
                         </table>
                         <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
@@ -325,7 +325,6 @@
                     </div>
                     <div v-bind:hidden="!show">
                         <h2>{{gameName}}</h2>
-                        <h5>比赛成绩的单位</h5>
                         <table border="4" class="tableX">
                             <tr>
                                 <th>UID</th><th>运动员姓名</th><th>成绩</th>
@@ -355,11 +354,11 @@
                             <h2>我负责的比赛</h2>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>发布成绩</th>
+                                    <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>发布成绩</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td>
-                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">发布成绩</button></td>
+                                    <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
+                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">发布</button></td>
                                 </tr>
                             </table>
                             <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>

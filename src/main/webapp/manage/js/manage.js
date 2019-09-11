@@ -52,8 +52,8 @@ var userInfo = new Vue({    //获取用户信息
                 setCookie("token", rep.data.token);
                 this.realName = rep.data.realName;
                 this.gender = rep.data.gender;
-                this.uid = rep.data.gender;
-                this.id = rep.data.gender;
+                this.uid = rep.data.uid;
+                this.id = rep.data.id;
             }
         else
             {
@@ -197,7 +197,7 @@ var setUmpire = new Vue({   //任命裁判
                     rep=>{
                     if(rep.data.status=="success"){
                     setCookie("token",rep.data.token);
-                    alert("任命成功！");
+                    alert("任命主裁判成功！");
                     location.reload(true);
                 } else{
                     alert("任命失败"+rep.data.reason);
@@ -211,10 +211,12 @@ var setUmpire = new Vue({   //任命裁判
             }
             else {
                 axios({
-                    url:'/Data/admin_appointMainJudge',
+                    url:'/Data/admin_appointProjectJudge',
                     params: {
                         param: {
+                            token: getCookie("token"),
                             Data:{
+                                gid: this.gameID,
                                 uid: this.UID,
                                 appoint: true,
                             }
@@ -224,7 +226,7 @@ var setUmpire = new Vue({   //任命裁判
                     rep=>{
                         if(rep.data.status=="success"){
                             setCookie("token",rep.data.token);
-                            alert("任命主裁判成功！");
+                            alert("任命项目裁判成功！");
                             location.reload(true);
                         } else{
                             alert("任命失败"+rep.data.reason);
@@ -302,6 +304,7 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                         for (var info of rep.data.infos) {
                             this.gameid.push(info.gid);
                         }
+                        console.log(this.gameid);
                         this.recordAmount = this.gameid.length;
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
@@ -366,7 +369,8 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 }
                 axios({
                     url: '/Data/game_info',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -394,7 +398,8 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 }
                 axios({
                     url: '/Data/user_info',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -638,7 +643,7 @@ var checkUser = new Vue({ //审查用户资格
                         this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
                         this.changePage();
                     } else{
-                        alert("获取运动员申请表失败!");
+                        alert("获取用户资格申请表失败!");
                     }
                 })
         },
@@ -721,10 +726,11 @@ var checkUser = new Vue({ //审查用户资格
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = true;
+                this.isAgree = true;
                 axios({
                     url: '/Data/admin_verifyUser',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -754,10 +760,11 @@ var checkUser = new Vue({ //审查用户资格
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = false;
+                this.isAgree = false;
                 axios({
                     url: '/Data/admin_verifyUser',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {

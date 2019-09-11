@@ -89,13 +89,13 @@
                     <div id="enterScore">
                         <div v-bind:hidden="show">
                             <h2>我负责的比赛</h2>
-                            <table border="4" class="tableX">
+                            <table border="4" id="idData1" class="tableX">
                                 <tr>
-                                    <th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>已经录入</th><th>录入成绩</th>
+                                    <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>录入成绩</th>
                                 </tr>
                                 <tr v-for="game in game">
-                                    <td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td><td>{{game.isReg}}</td>
-                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID,game.isReg)">录入</button></td>
+                                    <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
+                                    <td><button type="button" v-on:click="change(game.gameName,game.gameID)">录入</button></td>
                                 </tr>
                             </table>
                             <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
