@@ -14,6 +14,7 @@ import org.junit.Test
 @Ignore
 class UserTest {
     @Before
+    @Test
     fun init() {
         SQLManager.init()
         TokenManager.init()

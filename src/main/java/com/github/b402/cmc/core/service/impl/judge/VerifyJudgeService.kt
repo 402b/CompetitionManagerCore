@@ -32,7 +32,7 @@ object VerifyJudgeService : DataService<SubmitData>(
                 val obj = JsonObject()
                 val uid = id.toInt()
                 obj.addProperty("uid", uid)
-                val info = JudgeInfo.getJudgeInfo(uid, gid).await()
+                val info = JudgeInfo.getJudgeInfo(uid, gid,false).await()
                 if (info == null) {
                     obj.addProperty("status", ERROR)
                     obj.addProperty("reason", "找不到用户的申请信息")

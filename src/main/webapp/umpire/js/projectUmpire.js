@@ -213,7 +213,6 @@ var enterScore = new Vue({    //录入成绩
                         this.game = rep.data.info;
                         for (var i = 0; i < this.game.length; i++) {
                             this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                            console.log(this.game[i].time);
                         }
                     } else{
                         alert("获取用户数据表失败!");
@@ -518,7 +517,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                             this.game = rep.data.info;
                             for (var i = 0; i < this.game.length; i++) {
                                 this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                                console.log(this.game[i].time);
                             }
                         } else{
                             alert("获取比赛数据表失败!");
@@ -529,33 +527,48 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 this.umpire = [];
                 var start = (this.pageNow - 1) * this.pageEach;
                 var end = Math.min(start + this.pageEach, this.recordAmount);
-                var useridX = [];    //需要请求的用户id列表
+                var t;
                 for (var i = start; i < end; i++) {
-                    useridX.push(this.users[i]);
-                }
-                axios({
-                    url: '/Data/user_info',
-                    params: {
-                        param: {
-                            token: getCookie("token"),
-                            Data: {
-                                uid: useridX,
+                    var useridX = [];    //需要请求的用户id列表
+                    useridX.push(this.users[i].uid);
+                    axios({
+                        url: '/Data/user_info',
+                        method: 'POST',
+                        data: {
+                            param: {
+                                token: getCookie("token"),
+                                Data: {
+                                    uid: useridX,
+                                }
                             }
                         }
-                    }
-                }).then(
-                    rep => {
-                        if (rep.data.status == "success") {
-                            setCookie("token", rep.data.token);
-                            this.umpire = rep.data.info;
-                        } else {
-                            alert("获取用户信息表失败!");
-                        }
-                    })
+                    }).then(
+                        rep => {
+                            if (rep.data.status == "success") {
+                                setCookie("token", rep.data.token);
+                                var obj = {id:rep.data.info[0].id, uid:rep.data.info[0].uid, realName:rep.data.info[0].realName, gender:rep.data.info[0].gender, type:""};
+                                this.umpire.push(obj);
+                                this.umpireType();
+                            } else {
+                                alert("获取用户信息表失败!");
+                            }
+                        })
+                }
             }
         }
         ,
-        change: function (gameName, gameID) {   //进入审核裁判员页面
+        umpireType: function () {
+            for (var i = 0; i < this.umpire.length; i++) {
+                for (var j = 0; j < this.umpire.length; j++) {
+                    if (this.umpire[i].uid == this.users[j].uid) {
+                        this.umpire[i].type = this.users[j].type;
+                        break;
+                    }
+                }
+            }
+        }
+        ,
+        change: function (gameName, gameID) {   //进入取消裁判员页面
             this.show = true;
             this.gameID = gameID;
             this.gameName = gameName;
@@ -566,8 +579,8 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                         token: getCookie("token"),
                         Data: {
                             by: "game",
-                            gid: this.gameID,
-                            verify: false,
+                            id: this.gameID,
+                            verify: true,
                         }
                     }
                 }
@@ -577,16 +590,17 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                         setCookie("token", rep.data.token);
                         this.users = [];
                         for (info of rep.data.infos) {
-                            this.users.push(info.uid);
+                            var obj = {uid:info.uid, type:info.type};
+                            this.users.push(obj);
                         }
+                        this.recordAmount = this.users.length;
+                        this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
+                        this.pageNow = 1;
+                        this.changePage();
                     } else {
                         alert("获取当前项目裁判的id列表失败!");
                     }
                 })
-            this.recordAmount = this.users.length;
-            this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
-            this.pageNow = 1;
-            this.changePage();
         },
         back: function () {
             this.show = false;
@@ -632,40 +646,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             else
                 return false;
         },
-        agree: function () {
-            if (this.checked.length < 1)
-                alert("你未选择任何项目！");
-            else {
-                isAgree = true;
-                axios({
-                    url: '/Data/judge_verify',
-                    params: {
-                        param: {
-                            token: getCookie("token"),
-                            Data: {
-                                gid:this.gameID,
-                                checked:this.checked,
-                                verify:true,
-                            }
-                        }
-                    }
-                }).then(
-                    rep=>{
-                        if(rep.data.status=="success"){
-                            setCookie("token",rep.data.token);
-                            alert("成功通过相应用户的申请！");
-                            location.reload(true);
-                        } else{
-                            alert("审核失败!");
-                        }
-                    }
-                    ,
-                    rep=>{
-                        alert("抱歉，网页当前不可用");
-                        console.log(rep)
-                    })
-            }
-        },
         disagree: function () {
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
@@ -673,7 +653,8 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 isAgree = false;
                 axios({
                     url: '/Data/judge_verify',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -845,7 +826,6 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                             this.game = rep.data.info;
                             for (var i = 0; i < this.game.length; i++) {
                                 this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                                console.log(this.game[i].time);
                             }
                         } else{
                             alert("获取比赛数据表失败!");
@@ -862,7 +842,8 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                 }
                 axios({
                     url: '/Data/user_info',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -875,8 +856,14 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                         if (rep.data.status == "success") {
                             setCookie("token", rep.data.token);
                             this.umpire = rep.data.info;
+                            for (var i = 0; i < this.umpire.length; i++) {
+                                if (this.umpire[i].gender == "M")
+                                    this.umpire[i].gender = "男";
+                                else if (this.umpire[i].gender == "F")
+                                    this.umpire[i].gender = "女";
+                            }
                         } else {
-                            alert("获取用户信息表失败!");
+                            alert("获取用户信息表失败!"+rep.data.reason);
                         }
                     })
             }
@@ -901,14 +888,16 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                     if (rep.data.status == "success") {
                         setCookie("token", rep.data.token);
                         this.users = rep.data.uids;
+                        this.recordAmount = this.users.length;
+                        console.log(this.users[0]);
+                        this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
+                        this.pageNow = 1;
+                        this.changePage();
                     } else {
-                        alert("获取申请裁判的用户id列表失败!");
+                        alert("获取申请裁判的用户id列表失败!" + rep.data.reason);
+                        location.reload(true);
                     }
                 })
-            this.recordAmount = this.users.length;
-            this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
-            this.pageNow = 1;
-            this.changePage();
         },
         back: function () {
             this.show = false;
@@ -916,6 +905,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             this.gameName = "";
             this.checked = [];
             this.umpire = [];
+            this.users = [];
             this.pageNow = 1;
             this.recordAmount = this.gameid.length;
             this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
@@ -958,10 +948,10 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = true;
                 axios({
                     url: '/Data/judge_verify',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -978,7 +968,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                             alert("成功通过相应用户的申请！");
                             location.reload(true);
                         } else{
-                            alert("审核失败!");
+                            alert("操作失败!");
                             location.reload(true);
                         }
                     }
@@ -993,10 +983,10 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = false;
                 axios({
                     url: '/Data/judge_verify',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -1013,7 +1003,7 @@ var checkUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
                             alert("成功拒绝相应用户的申请！");
                             location.reload(true);
                         } else{
-                            alert("审核失败!");
+                            alert("操作失败!");
                         }
                     }
                     ,
@@ -1054,7 +1044,7 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
         pageNow: 1, //当前所在页面
         pageAmount: 0, //页面总数
         recordAmount: 0,
-        pageEach: 2,   //每页显示的记录数
+        pageEach: 10,   //每页显示的记录数
         enterNumber: 0, //用户键盘输入的页码数
         isAgree: false,
         isCheckAll: false,
@@ -1167,7 +1157,6 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
                             this.game = rep.data.info;
                             for (var i = 0; i < this.game.length; i++) {
                                 this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                                console.log(this.game[i].time);
                             }
                         } else{
                             alert("获取比赛数据表失败!");
@@ -1184,7 +1173,8 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
                 }
                 axios({
                     url: '/Data/user_info',
-                    params: {
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -1197,6 +1187,12 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
                         if (rep.data.status == "success") {
                             setCookie("token", rep.data.token);
                             this.player = rep.data.info;
+                            for (var i = 0; i < this.player.length; i++) {
+                                if (this.player[i].gender == "F")
+                                    this.player[i].gender = "女";
+                                else if (this.player[i].gender == "M")
+                                    this.player[i].gender = "男";
+                            }
                         } else {
                             alert("获取用户信息表失败!");
                         }
@@ -1209,7 +1205,7 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
             this.gameID = gameID;
             this.gameName = gameName;
             axios({
-                url: '/Data/judge_unverified',
+                url: '/Data/game_unverifiedJoin',
                 params: {
                     param: {
                         token: getCookie("token"),
@@ -1223,14 +1219,14 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
                     if (rep.data.status == "success") {
                         setCookie("token", rep.data.token);
                         this.users = rep.data.uids;
+                        this.recordAmount = this.users.length;
+                        this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
+                        this.pageNow = 1;
+                        this.changePage();
                     } else {
                         alert("获取报名运动员的用户id列表失败!");
                     }
                 })
-            this.recordAmount = this.users.length;
-            this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
-            this.pageNow = 1;
-            this.changePage();
         },
         back: function () {
             this.show = false;
@@ -1280,10 +1276,10 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = true;
                 axios({
-                    url: '/Data/judge_verify',
-                    params: {
+                    url: '/Data/game_verifyJoinGame',
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -1315,10 +1311,10 @@ var checkPlayer = new Vue({    //某裁判所负责的项目信息，可以用�
             if (this.checked.length < 1)
                 alert("你未选择任何项目！");
             else {
-                isAgree = false;
                 axios({
-                    url: '/Data/judge_verify',
-                    params: {
+                    url: '/Data/game_verifyJoinGame',
+                    method: 'POST',
+                    data: {
                         param: {
                             token: getCookie("token"),
                             Data: {
@@ -1479,7 +1475,6 @@ var checkScore = new Vue({    //审核成绩
                         this.game = rep.data.info;
                         for (var i = 0; i < this.game.length; i++) {
                             this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                            console.log(this.game[i].time);
                         }
                     } else{
                         alert("获取比赛数据表失败!");
@@ -1779,7 +1774,6 @@ var showScore = new Vue({    //审核成绩
                         this.game = rep.data.info;
                         for (var i = 0; i < this.game.length; i++) {
                             this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                            console.log(this.game[i].time);
                         }
                     } else{
                         alert("获取比赛数据表失败!");

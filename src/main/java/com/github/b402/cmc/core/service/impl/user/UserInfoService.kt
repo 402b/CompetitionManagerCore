@@ -24,7 +24,7 @@ object UserInfoService : DataService<SubmitData>(
         val token = data.token!!
         val user = token.getUser()
         if (data.json.contains("uid")) {
-            if (!user.permission.contains(Permission.JUDGE)) {
+            if (!user.permission.contains(Permission.VERIFIED)) {
                 return returnData(ILLEGAL_PERMISSION, "权限不足")
             }
             val array = JsonArray()
