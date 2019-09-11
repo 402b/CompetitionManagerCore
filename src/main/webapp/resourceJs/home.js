@@ -19,6 +19,27 @@ function check(){
 }
 
 check();
+axios.interceptors.request.use(
+    config => {
+        let url = config.url
+        // get参数编码
+        if (config.method === 'get' && config.params) {
+            url += '?'
+            let keys = Object.keys(config.params)
+            for (let key of keys) {
+                url += `${key}=${encodeURIComponent(config.params[key])}&`
+            }
+            url = url.substring(0, url.length - 1)
+            config.params = {}
+        }
+        config.url = url
+        return config
+    },err=>{
+        console.log("请求出错");
+        console.log(err);
+    })
+
+
 
 /*
 //获取作为选手参加的比赛

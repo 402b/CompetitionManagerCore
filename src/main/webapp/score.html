@@ -174,8 +174,9 @@
 
                 //获取比赛分数
                 axios({
+                    method:'POST',
                     url:"/Data/",
-                    params:{
+                    data:{
 
                         param:{
                             token:getCookie("token"),

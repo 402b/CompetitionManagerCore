@@ -116,8 +116,9 @@
             //获取个人信息
             userInfo:function(){
                 axios({
+                    method:"POST",
                     url:"/Data/user_info",
-                    params:{
+                    data:{
 
                         param:{
                             token:getCookie("token"),
@@ -135,8 +136,9 @@
             //获取消息信息
             messages: function (){
                 axios({
+                    method:"POST",
                     url:"/Data/get_message",
-                    params:{
+                    data:{
 
                         param:{
                             token:getCookie("token"),

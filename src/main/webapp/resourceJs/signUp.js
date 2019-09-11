@@ -153,8 +153,9 @@ var vm = new Vue({
         //报名某个比赛
         signUp(competition){
             axios({
+                method:"POST",
                 url:"/Data/game_join",
-                params: {
+                data: {
 
                     param: {
                         token:getCookie("token"),
@@ -172,8 +173,9 @@ var vm = new Vue({
         //申请成为某个比赛的裁判
         applyJudge(competition){
             axios({
+                method:"POST",
                 url:"/Data/judge_apply",
-                params: {
+                data: {
 
                     param: {
                         token:getCookie("token"),
