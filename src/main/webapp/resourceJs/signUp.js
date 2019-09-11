@@ -1,5 +1,5 @@
 //引入部分依赖函数
-document.write('<script src="login.js" type="text/javascript" charset="utf-8"></script>');
+//document.write('<script src="login.js" type="text/javascript" charset="utf-8"></script>');
 
 //报名函数
 /*signUp(competition){
@@ -50,6 +50,7 @@ applyJudge(){
 var vm = new Vue({
     el: '#page',
     data: {
+        userInfo:{name:"test3"},
         /*userInfo:{
             name:"smc",
             age:20,
@@ -60,15 +61,17 @@ var vm = new Vue({
             //接收消息
 
         },
+        gameToShowById:[],
         //pageIndex
         pageIndex:0,
         //储存得到的所有比赛项目的id
-        gameIds:[],
+        gameIds:[1,2,3],
         //储存要展示的比赛项目的信息
-        //gameToShow
+        gameToShow:[]
     },
     computed:{
-        userInfo:function(){
+        //获取个人信息
+        computeUserInfo:function(){
             axios({
                 method:"POST",
                 url:"/Data/user_info",
@@ -82,20 +85,19 @@ var vm = new Vue({
                     }
                 }
             }).then(
-                rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                rep=>{console.log("请求个人信息成功");console.log(rep);
+                console.log(rep["data"]);
+                this.userInfo = rep["data"];
+                return rep["data"];}
                 ,
                 rep=>{console.log("请求个人信息失败")}
             )
         },
-        //获取所有可报名比赛的信息
-        computeGameIds:{
-            get:function(){
-                return this.gameIds
-            },
-            set:function(){
+        //获取所有可报名比赛的id
+        /*computeGameIds: function(){
                 axios({
                     method:"POST",
-                    url:"/Data/game_info",
+                    url:"/Data/game_list",
                     data:{
 
                         param: {
@@ -108,47 +110,50 @@ var vm = new Vue({
                     }
                 }).then(
                     rep=>{
-                        console.log("获取可报名的项目成功");
+                        console.log("获取可报名的比赛id成功");
+                        this.gameIds = rep.data;
                         //格式存疑
                         return rep;
                     },
-                    rep=>{console.log("获取可报名的项目失败")}
+                    rep=>{console.log("获取可报名的比赛id失败")}
                 );
-            }
-        },
+            },
+        */
         //获取要展示的比赛的gameId
-        gameToShowById: function () {
+        computeGameToShowById: function () {
             var index = (this.pageIndex-1)*10;
             index = index>-1?index:0;
             var list = [];
-            for(var i =0;i<10 && index+i<this.gameIds.length;i++){
-                list[i] = this.gameIds[index+i];
+            //if(!this.gameIds)
+            //   return [];
+            for(var i =0;i<10 && this.gameIds.gamelist[index+i];i++){
+                list[i] = this.gameIds.gamelist[index+i];
             }
+            this.gameToShowById = list;
             return list;
         },
-        gameToShow:function(){
-            //获取可报名的比赛项目
-            var games = {};
+        computeGameToShow:function(){
+            //获取要展示的可报名的比赛的信息
             axios({
                 method:"POST",
-                url:"/Data/game_list",
+                url:"/Data/game_info",
                 data:{
-
                     param: {
                         token:getCookie("token"),
                         Data:{
-                            //有歧义 并非真正gameId 而是比赛在列表中的序号
                             gameId:this.gameToShowById
                         },
                     }
                 }
             }).then(
                 rep=>{
-                    console.log("获取可报名的项目成功");
+                    console.log("获取要展示的比赛的信息成功");
+                    this.gameToShow = rep.data;
+                    console.log(rep);
                     //格式存疑
                     return rep;
                 },
-                rep=>{console.log("获取可报名的项目失败")}
+                rep=>{console.log("获取要展示的比赛的信息失败")}
             );
         }
     },
@@ -194,3 +199,28 @@ var vm = new Vue({
         }
     }
 })
+
+
+
+
+axios({
+    method:"POST",
+    url:"/Data/game_list",
+    data:{
+
+        param: {
+            token:getCookie("token"),
+            Data:{
+
+            },
+        }
+    }
+}).then(
+    rep=>{
+        console.log("获取可报名的比赛id成功");
+        vm.gameIds = rep.data;
+        //格式存疑
+        return rep;
+    },
+    rep=>{console.log("获取可报名的比赛id失败")}
+);

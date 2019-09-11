@@ -42,7 +42,7 @@ http://www.865171.cn/
 <div id="page">
     <div id="page-bgtop">
         <div id="content">
-            <div class="post" v-for="game in gameToShow">
+            <div class="post" v-for="game in gameToShow.info">
                 <p class ="meta">未参加</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
@@ -58,6 +58,10 @@ http://www.865171.cn/
             <ul>
                 <li>
                     <h2>用户</h2>
+                    <h1 v-for="n in computeUserInfo">{{n}}</h1>
+                    <h1 v-for="n in computeGameToShowById">{{n}}</h1>
+                    <h1 v-for="n in computeGameToShow">{{n}}</h1>
+                    
                     <p v-for="(value,key) in userInfo">{{key}}:{{value}}</p>
                 </li>
                 <li>
@@ -199,6 +203,12 @@ http://www.865171.cn/
     })
 </script -->
 <script src = "./resourceJs/signUp.js"> </script>
+<!--
+<h1 v-for="computeUserInfo">{{computeUserInfo}}</h1>
+<h1 v-for="gameToShowById">{{computeUserInfo}}</h1>
+<h1 v-for="gameToShow">{{computeUserInfo}}</h1>
+<h1 v-for="computeUserInfo">{{computeUserInfo}}</h1>
+-->
 </body>
 </html>
 
