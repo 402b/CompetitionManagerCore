@@ -1,6 +1,8 @@
 package com.github.b402.cmc.core.service.impl.user
 
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.user.UserVerifyEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.User
@@ -33,6 +35,8 @@ object VerifyUserService : DataService<SubmitData>(
                 } else {
                     user.verified = verify
                     if (user.sync().await()) {
+                        val uve = UserVerifyEvent(id,data.token!!.uid,verify)
+                        EventBus.callEvent(uve)
                         obj.addProperty("status", SUCCESS)
                     } else {
                         obj.addProperty("status", ERROR)

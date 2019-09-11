@@ -8,7 +8,7 @@ class ListenerTest {
 
     @Test
     fun register(){
-        val ll = EventBus.registerListener<TestEvent>(EventBus.EventPriority.NORMAL){
+        val ll = EventBus.registerListener<TestEvent>(EventBus.EventPriority.NORMAL,false,false){
 
             println("test")
         }

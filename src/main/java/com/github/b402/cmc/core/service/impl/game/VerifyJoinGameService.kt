@@ -1,6 +1,8 @@
 package com.github.b402.cmc.core.service.impl.game
 
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.user.UserVerifyJoinGameEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.JoinGame
@@ -34,6 +36,8 @@ object VerifyJoinGameService:DataService<SubmitData>(
                     obj.addProperty("status", ERROR)
                     obj.addProperty("reason", "数据库异常")
                 } else {
+                    val uvjge = UserVerifyJoinGameEvent(gid,uid,user.uid,verify)
+                    EventBus.callEvent(uvjge)
                     obj.addProperty("status", SUCCESS)
                 }
                 result.add(obj)

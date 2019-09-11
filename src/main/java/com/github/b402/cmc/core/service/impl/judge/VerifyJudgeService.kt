@@ -1,6 +1,8 @@
 package com.github.b402.cmc.core.service.impl.judge
 
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.user.UserVerifyJudgeEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.JudgeInfo
@@ -37,6 +39,8 @@ object VerifyJudgeService : DataService<SubmitData>(
                 } else {
                     info.verified = verify
                     if(info.sync().await()){
+                        val uvje = UserVerifyJudgeEvent(uid,gid,user.uid,verify)
+                        EventBus.callEvent(uvje)
                         obj.addProperty("status", SUCCESS)
                     }else{
                         obj.addProperty("status", ERROR)

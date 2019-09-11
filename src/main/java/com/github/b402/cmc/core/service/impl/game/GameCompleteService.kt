@@ -2,6 +2,8 @@ package com.github.b402.cmc.core.service.impl.game
 
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.configuration.Configuration
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.game.GameCompleteEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sort.Sort
@@ -52,6 +54,8 @@ object GameCompleteService : DataService<SubmitData>(
         val obj = JsonObject()
         obj.add("result",array)
         Game.createResult(Configuration.gson.toJson(obj),gid).await()
+        val gce = GameCompleteEvent(game)
+        EventBus.callEvent(gce)
         return returnData(SUCCESS)
     }
 }

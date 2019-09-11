@@ -1,6 +1,8 @@
 package com.github.b402.cmc.core.service.impl.score
 
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.score.ScoreUploadEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sort.Sort
@@ -62,6 +64,8 @@ object UploadScoreService : DataService<SubmitData>(
         }
         if (update) {
             if (score.sync(!admin).await()) {
+                val sue = ScoreUploadEvent(score)
+                EventBus.callEvent(sue)
                 return returnData(SUCCESS)
             }
         } else {
@@ -69,6 +73,8 @@ object UploadScoreService : DataService<SubmitData>(
                 if (admin) {
                     score.sync().await()
                 }
+                val sue = ScoreUploadEvent(score)
+                EventBus.callEvent(sue)
                 return returnData(SUCCESS)
             }
         }

@@ -1,6 +1,8 @@
 package com.github.b402.cmc.core.service.impl.user
 
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.user.UserRegisterEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.User
@@ -24,6 +26,12 @@ object RegisterService : DataService<RegisterData>(
             return returnData(ERROR, "创建用户时发生错误: ${reason}")
         }
         val token = Token(user.uid)
+        val rue = UserRegisterEvent(user.uid, data.id ?: "", data.gender, data.userName)
+        EventBus.callEvent(rue)
+        if (rue.isCancel) {
+            return returnData(DENY, rue.reason ?: "")
+
+        }
         return returnData(SUCCESS) {
             this.json.addProperty("token", token.toTokenString())
         }

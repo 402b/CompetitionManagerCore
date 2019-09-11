@@ -1,6 +1,8 @@
 package com.github.b402.cmc.core.service.impl.game
 
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.game.GameCreateEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.ReturnData
 import com.github.b402.cmc.core.service.data.*
@@ -18,6 +20,11 @@ object CreateGameService : DataService<CreateGameData>(
     override suspend fun onRequest(data: CreateGameData): ReturnData {
         if (data.sortType !in Sort.getAllSortName()) {
             return returnData(ILLEGAL_INPUT, "找不到排序方式")
+        }
+        val gce = GameCreateEvent(data)
+        EventBus.callEvent(gce)
+        if (gce.isCancel) {
+            return returnData(DENY, gce.reason ?: "")
         }
         val (g, e) = Game.createGame(data)
         if (g != null) {

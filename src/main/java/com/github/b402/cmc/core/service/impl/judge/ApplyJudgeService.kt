@@ -2,6 +2,8 @@ package com.github.b402.cmc.core.service.impl.judge
 
 import com.github.b402.cmc.core.JudgeType
 import com.github.b402.cmc.core.Permission
+import com.github.b402.cmc.core.event.EventBus
+import com.github.b402.cmc.core.event.user.UserJudgeApplyEvent
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.Game
@@ -25,6 +27,8 @@ object ApplyJudgeService : DataService<SubmitData>(
         }
         val addJudge = JudgeInfo.addJudge(data.token!!.uid, gid, JudgeType.NORMAL).await()
         if (addJudge != null) {
+            val ujae = UserJudgeApplyEvent(data.token!!.uid,gid)
+            EventBus.callEvent(ujae)
             return returnData(SUCCESS)
         } else {
             return returnData(ERROR, "数据库异常")

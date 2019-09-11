@@ -1,8 +1,10 @@
 package com.github.b402.cmc.core.service.impl.judge
 
+import com.github.b402.cmc.core.JudgeType
 import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
+import com.github.b402.cmc.core.sql.data.Game
 import com.github.b402.cmc.core.sql.data.JudgeInfo
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -58,6 +60,18 @@ object JudgeInfoService : DataService<SubmitData>(
         }
         val uid = data.token!!.uid
         if(data.getUser()!!.permission.contains(Permission.MAIN_JUDGE)){
+            val ja = JsonArray()
+            for(g in Game.getAllGames(false).await() ?: return returnData(ERROR, "数据库异常")){
+                val obj = JsonObject()
+                obj.addProperty("uid",uid)
+                obj.addProperty("gid", g)
+                obj.addProperty("type", JudgeType.PROJECT.display)
+                obj.addProperty("verified", true)
+                ja.add(obj)
+            }
+            return returnData(SUCCESS) {
+                json.add("infos", ja)
+            }
 
         }
         val judgeInfos = JudgeInfo.getJudgeInfo(uid).await() ?: return returnData(ERROR, "数据库异常")

@@ -1,5 +1,7 @@
 package com.github.b402.cmc.core;
 
+import com.github.b402.cmc.core.event.EventBus;
+import com.github.b402.cmc.core.event.server.ContextInitEvent;
 import com.github.b402.cmc.core.module.Module;
 import com.github.b402.cmc.core.module.ModuleClassLoader;
 import com.github.b402.cmc.core.servlet.DataServlet;
@@ -28,6 +30,8 @@ public class ContextManager implements ServletContextListener {
         DataServlet.initDataService();
         TokenManager.init();
         Sort.init();
+        ContextInitEvent cie = new ContextInitEvent();
+        EventBus.INSTANCE.callEvent(cie);
     }
 
     @Override
