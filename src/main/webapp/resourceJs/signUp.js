@@ -203,7 +203,7 @@ var vm = new Vue({
                     param: {
                         token:getCookie("token"),
                         Data:{
-                            gameId:competition.gameID
+                            gid:competition.gameID
                         }
                     }
                 }

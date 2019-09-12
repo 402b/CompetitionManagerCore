@@ -57,6 +57,7 @@
                 <li>
                     <h2>用户</h2>
                     <p v-for="(value,key) in userInfo">{{key}}:{{value}}</p>
+                    <h1 v-for="n in computeGameToShow">{{n}}</h1>
                 </li>
                 <li>
                     <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
@@ -70,7 +71,7 @@
     <!-- end #page -->
     <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第{{pageIndex}}页</p>
     <div id="footer">
-        <button onclick="vm.pageIndex++;"> 上一页</button>
+        <button onclick="vm.pageIndex--;"> 上一页</button>
         <button onclick="vm.pageIndex++;"> 下一页</button>
         <!--p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p -->
     </div>
@@ -89,9 +90,13 @@
             messageNum:0,
             pageIndex:0,
             token:getCookie("token"),
+            gameToShow:[],
+            gameToShowById:[],
+            gameIds:[],
+            userInfo:[],
         },
         computed:{
-            userInfo:function(){
+            computeUserInfo:function(){
                 axios({
                     url:"/Data/user_info",
                     params:{
@@ -104,13 +109,16 @@
                         }
                     }
                 }).then(
-                    rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                    rep=>{console.log("请求个人信息成功");console.log(rep);
+                    this.userInfo = rep.data;
+                    console.log(this.userInfo);
+                    return rep}
                     ,
                     rep=>{console.log("请求个人信息失败")}
                 )
             },
             //得到个人已经报名的项目
-            gameToJoinId:function () {
+            /*gameToJoinId:function () {
                 axios({
                     url:"/Data/game_getJoined",
                     params:{
@@ -127,36 +135,51 @@
                     ,
                     rep=>{console.log("网络问题请求个人参加的项目失败")}
                 )
-            },
+            }, */
             //请求要展示的比赛信息
-            gameToShow:function(){
-
-
+            computeGameToShow:function(){
+                var index = (this.pageIndex-1)*10;
+                index = index>-1?index:0;
+                var list = [];
+                //if(!this.gameIds)
+                //   return []
+                if(!this.gameIds)
+                    return null;
+                //if(!this.gameIds.gamelist)
+                //return null;
+                console.log("gamelist: "+ this.gameIds)
+                for(var i =0;i<10 && this.gameIds[index+i];i++){
+                    list[i] = this.gameIds[index+i];
+                }
+                this.gameToShowById = list;
                 axios({
-                    url:"/Data/game_list",
+                    url:"/Data/game_info",
                     params:{
 
                         param: {
                             token:getCookie("token"),
                             Data:{
 
-                                gids:this.gameToJoinId
+                                gameId:list
                             },
                         }
                     }
                 }).then(
                     rep=>{
-                        console.log("获取已参加的项目信息成功");
+                        console.log("获取要展示的已参加的项目信息成功");
                         //格式存疑
+                        this.gameToShow = rep.data.info;
+                        console.log(rep);
                         return rep;
                     },
-                    rep=>{console.log("获取已参加的项目信息失败")}
+                    rep=>{console.log("获取要展示的已参加的项目信息失败")}
                 );
             }
         },
         methods:{
             //取消报名
             cancelSignUp(competition){
+                console.log(competition)
                 axios({
                     url:"/Data/game_join",
                     params:{
@@ -165,7 +188,7 @@
                             token:getCookie("token"),
                             Data:{
                                 uid:this.userInfo.uid,
-                                gid:competition.gameId,
+                                gid:competition.gameID,
                                 cancel:true
                             }
                         }
@@ -179,6 +202,53 @@
             }
         }
     })
+
+
+
+    axios({
+        method:"POST",
+        url:"/Data/game_getJoined",
+        data:{
+
+            param: {
+                token:getCookie("token"),
+                Data:{
+
+                },
+            }
+        }
+    }).then(
+        rep=>{
+            console.log("请求已报名的比赛的id成功");
+            vm.gameIds = rep.data["gids"];
+            console.log(rep);
+            //格式存疑
+            return rep;
+        },
+        rep=>{console.log("请求已报名的比赛id失败")}
+    );
+    console.log(vm.gameToShowById);
+
+    axios({
+        url:"/Data/user_info",
+        params:{
+
+            param:{
+                token:getCookie("token"),
+                Data:{
+                    //uid:this.userInfo.uid
+                }
+            }
+        }
+    }).then(
+        rep=>{console.log("请求个人信息成功");console.log(rep);
+            vm.userInfo = rep.data;
+
+            return rep}
+        ,
+        rep=>{console.log("请求个人信息失败")}
+    )
+    console.log(vm.userInfo);
 </script>
 </body>
 </html>
