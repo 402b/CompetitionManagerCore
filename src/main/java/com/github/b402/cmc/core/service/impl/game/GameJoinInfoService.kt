@@ -13,7 +13,7 @@ object GameJoinInfoService : DataService<RequestJoinInfo>(
         RequestJoinInfo::class.java
 ) {
     override suspend fun onRequest(data: RequestJoinInfo): ReturnData {
-        val djoined = JoinGame.getJoinedInfo(data.gid, data.verified)
+        val djoined = JoinGame.getJoinedInfo(data.gid, false,data.verified)
         val user = data.getUser() ?: return returnData(ILLEGAL_PERMISSION,"权限不足")
         if(!user.getPermission(data.gid).await().contains(Permission.JUDGE)){
             return returnData(ILLEGAL_PERMISSION,"权限不足")
@@ -31,6 +31,6 @@ object GameJoinInfoService : DataService<RequestJoinInfo>(
 }
 
 class RequestJoinInfo(json: JsonObject) : SubmitData(json) {
-    val gid = super.json.getInt("gid")
-    val verified = super.json.getBoolean("verified", false)
+    val gid = super.json.getInt("gameId")
+    val verified = super.json.getBoolean("verified", true)
 }

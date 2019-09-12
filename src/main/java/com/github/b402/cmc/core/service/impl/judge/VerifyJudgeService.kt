@@ -32,13 +32,16 @@ object VerifyJudgeService : DataService<SubmitData>(
                 val obj = JsonObject()
                 val uid = id.toInt()
                 obj.addProperty("uid", uid)
-                val info = JudgeInfo.getJudgeInfo(uid, gid,false).await()
+                val info = JudgeInfo.getJudgeInfo(uid, gid,!verify).await()
                 if (info == null) {
                     obj.addProperty("status", ERROR)
                     obj.addProperty("reason", "找不到用户的申请信息")
                 } else {
                     info.verified = verify
                     if(info.sync().await()){
+                        if(!verify){
+                            JudgeInfo.removeJudge(uid,gid).await()
+                        }
                         val uvje = UserVerifyJudgeEvent(uid,gid,user.uid,verify)
                         EventBus.callEvent(uvje)
                         obj.addProperty("status", SUCCESS)

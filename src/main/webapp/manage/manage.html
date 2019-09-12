@@ -64,7 +64,7 @@
 				  <h2>{{realName}}</h2>
 				  <p>你好！ <em>尊敬的管理员</em>， 欢迎来到管理员界面。 在这里，你可以进行有关运动会管理的相关操作。</p>
 				  <div class="main-btn"><a href="#2">了解更多</a></div>
-				  <div class="fb-btn"><a href="#" target="_blank">回到主页</a></div>
+				  <div class="fb-btn"><a href="home.html" target="_blank">回到主页</a></div>
 			  </div>
 		  </div>
 		</div>
@@ -108,7 +108,7 @@
 									<fieldset>
 										<h5>排序类型...</h5>
 										<select name="type" v-model="sortName">
-											<option v-for="sort in sorts" :value=sort.sortName>---------------------{{sort.display}}---------------------</option>
+											<option v-for="sort in sorts" :value=sort.sortName style="background-color: #5e5e5e">---------------------{{sort.display}}---------------------</option>
 										</select>
 									</fieldset>
 								</div>
@@ -197,41 +197,43 @@
 			<div class="content fifth-content">
 				<div class="container-fluid">
 					<div class="col-md-6">
-						<div id="cancelUmpire">
-							<div v-bind:hidden="show">
-								<h2>我负责的比赛</h2>
-								<table border="4" class="tableX">
-									<tr>
-										<th>比赛名称</th><th>比赛ID</th><th>比赛类型</th><th>取消裁判资格</th>
-									</tr>
-									<tr v-for="game in game">
-										<td>{{game.gameName}}</td><td>{{game.gameID}}</td><td>{{game.gameType}}</td>
-										<td><button type="button" v-on:click="change(game.gameName,game.gameID)">取消裁判资格</button></td>
-									</tr>
-								</table>
-								<h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
-								</br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
-							</div>
-							<div v-bind:hidden="!show">
-								<h2>{{gameName}}</h2>
-								<table border="4" class="tableX">
-									<tr>
-										<th>ID</th><th>UID</th><th>裁判员姓名</th><th>性别</th>
-										<th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
-									</tr>
-									<tr v-for="umpire in umpire">
-										<td>{{umpire.id}}</td><td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td>
-										<td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
-									</tr>
-								</table>
-								<div class="col-md-12">
-									<fieldset></br>
-										<button v-on:click="back" type="submit">返回</button>
-										<button v-on:click="disagree" type="submit">取消裁判资格</button>
-									</fieldset>
-								</div>
-							</div>
-						</div>
+                        <div id="cancelUmpire">
+                            <div v-bind:hidden="show">
+                                <h2>我负责的比赛</h2>
+                                <table border="4" class="tableX">
+                                    <tr>
+                                        <th>比赛ID</th><th>比赛名称</th><th>比赛时间</th><th>取消资格</th>
+                                    </tr>
+                                    <tr v-for="game in game">
+                                        <td>{{game.gameID}}</td><td>{{game.gameName}}</td><td>{{game.time}}</td>
+                                        <td><button type="button" v-on:click="change(game.gameName,game.gameID)">取消</button></td>
+                                    </tr>
+                                </table>
+                                <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+                                </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+                            </div>
+                            <div v-bind:hidden="!show">
+                                <h2>{{gameName}}</h2>
+                                <table border="4" class="tableX">
+                                    <tr>
+                                        <th>ID</th><th>UID</th><th>裁判员姓名</th><th>性别</th><th>裁判类型</th>
+                                        <th><input type="checkbox" :checked="isCheckAll" @click="checkAll()"><h6>全选</h6></th>
+                                    </tr>
+                                    <tr v-for="umpire in umpire">
+                                        <td>{{umpire.id}}</td><td>{{umpire.uid}}</td><td>{{umpire.realName}}</td><td>{{umpire.gender}}</td><td>{{umpire.type}}</td>
+                                        <td><input type="checkbox" :checked="check(umpire.uid)" @click="checkOne(umpire.uid)"><h6>选择</h6></td>
+                                    </tr>
+                                </table>
+                                <h6>共有{{pageAmount}}页，共有{{recordAmount}}条数据</h6><button v-on:click="prePage">上一页</button>目前第{{pageNow}}页<button v-on:click="nextPage">下一页</button>
+                                </br>前往第<input type="text" v-on:keyUp.enter="enter" v-model="enterNumber">页
+                                <div class="col-md-12">
+                                    <fieldset></br>
+                                        <button v-on:click="back" type="submit">返回</button>
+                                        <button v-on:click="disagree" type="submit">取消裁判资格</button>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>

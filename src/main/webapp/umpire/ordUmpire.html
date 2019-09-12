@@ -58,7 +58,7 @@
                     <h2>{{realName}}</h2>
                     <p>你好！ <em>尊敬的普通裁判</em>， 欢迎来到裁判员界面。 在这里，你可以进行有关运动会普通裁判职权的相关操作。</p>
                     <div class="main-btn"><a href="#2">了解更多</a></div>
-                    <div class="fb-btn"><a href="#" target="_blank">回到主页</a></div>
+                    <div class="fb-btn"><a href="home.html" target="_blank">回到主页</a></div>
                 </div>
             </div>
         </div>
@@ -103,24 +103,13 @@
                         </div>
                         <div v-bind:hidden="!show">
                             <h2>{{gameName}}</h2>
-                            <h5>请选择该比赛成绩的单位</h5>
-                            <select v-model="scoreType">
-                                <option value="秒">秒(例:12.33)</option>
-                                <option value="分秒">分秒(例:3:42.12)</option>
-                                <option value="米">米(例:12.55)</option>
-                                <option value="个">个(例:15)</option>
-                                <option value="分数">分数(例200.2)</option>
-                            </select></br></br>
+                            </br></br>
                             <table border="4" class="tableX">
                                 <tr>
-                                    <th>UID</th><th>运动员姓名</th><th>是否犯规</th><th>成绩</th>
+                                    <th>UID</th><th>运动员姓名</th><th>成绩</th>
                                 </tr>
                                 <tr v-for="player in player">
                                     <td>{{player.uid}}</td><td>{{player.realName}}</td>
-                                    <td><select name="foul">
-                                        <option value = "false" selected>否</option>
-                                        <option value = "true">是</option>
-                                    </select></td>
                                     <td>
                                         <input type="text" name="score">
                                     </td>

@@ -64,7 +64,7 @@
                     <h2>{{realName}}</h2>
                     <p>你好！ <em>尊敬的项目裁判</em>， 欢迎来到裁判员界面。 在这里，你可以进行有关运动会项目裁判职权的相关操作。</p>
                     <div class="main-btn"><a href="#2">了解更多</a></div>
-                    <div class="fb-btn"><a href="#" target="_blank">回到主页</a></div>
+                    <div class="fb-btn"><a href="home.html" target="_blank">回到主页</a></div>
                 </div>
             </div>
         </div>
@@ -82,6 +82,9 @@
                         <!--<div class="main-btn"><a href="#4">任命裁判</a></div></br>-->
                         <div class="main-btn"><a href="#5">取消裁判</a></div></br>
                         <div class="main-btn"><a href="#6">审核裁判申请</a></div>
+                        <div class="main-btn"><a href="#7">审核运动员报名</a></div>
+                        <div class="main-btn"><a href="#8">审核成绩</a></div>
+                        <div class="main-btn"><a href="#9">发布成绩</a></div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -368,19 +371,10 @@
                         </div>
                         <div v-bind:hidden="!show">
                             <h2>{{gameName}}</h2>
-                            <table border="4" class="tableX">
-                                <tr>
-                                    <th>UID</th><th>运动员姓名</th><th>成绩</th>
-                                </tr>
-                                <tr v-for="score in score">
-                                    <td>{{score.uid}}</td><td>{{score.realName}}</td><td>{{score.score}}</td>
-                                </tr>
-                            </table>
                             <div class="col-md-12">
                                 <fieldset></br>
-                                    <button v-on:click="back" type="submit">返回</button></br></br>
-                                    我想要发布前：<input type="text">的成绩
-                                    <button v-on:click="show" type="submit">返回</button>
+                                    <h4>我想要发布前：<input type="number" v-model="top">的成绩</h4>
+                                        <button v-on:click="back" type="submit">返回</button></br></br><button v-on:click="showX" type="submit">发布</button>
                                 </fieldset>
                             </div>
                         </div>
