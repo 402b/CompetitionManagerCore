@@ -40,14 +40,14 @@
 <div id="page">
     <div id="page-bgtop">
         <div id="content">
-            <div class="post" v-for="(game,index) in gameToShowInfo">
-                <p class ="meta">已完成</p>
+            <div class="post" v-for="game in allGameInfo">
+                <p class ="meta">未参加</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
                     <p v-for="(value,key) in game"> {{key}}:{{value}} </p>
-                    <p>成绩：{{gameScoreToShow[index]}}</p>
-                    <!-- button v-on:click="cancelSignUp(competition)">放弃报名</button -->
+                    <!-- button v-on:click="signUp(game)">报名参赛</button>
+                    <button v-on:click="applyJudge(game)">申请裁判</button-->
                 </div>
             </div>
 
@@ -58,6 +58,7 @@
                 <li>
                     <h2>用户</h2>
                     <p v-for="(value,key) in userInfo">{{key}}:{{value}}</p>
+                    <h1 v-for="n in computeUserInfo">{{n}}</h1>
                 </li>
                 <li>
                     <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
@@ -88,14 +89,16 @@
             //pageIndex
             pageIndex:0,
             //储存得到的所有比赛项目的id
-            gameJoinedId:[],
+            gameIds:[],
             //储存要展示的比赛项目的信息
-            gameToShow:{},
+            gameToShow:[],
             token:getCookie("token"),
-            //gameToShowId:[],
+            gameToShowById:[],
+            userInfo:{},
+            allGameInfo:[],
         },
         computed:{
-            userInfo:function(){
+            computeUserInfo:function(){
                 axios({
                     url:"/Data/user_info",
                     params:{
@@ -108,30 +111,43 @@
                         }
                     }
                 }).then(
-                    rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                    rep=>{console.log("请求个人信息成功");console.log(rep);
+                    this.userInfo = rep.data;
+                    return rep}
                     ,
                     rep=>{console.log("请求个人信息失败")}
                 )
             },
             //要展示的比赛的id
-            gameToShowId: function(){
+            /*
+            computeGameToShowById: function(){
                 var index = (this.pageIndex-1)*10;
                 index = index>-1?index:0;
                 var list = [];
-                for(var i =0;i<10 && index+i<this.gameJoinedId.length;i++)
-                    list[i] = this.gameJoinedId[index+i];
+                for(var i =0;i<10 && index+i<this.gameIds.length;i++)
+                    list[i] = this.gameIds[index+i];
                 return list;
             },
+            */
+
             //要展示的比赛的信息
-            gameToShowInfo: function(){
+            computeGameToShow: function(){
+                var index = (this.pageIndex-1)*10;
+                index = index>-1?index:0;
+                var list = [];
+                if(!this.gameIds)
+                    return null;
+                for(var i =0;i<10 && index+i<this.gameIds.length;i++)
+                    list[i] = this.gameIds[index+i];
+                this.gameToShowById =  list;
                 axios({
-                    url:"/Data/game",
+                    url:"/Data/game_info",
                     params:{
 
                         param: {
                             token:getCookie("token"),
                             Data:{
-                                gameId:this.gameToShowId
+                                gameId:this.list
                             },
                         }
                     }
@@ -145,33 +161,26 @@
                 );
             },
             //得到个人参加的项目的列表
-            computeGameJoinedId:{
-                get:function () {
-                    return this.gameJoinedId;
-                },
-                set:function () {
+            computeGameIds: function () {
                 axios({
-                    url:"/Data/",
+                    url:"/Data/game_result",
                     params:{
-
                         param:{
                             token:getCookie("token"),
                             Data:{
-                                uid:this.userInfo.uid,
-                                finished: true
+                                all:"true",
                             }
                         }
                     }
                 }).then(
-                    rep=>{console.log("获取个人已完成的项目列表成功"); this.gameJoinedId = rep;return this.gameJoinedId}
+                    rep=>{console.log("获取个人已完成的项目列表成功"); this.gameIds = rep.data;
+                    return this.gameIds}
                     ,
                     rep=>{console.log("获取个人已完成的项目列表失败")}
                 )
-                }
             },
             //获取列表 包含每个比赛的gameid和用户的成绩
             gameScoreToShow:function(){
-
                 //获取比赛分数
                 axios({
                     method:'POST',
@@ -199,6 +208,26 @@
 
         }
     })
+
+    //获取所有已出成绩的比赛的全部信息
+    axios({
+        url:"/Data/game_result",
+        params:{
+            param:{
+                token:getCookie("token"),
+                Data:{
+                    all:"true",
+                }
+            }
+        }
+    }).then(
+        rep=>{console.log("获取所有已出成绩的比赛的信息成功"); this.allGameInfo = rep.data;
+            return rep}
+        ,
+        rep=>{console.log("获取所有已出成绩的比赛信息失败")}
+    )
+
+
 </script>
 </body>
 </html>
