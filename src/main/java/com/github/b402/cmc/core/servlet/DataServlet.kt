@@ -123,10 +123,12 @@ class DataServlet : HttpServlet() {
     companion object {
         val dataService = mutableMapOf<String, DataService<*>>()
 
+        @JvmStatic
         fun register(ds: DataService<*>) {
             dataService["/${ds.path}"] = ds
         }
 
+        @JvmStatic
         fun unregister(path: String): DataService<*>? {
             return dataService.remove("/${path}")
         }

@@ -120,14 +120,14 @@ public abstract class Module {
             try {
                 loadModule(it);
             } catch (Throwable t) {
-                logger.error(String.format("加载模块$s时发生异常", module.getName()), t);
+                logger.error(String.format("加载模块%s时发生异常", module.getName()), t);
             }
         }
         for (ModuleClassLoader it : ml.getLoaders()) {
             try {
                 enableModule(it);
             } catch (Throwable t) {
-                logger.error(String.format("启动模块$s时发生异常", it.getModule().getName()), t);
+                logger.error(String.format("启动模块%s时发生异常", it.getModule().getName()), t);
             }
         }
     }

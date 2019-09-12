@@ -6,5 +6,8 @@
   <listener>
     <listener-class>com.github.b402.cmc.core.ContextManager</listener-class>
   </listener>
-  <display-name>Archetype Created Web Application</display-name>
+  <display-name>CompetitionManagerCore</display-name>
+  <welcome-file-list>
+    <welcome-file>/loginX.html</welcome-file>
+  </welcome-file-list>
 </web-app>

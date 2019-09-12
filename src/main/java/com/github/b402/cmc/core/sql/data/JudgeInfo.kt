@@ -46,6 +46,20 @@ data class JudgeInfo(
             ps.executeUpdate()
         }
 
+        suspend fun getJudgeInfo(uid: Int, gid: Int) = SQLManager.asyncDeferred {
+            val ps = prepareStatement("SELECT * FROM Judge WHERE UID = ? AND GID = ?")
+            ps.setInt(1, uid)
+            ps.setInt(2, gid)
+            val rs = ps.executeQuery()
+            if (rs.next()) {
+                val type = JudgeType.valueOf(rs.getString("Type"))
+                val verified = rs.getBoolean("Verified")
+                JudgeInfo(uid, gid, type, verified)
+            } else {
+                null
+            }
+        }
+
         suspend fun getJudgeInfo(uid: Int, gid: Int, verified: Boolean = true) = SQLManager.asyncDeferred {
             val ps = prepareStatement("SELECT * FROM Judge WHERE UID = ? AND GID = ? AND Verified = ?")
             ps.setInt(1, uid)
@@ -54,7 +68,6 @@ data class JudgeInfo(
             val rs = ps.executeQuery()
             if (rs.next()) {
                 val type = JudgeType.valueOf(rs.getString("Type"))
-                val verified = rs.getBoolean("Verified")
                 JudgeInfo(uid, gid, type, verified)
             } else {
                 null

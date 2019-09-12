@@ -4,6 +4,7 @@ import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.service.DataService
 import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.Game
+import com.github.b402.cmc.core.sql.data.GameResult
 import com.google.gson.JsonArray
 import kotlinx.coroutines.Job
 

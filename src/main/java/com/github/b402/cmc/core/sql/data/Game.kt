@@ -140,7 +140,7 @@ class Game(
         }
 
         suspend fun createResult(result: String, gid: Int) = SQLManager.async {
-            val ps = this.prepareStatement("INSERT INTO VALUES (?,?,?)")
+            val ps = this.prepareStatement("INSERT INTO GameResult VALUES (?,?,?)")
             ps.setInt(1, gid)
             ps.setString(2, result)
             ps.setLong(3, System.currentTimeMillis())

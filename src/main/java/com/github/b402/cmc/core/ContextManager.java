@@ -24,12 +24,12 @@ public class ContextManager implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent evt) {
         servletContext = evt.getServletContext();
-        Logger.getLogger(ContextManager.class).info("开始初始化模块");
-        Module.loadModules();
         SQLManager.init();
         DataServlet.initDataService();
         TokenManager.init();
         Sort.init();
+        Logger.getLogger(ContextManager.class).info("开始初始化模块");
+        Module.loadModules();
         ContextInitEvent cie = new ContextInitEvent();
         EventBus.INSTANCE.callEvent(cie);
     }
