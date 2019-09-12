@@ -1830,7 +1830,8 @@ var showScore = new Vue({    //发布成绩
                     rep=>{
                         if(rep.data.status=="success"){
                             setCookie("token",rep.data.token);
-                            alert("发布成功！")
+                            alert("发布成功！");
+                            location.reload(true);
                         } else{
                             alert("发布失败!");
                             location.reload(true);

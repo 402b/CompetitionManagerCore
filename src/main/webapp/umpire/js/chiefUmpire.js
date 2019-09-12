@@ -74,10 +74,15 @@ var userInfo = new Vue({    //获取用户信息
                 this.gender = rep.data.gender;
                 this.uid = rep.data.uid;
                 this.id = rep.data.id;
+                if (rep.data.permission != "MAIN_JUDGE") {
+                    alert("你无权进入此网页！");
+                    window.location.href="../home.html";
+                }
             }
         else
             {
-                alert("获取用户信息失败！" + rep.data.reason)
+                alert("获取用户信息失败！" + rep.data.reason);
+                window.location.href="../home.html";
             }
         })
         }

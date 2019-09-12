@@ -58,7 +58,6 @@ var userInfo = new Vue({    //获取用户信息
             this.realName = "Tony";
         },
         refresh: function () {
-            console.log(window.location.pathname);
             axios({
                 url: '/Data/user_info',
                 params: {
@@ -77,14 +76,14 @@ var userInfo = new Vue({    //获取用户信息
                 this.uid = rep.data.uid;
                 this.id = rep.data.id;
                 if (rep.data.permission != "ADMIN") {
-                    console.log(rep.data.permission);
                     alert("你无权进入此网页！");
-                    window.location("home.html");
+                    window.location.href="../home.html";
                 }
             }
         else
             {
-                alert("获取用户信息失败！" + rep.data.reason)
+                alert("获取用户信息失败！" + rep.data.reason);
+                window.location.href="../home.html";
             }
         })
         }
