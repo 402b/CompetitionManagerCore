@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Home</title>
+    <title>Message</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />；
     <link href="assiduous/style.css" rel="stylesheet" type="text/css" media="screen" />
@@ -39,6 +39,9 @@
 <hr />
 <!-- end #logo -->
 <div id="page">
+    <p v-for="n in computeUserInfo">{{n}}</p>
+    <p v-for="n in computeUnreadMessageId">{{n}}</p>
+    <p v-for="n in computeMessageData">{{n}}</p>
     <div id="page-bgtop">
         <div id="content">
             <div class="post" v-for="message in messages">
@@ -46,7 +49,10 @@
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <p v-for="(value,key) in message"> {{key}}:{{value}} </p>
+                    <!-- p v-for="(value,key) in message"> {{key}}:{{value}} </p-->
+                    <p> 消息内容:{{message.message.message}} </p>
+                    <p> 消息来源:{{message.message.from}} </p>
+                    <button v-on:click="setRead(message)" >设为已读</button>
                     <!-- button onclick="signUp(competition)">放弃报名</button -->
                 </div>
             </div>
@@ -57,7 +63,13 @@
             <ul>
                 <li>
                     <h2>用户</h2>
-                    <p v-for="(value,key) in userInfo">{{key}}:{{value}}</p>
+                    <!-- p v-for="(value,key) in userInfo">{{key}}:{{value}}</p-->
+
+
+                    <p>真实姓名：{{userInfo.realName}}</p>
+                    <p>性别：{{userInfo.gender=='M'?"男":"女"}}</p>
+                    <p>用户id：{{userInfo.uid}}</p>
+                    <p>身份：{{userInfo.permission=="VERIFIED"?"已验证":"未验证"}}</p>
                 </li>
                 <li>
                     <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
@@ -86,79 +98,176 @@
             },*/
             messageNum:0,
             //接收消息
-            /*messages: {
-                //形式1
-                applyJudge_run20191000_Success: {
-                    content:"您对 在2019年10月20日第二运动场进行的男子1000米比赛 的 报名成功",
-                    messageTimestamp:"20191.10.05"
-                },
-                //形式2
-                applyJudge_run20193000_Success:{
-                    content:"报名成功",
-                    gameInfo:{
-                        sport:"男子3000米跑",
-                        date:"2019.10.30",
-                        location:"运动场",
-                        time:"10:00"
-                    },
-                    messageTimestamp:"20191.10.05"
-                }
-            },*/
+            messages: {},
 
-
-
+            token:getCookie("token"),
+            userInfo:[],
             //pageIndex
             pageIndex:0,
-
+            messageIds:[],
 
         },
         computed:{
-            //获取个人信息
-            userInfo:function(){
+            computeUserInfo:function(){
                 axios({
-                    method:"POST",
+                    method:'POST',
                     url:"/Data/user_info",
                     data:{
 
                         param:{
                             token:getCookie("token"),
                             Data:{
-
+                                //uid:this.userInfo.uid
                             }
                         }
                     }
                 }).then(
-                    rep=>{console.log("请求个人信息成功");console.log(rep);return rep}
+                    rep=>{console.log("请求个人信息成功");//console.log(rep);
+                        this.userInfo = rep.data;
+                        //console.log(this.userInfo);
+                        return rep}
                     ,
                     rep=>{console.log("请求个人信息失败")}
                 )
             },
-            //获取消息信息
-            messages: function (){
+
+
+            //获取未读消息id信息
+            computeUnreadMessageId: function (){
                 axios({
                     method:"POST",
-                    url:"/Data/get_message",
+                    url:"/Data/message_unread",
+                    data:{
+
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                uid:this.userInfo.uid,
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取未读消息id成功");
+                        this.messageIds = rep.data.list;
+                        if(rep.data.list)
+                            this.messageNum = rep.data.list.length;
+                        console.log(rep);
+                        return rep;
+                    },
+                    rep=>{console.log("获取未读消息id失败")}
+                );
+            },
+            //请求消息内容
+            computeMessageData:function () {
+                axios({
+                    method:"POST",
+                    url:"/Data/message_data",
+                    data:{
+
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                index:this.messageIds,
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取未读消息内容成功");
+                        this.messages = rep.data;
+                        this.messages = rep.data.datas;
+                        for(message in this.messages){
+                            getUserName(message.message.from);
+                        }
+                        console.log(rep);
+                        return rep;
+                    },
+                    rep=>{console.log("获取未读消息内容失败")}
+                );
+            }
+        },
+        methods:{
+            //将消息设为已读
+            setRead:function (message) {
+                axios({
+                    method:"POST",
+                    url:"/Data/message_read",
+                    data:{
+
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                index:message.index,
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("将 message"+message.index+"设为已读成功");
+
+                        return rep;
+                    },
+                    rep=>{console.log("将 message"+message.index+"设为已读失败")}
+                );
+            },
+            getUserName:function(uid) {
+                axios({
+                    method:'POST',
+                    url:"/Data/user_info",
                     data:{
 
                         param:{
                             token:getCookie("token"),
-                            Data:{
-
-                            }
+                                Data:{
+                                    uid:[uid],
+                                }
                         }
                     }
                 }).then(
-                    rep=>{console.log("请求消息信息成功");console.log(rep);return rep}
+                    rep=>{console.log("请求uid为 "+uid+"的人信息成功");//console.log(rep);
+                        console.log(rep.data);
+                        if(this.messages)
+                            for(message in this.messages){
+                                if(message)
+                                    if(message.message.from==uid) {
+                                        message.message.from = rep.data.info[0].realName;
+                                        console.log("realName");
+                                    }
+                            }
+                        return rep}
                     ,
-                    rep=>{console.log("请求消息信息失败")}
+                    rep=>{console.log("请求uid为 "+uid+"的人信息失败")}
                 )
             },
-
-        },
-        methods:{
-
         }
     })
+
+
+    axios({
+        method:"POST",
+        url:"/Data/message_unread",
+        data:{
+
+            param: {
+                token:getCookie("token"),
+                Data:{
+                    uid:vm.userInfo.uid,
+                },
+            }
+        }
+    }).then(
+        rep=>{
+            console.log("获取未读消息id成功");
+            vm.messageIds = rep.data;
+
+            console.log(rep);
+            return rep;
+        },
+        rep=>{console.log("获取未读消息id失败")}
+    );
+
+
 </script>
 </body>
 </html>
