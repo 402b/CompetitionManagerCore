@@ -1,7 +1,7 @@
 package com.github.b402.cmc.core.token
 
 import com.github.b402.cmc.core.FileManager
-import com.github.b402.cmc.core.util.md5Hash
+import com.github.b402.cmc.core.util.hashSHA256
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -18,7 +18,7 @@ object TokenManager {
         if (!f.exists()) {
             f.createNewFile()
             val fw = FileWriter(f)
-            fw.write("${UUID.randomUUID()}/${Math.random()}/${Random.nextLong()}".md5Hash())
+            fw.write("${UUID.randomUUID()}/${Math.random()}/${Random.nextLong()}".hashSHA256())
             fw.flush()
             fw.close()
         }

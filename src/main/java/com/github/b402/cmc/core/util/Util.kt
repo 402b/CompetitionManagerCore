@@ -17,14 +17,14 @@ fun String.deBase64(): String {
     return String(Base64.getUrlDecoder().decode(this))
 }
 
-val instance = MessageDigest.getInstance("MD5")
-fun String.md5Hash(): String {
+val instance = MessageDigest.getInstance("SHA-256")
+fun String.hashSHA256(): String {
     val ba = instance.digest("$this-cmc".toByteArray())
     return byteArrayToHexString(ba)
 }
 
-fun String.md5HashWithSalt(salt: String = TokenManager.Signature): String {
-    val ba = instance.digest("$this-$salt-cmc".toByteArray())
+fun String.hashSHA256WithSalt(exsalt:String, salt: String = TokenManager.Signature): String {
+    val ba = instance.digest("$exsalt-$this-$salt-cmc".toByteArray())
     return byteArrayToHexString(ba)
 }
 

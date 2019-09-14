@@ -5,6 +5,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 
 object FileManager {
+    @JvmStatic
     fun checkFolder() {
         val bf = getBaseFolder()
         println(bf.absolutePath)
@@ -21,17 +22,19 @@ object FileManager {
         }
     }
 
+    @JvmStatic
     fun getBaseFolder() = File("CompetitionManagerCore")
 
+    @JvmStatic
     fun saveResources(file: File, ins: InputStream) {
-        if(file.exists()){
+        if (file.exists()) {
             file.delete()
         }
         file.createNewFile()
         val fos = FileOutputStream(file)
-        while(true){
+        while (true) {
             val i = ins.read();
-            if(i == -1){
+            if (i == -1) {
                 break
             }
             fos.write(i)

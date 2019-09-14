@@ -98,9 +98,9 @@ class User(
 
         suspend fun getUnverifiedUsers() = SQLManager.asyncDeferred {
             val list = mutableListOf<Int>()
-            val ps = this.prepareStatement("""
-                SELECT UID FROM User WHERE JSON_EXTRACT(Data,'$.verified') IS NULL OR JSON_EXTRACT(Data,'$.verified') = FALSE
-            """.trimIndent())
+            val ps = this.prepareStatement(
+                    "SELECT UID FROM User WHERE JSON_EXTRACT(Data,'$.verified') IS NULL OR JSON_EXTRACT(Data,'$.verified') = FALSE"
+            )
             val rs = ps.executeQuery()
             while (rs.next()) {
                 list += rs.getInt("UID")

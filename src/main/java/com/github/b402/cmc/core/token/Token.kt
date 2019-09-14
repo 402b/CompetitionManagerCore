@@ -1,13 +1,11 @@
 package com.github.b402.cmc.core.token
 
-import com.github.b402.cmc.core.Permission
 import com.github.b402.cmc.core.configuration.Configuration
 import com.github.b402.cmc.core.sql.data.User
 import com.github.b402.cmc.core.util.deBase64
-import com.github.b402.cmc.core.util.md5HashWithSalt
+import com.github.b402.cmc.core.util.hashSHA256WithSalt
 import com.github.b402.cmc.core.util.toBase64
 import kotlinx.coroutines.*
-import java.util.*
 import kotlin.random.Random
 
 
@@ -27,7 +25,7 @@ class Token(
     fun toTokenString(): String {
         println("生成token: ${"""{"uid":$uid,"exp":$exp,"iat":$iat,"jti":$jti}"""}")
         val json = """{"uid":$uid,"exp":$exp,"iat":$iat,"jti":$jti}""".trimIndent().toBase64()
-        val auth = "$HEADER,$json".md5HashWithSalt()
+        val auth = "$HEADER,$json".hashSHA256WithSalt("$uid")
         return "$HEADER.$json.$auth"
     }
 
@@ -101,10 +99,10 @@ class Token(
             if (str.size != 3 || str[0] != HEADER) {
                 return null
             }
-            val auth = "${str[0]},${str[1]}".md5HashWithSalt()
+            val json = str[1].deBase64()
+            val data = Configuration(json)
+            val auth = "${str[0]},${str[1]}".hashSHA256WithSalt("${data.getInt("uid")}")
             if (auth == str[2]) {
-                val json = str[1].deBase64()
-                val data = Configuration(json)
                 val token = Token(
                         data.getInt("uid"),
                         data.getLong("exp"),

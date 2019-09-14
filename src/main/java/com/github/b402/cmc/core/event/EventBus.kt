@@ -11,6 +11,7 @@ import java.util.*
 object EventBus {
     private val handlers = mutableMapOf<Class<out Event>, EventHandler>()
 
+    @JvmStatic
     fun registerListener(listener: Any) {
         for (method in listener::class.java.declaredMethods) {
             method.isAccessible = true
@@ -44,6 +45,7 @@ object EventBus {
         return ll
     }
 
+    @JvmStatic
     fun registerListener(listener: Any, priority: EventPriority, event: Class<out Event>, ignoreCancel: Boolean, async: Boolean, method: Method) {
         method.isAccessible = true
         val handler = handlers.getOrPut(event) { EventHandler(event) }
@@ -53,6 +55,7 @@ object EventBus {
         list.add(wl)
     }
 
+    @JvmStatic
     fun callEvent(e: Event) {
         fireEvent(e::class.java, e)
         GlobalScope.launch {

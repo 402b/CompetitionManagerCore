@@ -8,7 +8,8 @@ import com.github.b402.cmc.core.service.data.*
 import com.github.b402.cmc.core.sql.data.User
 import com.github.b402.cmc.core.sql.data.UserGender
 import com.github.b402.cmc.core.token.Token
-import com.github.b402.cmc.core.util.md5HashWithSalt
+import com.github.b402.cmc.core.util.hashSHA256WithSalt
+import com.github.b402.cmc.core.util.toBase64
 import com.google.gson.JsonObject
 
 object RegisterService : DataService<RegisterData>(
@@ -40,7 +41,7 @@ object RegisterService : DataService<RegisterData>(
 
 class RegisterData(json: JsonObject) : SubmitData(json) {
     val userName = json.get("userName").asString!!
-    val password = json.get("password").asString!!.md5HashWithSalt()
+    val password = json.get("password").asString!!.hashSHA256WithSalt(userName.toBase64())
     val realName = json.get("realName").asString!!
     val id: String? = json.get("id")?.asString
     val gender = UserGender.getGender(json.get("gender").asString!!)

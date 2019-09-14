@@ -11,20 +11,12 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 
-@Ignore
 class UserTest {
     @Before
     @Test
     fun init() {
         SQLManager.init()
         TokenManager.init()
-    }
-
-    @Test
-    fun getUser() = runBlocking {
-        val user = User.getUserByName("Bryanlzh")
-        val u = user.await()
-        println(u!!.data.toJson())
     }
 
     @Test
@@ -37,7 +29,11 @@ class UserTest {
     fun createUser() = runBlocking<Unit> {
         withTimeout(3000L) {
             SQLManager.coroutinesConnection {
-                this.prepareStatement("DELETE FROM User WHERE Name = 'Bryanlzh'").executeUpdate()
+                val stn = this.createStatement();
+                stn.execute("SET FOREIGN_KEY_CHECKS=0")
+                stn.execute("TRUNCATE TABLE User")
+                stn.execute("SET FOREIGN_KEY_CHECKS=1")
+                stn.close()
             }
             val rs = RegisterService
             val result = rs.input("""
@@ -54,4 +50,11 @@ class UserTest {
             println(result.toJson())
         }
     }
+    @Test
+    fun getUser() = runBlocking {
+        val user = User.getUserByName("Bryanlzh")
+        val u = user.await()
+        println(u!!.data.toJson())
+    }
+
 }

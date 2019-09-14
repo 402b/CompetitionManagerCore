@@ -9,10 +9,8 @@ class ListenerTest {
     @Test
     fun register(){
         val ll = EventBus.registerListener<TestEvent>(EventBus.EventPriority.NORMAL,false,false){
-
-            println("test")
+            println("Listener Register Success")
         }
-
         EventBus.callEvent(TestEvent2())
     }
 }

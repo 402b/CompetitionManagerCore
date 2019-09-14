@@ -63,7 +63,7 @@ object SQLManager {
         }
     }
 
-     fun checkTable() {
+    fun checkTable() {
         Logger.getLogger(SQLManager::class.java).info("正在检查数据表")
         operateConnection {
             val stn = this.createStatement()
@@ -131,6 +131,7 @@ object SQLManager {
         }
     }
 
+    @JvmStatic
     fun operateConnection(func: Connection.() -> Unit) {
         var conn: Connection? = null
         try {

@@ -3,6 +3,7 @@ import com.github.b402.cmc.core.configuration.MemorySection
 import com.github.b402.cmc.core.sql.SQLManager
 import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.token.TokenManager
+import com.github.b402.cmc.core.util.hashSHA256
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Before
@@ -11,7 +12,9 @@ import org.junit.Test
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-@Ignore
+import java.util.*
+import kotlin.random.Random
+
 class ConfigTest {
 
     @Before
@@ -51,7 +54,7 @@ class ConfigTest {
 
     @Test
     fun token() = runBlocking{
-        Assert.assertEquals(TokenManager.Signature, "9112D7490C0480CC7014593DF27CC0A3")
+        Assert.assertEquals(TokenManager.Signature, "D6EDFF4728D564FCCFB0B746BF444DA24EE4AF8E310FDE8C2492EC88DDC55ADD")
         val uuid = 234
         val token = Token(uuid)
         val testToken = token.toTokenString()
@@ -112,7 +115,9 @@ class ConfigTest {
       "MaxLifetime": 60000,
       "MaximumPoolSize": 50
     }
-  }
+  },
+  "Admin": [
+  ]
 }
 """
     }

@@ -23,5 +23,7 @@
       "MaxLifetime": 60000,
       "MaximumPoolSize": 50
     }
-  }
+  },
+  "Admin": [
+  ]
 }
