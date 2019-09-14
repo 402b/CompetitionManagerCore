@@ -26,7 +26,8 @@ http://www.865171.cn/
                 <li class="current_page_item"><a href="signup.html">报名</a></li>
                 <li><a href="message.html">消息</a></li>
                 <li><a href="score.html">成绩</a></li>
-                <li><a href="manage/manage.html">管理</a></li>
+                <li><a href="manage/manage.html">管理系统</a></li>
+                <li><a href="umpire/projectUmpire.html">管理比赛</a></li>
             </ul>
         </div>
     </div>
@@ -90,8 +91,8 @@ http://www.865171.cn/
     <!-- end #page -->
     <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp第{{pageIndex}}页</p>
     <div id="footer">
-        <button onclick="vm.pageIndex--;"> 上一页</button>
-        <button onclick="vm.pageIndex++;"> 下一页</button>
+        <button onclick="vm.pageIndex--;if(vm.pageIndex<1) vm.pageIndex = 1;"> 上一页</button>
+        <button onclick="vm.pageIndex++;if(vm.pageIndex>vm.gameToShowById.length/10+1) vm.pageIndex--;"> 下一页</button>
         <!--p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p-->
     </div>
     <!-- end #footer -->
