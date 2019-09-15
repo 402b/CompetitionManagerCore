@@ -45,10 +45,8 @@
         <div id="content">
             <div class="post" v-for="game in gameToShow">
                 <p class ="meta">已参加</p>
-                <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
-                <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <!--p v-for="(value,key) in game"> {{key}}:{{value}} </p-->
+
                     <p>比赛id:{{game.gameID}}</p>
                     <p>比赛名称:{{game.gameName}}</p>
                     <p>比赛时间:{{toLocalString(new Date(game.time))}}</p>
@@ -96,11 +94,7 @@
     var vm = new Vue({
         el: '#page',
         data: {
-            /*userInfo:{
-                name:"smc",
-                age:20,
-                authority:"athlete"
-            },*/
+
             messageNum:0,
             pageIndex:1,
             token:getCookie("token"),
@@ -132,25 +126,7 @@
                     rep=>{console.log("请求个人信息失败")}
                 )
             },
-            //得到个人已经报名的项目
-            /*gameToJoinId:function () {
-                axios({
-                    url:"/Data/game_getJoined",
-                    params:{
 
-                        param:{
-                            token:getCookie("token"),
-                            Data:{
-
-                            }
-                        }
-                    }
-                }).then(
-                    rep=>{console.log("请求个人参加的项目成功");console.log(rep);return rep}
-                    ,
-                    rep=>{console.log("网络问题请求个人参加的项目失败")}
-                )
-            }, */
             //请求要展示的比赛信息
             computeGameToShow:function(){
                 var index = (this.pageIndex-1)*10;
@@ -287,7 +263,7 @@
             param:{
                 token:getCookie("token"),
                 Data:{
-                    //uid:this.userInfo.uid
+
                 }
             }
         }

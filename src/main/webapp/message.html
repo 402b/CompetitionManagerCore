@@ -26,19 +26,16 @@
                 <li><a href="projectUmpire.html">管理比赛</a></li>
             </ul>
         </div>
-        <!-- end #menu -->
 
-        <!-- end #search -->
     </div>
 </div>
-<!-- end #header -->
-<!-- end #header-wrapper -->
+
 <div id="logo">
     <h1><a href="http://www.865171.cn/">消息</a></h1>
-    <!-- p><em> template design by <a href="http://www.865171.cn/">www.865171.cn</a></em></p -->
+
 </div>
 <hr />
-<!-- end #logo -->
+
 <div id="page">
     <p v-for="n in computeUserInfo">{{n}}</p>
     <p v-for="n in computeUnreadMessageId">{{n}}</p>
@@ -46,27 +43,19 @@
     <div id="page-bgtop">
         <div id="content">
             <div class="post" v-for="message in messages">
-                <!-- p class ="meta">已参加</p -->
-                <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
-                <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
+
                 <div class="entry">
-                    <!-- p v-for="(value,key) in message"> {{key}}:{{value}} </p-->
                     <p> 消息内容:{{message.message.message}} </p>
                     <p> 消息来源:{{message.message.from}} </p>
                     <button v-on:click="setRead(message)" >设为已读</button>
-                    <!-- button onclick="signUp(competition)">放弃报名</button -->
                 </div>
             </div>
 
         </div>
-        <!-- end #content -->
         <div id="sidebar">
             <ul>
                 <li>
                     <h2>用户</h2>
-                    <!-- p v-for="(value,key) in userInfo">{{key}}:{{value}}</p-->
-
-
                     <p>真实姓名：{{userInfo.realName}}</p>
                     <p>性别：{{userInfo.gender=='M'?"男":"女"}}</p>
                     <p>用户id：{{userInfo.uid}}</p>
@@ -78,25 +67,21 @@
 
             </ul>
         </div>
-        <!-- end #sidebar -->
+
         <div style="clear: both;">&nbsp;</div>
     </div>
-    <!-- end #page -->
+
     <div id="footer">
         <!-- p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p-->
     </div>
-    <!-- end #footer -->
+
 </div>
 
 <script>
     var vm = new Vue({
         el: '#page',
         data: {
-            /*userInfo:{
-                name:"smc",
-                age:20,
-                authority:"athlete"
-            },*/
+
             messageNum:0,
             //接收消息
             messages: {},

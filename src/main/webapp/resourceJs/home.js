@@ -51,39 +51,3 @@ check();
 
 
 
-/*
-//获取作为选手参加的比赛
-function joinCompetitions(){
-    axios({
-        //待定
-        url: '',
-        params:{
-            param:{
-                token: getCookie("token"),
-                Data : {
-
-
-                }
-            }
-        }
-    }).then()           //对对象赋值 用 v-for 渲染
-}
-
-//获取作为裁判参加的比赛
-function judgeCompetitions(){
-    axios({
-        //待定
-        url: '',
-        params:{
-            param:{
-                token: getCookie("token"),
-                Data : {
-
-
-                }
-            }
-        }
-    }).then()
-}
-
-*/
