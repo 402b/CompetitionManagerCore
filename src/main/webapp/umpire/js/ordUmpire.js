@@ -53,9 +53,6 @@ var userInfo = new Vue({    //获取用户信息
         this.refresh();
     },
     methods: {
-        test: function() {
-            this.realName = "Tony";
-        },
         refresh: function () {
             axios({
                 url: '/Data/userinfo',
@@ -91,22 +88,10 @@ var enterScore = new Vue({    //录入成绩
         ],   //某裁判负责的所有项目信息
         player: [
         ],
-        tests2: [
-            {uid:"001",realName:"张三"},
-            {uid:"002",realName:"李四"},
-            {uid:"003",realName:"Tony"},
-            {uid:"004",realName:"Lisa"},
-        ],
         uids:[],    //参赛选手的uid列表
         gameid: [
         ],  //用户从后端获取的所有比赛id
         score:[],       //提交成绩后传给后端比赛列表
-        tests: [
-            {gameName:"男子100米",gameID:"001"},
-            {gameName:"女子100米",gameID:"002"},
-            {gameName:"男子100米",gameID:"003"},
-            {gameName:"男子1500米",gameID:"004"},
-        ],
         gameID: "", //选择录入的赛事ID
         gameName: "",   //选择录入赛事的名称
         show:false, //false展示赛事选择界面，true展示成绩录入界面
@@ -121,11 +106,6 @@ var enterScore = new Vue({    //录入成绩
     },
     methods: {
         start: function() {
-            //测试用代码
-            // this.recordAmount = this.tests.length;
-            // this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
-            // this.changePage();
-
             axios({
                 url: '/Data/judge_info',
                 params: {
@@ -172,21 +152,11 @@ var enterScore = new Vue({    //录入成绩
                 alert("请输入正确数字!")
             }
             else {
-                console.log(this.enterNumber);
                 this.pageNow = this.enterNumber;
                 this.changePage();
             }
         },
         changePage: function () {
-            //测试用代码
-            // this.game = [];
-            // var start = (this.pageNow-1) * this.pageEach;
-            // var end = Math.min(start+this.pageEach, this.recordAmount);
-            // console.log(end);
-            // for (var i = start; i < end; i++) {
-            //     this.game.push(this.tests[i]);
-            // }
-            // console.log(this.game.length);
             if (this.show == false) {
                 var start = (this.pageNow - 1) * this.pageEach;
                 var end = Math.min(start + this.pageEach, this.recordAmount);

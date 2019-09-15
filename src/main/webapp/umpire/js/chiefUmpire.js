@@ -53,9 +53,6 @@ var userInfo = new Vue({    //获取用户信息
         this.refresh();
     },
     methods: {
-        test: function() {
-            this.realName = "Tony";
-        },
         refresh: function () {
             axios({
                 url: '/Data/user_info',
@@ -96,22 +93,10 @@ var enterScore = new Vue({    //录入成绩
         ],   //某裁判负责的所有项目信息
         player: [
         ],
-        tests2: [
-            {uid:"001",realName:"张三"},
-            {uid:"002",realName:"李四"},
-            {uid:"003",realName:"Tony"},
-            {uid:"004",realName:"Lisa"},
-        ],
         uids:[],    //参赛选手的uid列表
         gameid: [
         ],  //用户从后端获取的所有比赛id
         score:[],       //提交成绩后传给后端比赛列表
-        tests: [
-            {gameName:"男子100米",gameID:"001"},
-            {gameName:"女子100米",gameID:"002"},
-            {gameName:"男子100米",gameID:"003"},
-            {gameName:"男子1500米",gameID:"004"},
-        ],
         gameID: "", //选择录入的赛事ID
         gameName: "",   //选择录入赛事的名称
         show:false, //false展示赛事选择界面，true展示成绩录入界面
@@ -126,11 +111,6 @@ var enterScore = new Vue({    //录入成绩
     },
     methods: {
         start: function() {
-            //测试用代码
-            // this.recordAmount = this.tests.length;
-            // this.pageAmount = Math.ceil(this.recordAmount/this.pageEach);
-            // this.changePage();
-
             axios({
                 url: '/Data/judge_info',
                 params: {
@@ -177,22 +157,11 @@ var enterScore = new Vue({    //录入成绩
                 alert("请输入正确数字!")
             }
             else {
-                console.log(this.enterNumber);
                 this.pageNow = this.enterNumber;
                 this.changePage();
             }
         },
         changePage: function () {
-            //测试用代码
-            // this.game = [];
-            // var start = (this.pageNow-1) * this.pageEach;
-            // var end = Math.min(start+this.pageEach, this.recordAmount);
-            // console.log(end);
-            // for (var i = start; i < end; i++) {
-            //     this.game.push(this.tests[i]);
-            // }
-            // console.log(this.game.length);
-
             var start = (this.pageNow-1) * this.pageEach;
             var end = Math.min(start+this.pageEach, this.recordAmount);
             var gameidX = [];    //需要请求的比赛id列表
@@ -217,7 +186,6 @@ var enterScore = new Vue({    //录入成绩
                         this.game = rep.data.info;
                         for (var i = 0; i < this.game.length; i++) {
                             this.game[i].time = formatTime(this.game[i].time, 'Y-M-D h:m:s');
-                            console.log(this.game[i].time);
                         }
                     } else{
                         alert("获取用户数据表失败!");
@@ -336,10 +304,6 @@ var setUmpire = new Vue({   //任命裁判
     },
     methods: {
         check:function () {
-            console.log(this.umpireName);
-            console.log(this.UID);
-            console.log(this.gameName);
-            console.log(this.type);
             if (this.type!="主裁判" && (this.UID=="" || this.gameName=="" || this.umpireName==""))
                 alert("有空项目，请检查!");
             else if(this.type=="主裁判" && this.gameName!="")
@@ -388,21 +352,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
         game: [],   //当前应该显示的某裁判负责的项目信息
         gameid: [],  //用户从后端获取的所有比赛id
         gameNow: [],    //当前应该展示的比赛信息
-        tests: [
-            {gameName: "男子100米", gameID: "001", gameType: "预赛"},
-            {gameName: "女子100米", gameID: "002", gameType: "决赛"},
-            {gameName: "男子100米", gameID: "003", gameType: "预赛"},
-            {gameName: "男子1500米", gameID: "004", gameType: "预赛"},
-        ],
-        tests2: [
-            {uid:"001",id:"1243",realName:"Tony",gender:"F"},
-            {uid:"002",id:"1243",realName:"Tony",gender:"M"},
-            {uid:"003",id:"1243",realName:"Tony",gender:"F"},
-            {uid:"004",id:"1243",realName:"Tony",gender:"M"},
-            {uid:"005",id:"1243",realName:"Tony",gender:"M"},
-            {uid:"006",id:"1243",realName:"Tony",gender:"M"},
-            {uid:"007",id:"1243",realName:"Tony",gender:"M"},
-        ],
         gameID: "", //选择取消裁判的赛事ID
         gameName: "",   //选择取消裁判的赛事名称
         users:[],   //所有该项目裁判的uid
@@ -421,11 +370,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
     },
     methods: {
         start: function () {
-            //测试用代码
-            // this.recordAmount = this.tests.length;
-            // this.pageAmount = Math.ceil(this.recordAmount / this.pageEach);
-            // this.changePage();
-
             axios({
                 url: '/Data/judge_info',
                 params: {
@@ -470,33 +414,11 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             } else if (!patrn.exec(this.enterNumber)) {
                 alert("请输入正确数字!")
             } else {
-                console.log(this.enterNumber);
                 this.pageNow = this.enterNumber;
                 this.changePage();
             }
         },
         changePage: function () {
-            // 测试用代码
-            // if (this.show == false) {
-            //     this.game = [];
-            //     var start = (this.pageNow - 1) * this.pageEach;
-            //     var end = Math.min(start + this.pageEach, this.recordAmount);
-            //     console.log(end);
-            //     for (var i = start; i < end; i++) {
-            //         this.game.push(this.tests[i]);
-            //     }
-            // }
-            // else {
-            //     this.checked = [];
-            //     this.umpire = [];
-            //     console.log(this.recordAmount);
-            //     var start = (this.pageNow - 1) * this.pageEach;
-            //     var end = Math.min(start + this.pageEach, this.recordAmount);
-            //     for (var i = start; i < end; i++) {
-            //         this.umpire.push(this.tests2[i]);
-            //     }
-            // }
-
             if (this.show == false) {
                 this.game = [];
                 var start = (this.pageNow - 1) * this.pageEach;
@@ -610,13 +532,11 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
             else {
                 this.checked = [];
             }
-            console.log(this.checked.length);
         },
         checkOne: function(uid) {
             var x = this.checked.indexOf(uid);
             if (x>-1) {
                 this.checked.splice(x,1)
-                console.log(this.checked.length);
             }
             else {
                 this.checked.push(uid);
@@ -625,8 +545,6 @@ var cancelUmpire = new Vue({    //某裁判所负责的项目信息，可以用�
         check: function(uid) {
             this.isCheckAll = (this.checked.length == this.umpire.length);
             var x = this.checked.indexOf(uid);
-            console.log(uid+":"+x);
-            console.log(this.checked.length);
             if (x>-1)
                 return true;
             else
