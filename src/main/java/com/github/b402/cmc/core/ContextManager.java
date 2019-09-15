@@ -40,6 +40,7 @@ public class ContextManager implements ServletContextListener {
         Sort.init();
         Logger.getLogger(ContextManager.class).info("开始初始化模块");
         Module.loadModules();
+        checkAdmin();
         ContextInitEvent cie = new ContextInitEvent();
         EventBus.callEvent(cie);
     }
