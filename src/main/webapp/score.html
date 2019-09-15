@@ -23,7 +23,8 @@
                 <li class="current_page_item"><a href="signup.html">报名</a></li>
                 <li><a href="message.html">消息</a></li>
                 <li><a href="score.html">成绩</a></li>
-                <li><a href="manage/manage.html">管理</a></li>
+                <li><a href="manage/manage.html">管理系统</a></li>
+                <li><a href="umpire/projectUmpire.html">管理比赛</a></li>
             </ul>
         </div>
 
@@ -41,11 +42,25 @@
     <div id="page-bgtop">
         <div id="content">
             <div class="post" v-for="game in allGameInfo">
-                <p class ="meta">未参加</p>
+                <p class ="meta">已完成</p>
                 <!-- p class="meta"><span class="date">Sunday, April 26, 2009</span> 7:27 AM Posted by <a href="http://www.865171.cn/">Someone</a></p -->
                 <!-- h2 class="title"><a href="http://www.865171.cn/">Welcome to Assiduous  </a></h2 -->
                 <div class="entry">
-                    <p v-for="(value,key) in game"> {{key}}:{{value}} </p>
+                    <!--p v-for="(value,key) in game"> {{key}}:{{value}} </p-->
+                    <p>比赛id:{{game.gid}}</p>
+                    <!--p>比赛名称{{game.gameName}}</p-->
+                    <table border="1">
+                        <tr>
+                            <th>用户id</th>
+                            <th>排名</th>
+                            <th>得分</th>
+                        </tr>
+                        <tr v-for="score in game.result.result">
+                            <td>{{score.uid}}</td>
+                            <td>{{score.rank}}</td>
+                            <td>{{score.score}}</td>
+                        </tr>
+                    </table>
                     <!-- button v-on:click="signUp(game)">报名参赛</button>
                     <button v-on:click="applyJudge(game)">申请裁判</button-->
                 </div>
@@ -57,8 +72,13 @@
             <ul>
                 <li>
                     <h2>用户</h2>
-                    <p v-for="(value,key) in userInfo">{{key}}:{{value}}</p>
+                    <!-- p v-for="(value,key) in userInfo">{{key}}:{{value}}</p-->
+                    <p>真实姓名：{{userInfo.realName}}</p>
+                    <p>性别：{{userInfo.gender=='M'?"男":"女"}}</p>
+                    <p>用户id：{{userInfo.uid}}</p>
+                    <p>身份：{{userInfo.permission=="VERIFIED"?"已验证":"未验证"}}</p>
                     <h1 v-for="n in computeUserInfo">{{n}}</h1>
+                    <h1 v-for="n in computeUnreadMessageId">{{n}}</h1>
                 </li>
                 <li>
                     <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
@@ -71,7 +91,7 @@
     </div>
     <!-- end #page -->
     <div id="footer">
-        <p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p>
+        <!--p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.865171.cn/">www.865171.cn</a>.</p-->
     </div>
     <!-- end #footer -->
 </div>
@@ -100,8 +120,9 @@
         computed:{
             computeUserInfo:function(){
                 axios({
+                    method:'POST',
                     url:"/Data/user_info",
-                    params:{
+                    data:{
 
                         param:{
                             token:getCookie("token"),
@@ -141,8 +162,9 @@
                     list[i] = this.gameIds[index+i];
                 this.gameToShowById =  list;
                 axios({
+                    method:'POST',
                     url:"/Data/game_info",
-                    params:{
+                    data:{
 
                         param: {
                             token:getCookie("token"),
@@ -163,8 +185,9 @@
             //得到个人参加的项目的列表
             computeGameIds: function () {
                 axios({
+                    method:'POST',
                     url:"/Data/game_result",
-                    params:{
+                    data:{
                         param:{
                             token:getCookie("token"),
                             Data:{
@@ -202,17 +225,46 @@
                     ,
                     rep=>{console.log("获取已完成项目分数失败")}
                 )
-            }
-        },
-        methods:{
+            },//获取未读消息id信息
+            computeUnreadMessageId: function (){
+                axios({
+                    method:"POST",
+                    url:"/Data/message_unread",
+                    data:{
 
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+                                uid:this.userInfo.uid,
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取未读消息id成功");
+                        this.messageIds = rep.data.list;
+                        if(rep.data.list)
+                            this.messageNum = rep.data.list.length;
+                        console.log(rep);
+                        return rep;
+                    },
+                    rep=>{console.log("获取未读消息id失败")}
+                );
+            },
+        },
+        methods :{
+            toLocalString: function(date) {
+                return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+"   "+date.getHours()
+                    +":"+date.getMinutes()+":"+date.getSeconds();
+            },
         }
     })
 
     //获取所有已出成绩的比赛的全部信息
     axios({
+        method:'POST',
         url:"/Data/game_result",
-        params:{
+        data:{
             param:{
                 token:getCookie("token"),
                 Data:{
@@ -221,7 +273,9 @@
             }
         }
     }).then(
-        rep=>{console.log("获取所有已出成绩的比赛的信息成功"); this.allGameInfo = rep.data;
+        rep=>{console.log("获取所有已出成绩的比赛的信息成功");
+            console.log(rep);
+            vm.allGameInfo = rep.data.results;
             return rep}
         ,
         rep=>{console.log("获取所有已出成绩的比赛信息失败")}
