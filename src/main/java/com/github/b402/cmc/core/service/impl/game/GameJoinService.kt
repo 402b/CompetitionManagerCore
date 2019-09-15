@@ -19,7 +19,7 @@ object GameJoinService : DataService<SubmitData>(
         val dgame = Game.getGame(gid)
         val djoined = JoinGame.hasJoinedGame(data.token!!.uid, gid)
         val game = dgame.await() ?: return returnData(ERROR, "找不到比赛")
-        if (System.currentTimeMillis() > game.endTime || System.currentTimeMillis() < game.startTime) {
+        if (System.currentTimeMillis() > game.endTime || System.currentTimeMillis() < game.startTime || game.complete) {
             return returnData(ERROR, "未到比赛报名时间或比赛已经停止报名")
         }
         val ujge = UserJoinGameEvent(gid, data.token!!.uid, cancel)

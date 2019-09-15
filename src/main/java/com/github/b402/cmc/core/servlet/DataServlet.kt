@@ -30,21 +30,16 @@ class DataServlet : HttpServlet() {
             return
         }
         val json = req.getParameter("param")
-        Logger.getLogger(DataServlet::class.java).debug("path: $path,json: $json")
         if (json == null) {
             response.status = 404
             return
         }
-        Logger.getLogger(DataServlet::class.java).debug("req.asyncContext")
         val async = req.startAsync(req, response)
-        Logger.getLogger(DataServlet::class.java).debug("GlobalScope.launch ")
         GlobalScope.launch {
             response.characterEncoding = "utf-8";
             response.setHeader("Content-type", "application/json;charset=UTF-8");
-            Logger.getLogger(DataServlet::class.java).debug("async")
             val resp = async.response
             resp.characterEncoding = "utf-8";
-            Logger.getLogger(DataServlet::class.java).debug(" async.response")
             val returndata = withTimeoutOrNull(5000) {
                 try {
                     return@withTimeoutOrNull ds.input(json)
@@ -56,8 +51,6 @@ class DataServlet : HttpServlet() {
                     return@withTimeoutOrNull returnData(ERROR, "请求异常")
                 }
             }
-            Logger.getLogger(DataServlet::class.java).debug("returndata: ${returndata?.toString()
-                    ?: "=null"}")
             val writer = resp.writer
             if (returndata == null) {
                 val rd = returnData(ERROR_TIMEOUT, "请求超时")
@@ -72,7 +65,6 @@ class DataServlet : HttpServlet() {
 
     override fun doPost(req: HttpServletRequest, response: HttpServletResponse) {
         req.characterEncoding = "utf-8";
-        Logger.getLogger(DataServlet::class.java).debug("doPost")
         val data = Configuration.parser.parse(InputStreamReader(req.inputStream))
         val path = req.pathInfo
         val ds = dataService[path]
@@ -81,21 +73,16 @@ class DataServlet : HttpServlet() {
             return
         }
         val json = data.asJsonObject.getAsJsonObject("param")
-        Logger.getLogger(DataServlet::class.java).debug("path: $path,json: $json")
         if (json == null) {
             response.status = 404
             return
         }
-        Logger.getLogger(DataServlet::class.java).debug("req.asyncContext")
         val async = req.startAsync(req, response)
-        Logger.getLogger(DataServlet::class.java).debug("GlobalScope.launch ")
         GlobalScope.launch {
             response.characterEncoding = "utf-8";
             response.setHeader("Content-type", "application/json;charset=UTF-8");
-            Logger.getLogger(DataServlet::class.java).debug("async")
             val resp = async.response
             resp.characterEncoding = "utf-8";
-            Logger.getLogger(DataServlet::class.java).debug(" async.response")
             val returndata = withTimeoutOrNull(5000) {
                 try {
                     return@withTimeoutOrNull ds.input(json)
@@ -107,8 +94,6 @@ class DataServlet : HttpServlet() {
                     return@withTimeoutOrNull returnData(ERROR, "请求异常")
                 }
             }
-            Logger.getLogger(DataServlet::class.java).debug("returndata: ${returndata?.toString()
-                    ?: "=null"}")
             val writer = resp.writer
             if (returndata == null) {
                 val rd = returnData(ERROR_TIMEOUT, "请求超时")
