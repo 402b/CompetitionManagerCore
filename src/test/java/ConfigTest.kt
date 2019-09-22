@@ -5,6 +5,7 @@ import com.github.b402.cmc.core.token.Token
 import com.github.b402.cmc.core.token.TokenManager
 import com.github.b402.cmc.core.util.hashSHA256
 import kotlinx.coroutines.runBlocking
+import org.apache.log4j.Logger
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Ignore
