@@ -67,7 +67,8 @@ var vm = new Vue({
         //储存得到的所有比赛项目的id
         gameIds:[1,2,3],
         //储存要展示的比赛项目的信息
-        gameToShow:[]
+        gameToShow:[],
+        userPermission:0,
     },
     computed:{
         //获取个人信息
@@ -93,6 +94,46 @@ var vm = new Vue({
                 rep=>{console.log("请求个人信息失败")}
             )
         },
+
+        //计算用户权限
+        computeUserPermission:function(){
+            axios({
+                method:'POST',
+                url:"/Data/user_permission",
+                data:{
+
+                    param: {
+                        token:getCookie("token"),
+                        Data:{
+
+                        },
+                    }
+                }
+            }).then(
+                rep=>{
+                    console.log("获取用户权限成功");
+                    //格式存疑
+                    var permission = rep.data.permission;
+                    console.log(rep);
+                    switch(permission){
+                        case "JUDGE": this.userPermission = 1; break;
+                        case "PROJECT_JUDGE": this.userPermission = 2;break;
+                        case "MAIN_JUDGE": this.userPermission = 3;break;
+                        case "ADMIN": this.userPermission = 4;break;
+                    }
+                    if(this.userPermission>0)
+                        document.getElementById("show1").style.display="block";
+                    if(this.userPermission>1)
+                        document.getElementById("show2").style.display="block";
+                    if(this.userPermission>2)
+                        document.getElementById("show3").style.display="block";
+                    if(this.userPermission>3)
+                        document.getElementById("show4").style.display="block";
+                },
+                rep=>{console.log("获取用户权限失败")}
+            );
+        },
+
         //获取所有可报名比赛的id
         /*computeGameIds: function(){
                 axios({

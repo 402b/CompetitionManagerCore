@@ -19,14 +19,15 @@
     <div id="header">
         <div id="menu">
             <ul>
-                <li><a href="home.html" class="first">主页</a></li>
+                <li ><a href="home.html" class="first">主页</a></li>
                 <li class="current_page_item"><a href="signup.html">报名</a></li>
                 <li><a href="message.html">消息</a></li>
                 <li><a href="score.html">成绩</a></li>
-                <li><a href=ordUmpire.html">管理比赛</a></li>
-                <li><a href="projectUmpire.html">管理项目</a></li>
-                <li><a href=chiefUmpire.html">主裁判入口</a></li>
-                <li><a href="manage.html">管理员入口</a></li>
+                <li id="show1" style="display:none"><a href="ordUmpire.html">管理比赛</a></li>
+                <li id="show2" style="display:none"><a href="projectUmpire.html">管理项目</a></li>
+                <li id="show3" style="display:none"><a href="chiefUmpire.html">主裁判入口</a></li>
+                <li id="show4" style="display:none"><a href="manage.html">管理员入口</a></li>
+                <p></p>
             </ul>
         </div>
 
@@ -34,7 +35,7 @@
 </div>
 
 <div id="logo">
-    <h1><a href="http://www.865171.cn/">成绩</a></h1>
+    <h1>成绩</h1>
 
 </div>
 <hr />
@@ -78,6 +79,7 @@
                     <p>身份：{{userInfo.permission=="VERIFIED"?"已验证":"未验证"}}</p>
                     <h1 v-for="n in computeUserInfo">{{n}}</h1>
                     <h1 v-for="n in computeUnreadMessageId">{{n}}</h1>
+                    <h1 v-for="n in computeUserPermission">{{n}}</h1>
                 </li>
                 <li>
                     <button onclick="window.open('message.html')">未读消息：{{messageNum}}</button>
@@ -111,6 +113,7 @@
             gameToShowById:[],
             userInfo:{},
             allGameInfo:[],
+            userPermission:0,
         },
         computed:{
             computeUserInfo:function(){
@@ -133,6 +136,45 @@
                     ,
                     rep=>{console.log("请求个人信息失败")}
                 )
+            },
+
+            //计算用户权限
+            computeUserPermission:function(){
+                axios({
+                    method:'POST',
+                    url:"/Data/user_permission",
+                    data:{
+
+                        param: {
+                            token:getCookie("token"),
+                            Data:{
+
+                            },
+                        }
+                    }
+                }).then(
+                    rep=>{
+                        console.log("获取用户权限成功");
+                        //格式存疑
+                        var permission = rep.data.permission;
+                        console.log(rep);
+                        switch(permission){
+                            case "JUDGE": this.userPermission = 1; break;
+                            case "PROJECT_JUDGE": this.userPermission = 2;break;
+                            case "MAIN_JUDGE": this.userPermission = 3;break;
+                            case "ADMIN": this.userPermission = 4;break;
+                        }
+                        if(this.userPermission>0)
+                            document.getElementById("show1").style.display="block";
+                        if(this.userPermission>1)
+                            document.getElementById("show2").style.display="block";
+                        if(this.userPermission>2)
+                            document.getElementById("show3").style.display="block";
+                        if(this.userPermission>3)
+                            document.getElementById("show4").style.display="block";
+                    },
+                    rep=>{console.log("获取用户权限失败")}
+                );
             },
 
             //要展示的比赛的信息

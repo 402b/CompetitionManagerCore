@@ -19,22 +19,21 @@
     <div id="header">
         <div id="menu">
             <ul>
-                <li><a href="home.html" class="first">主页</a></li>
+                <li ><a href="home.html" class="first">主页</a></li>
                 <li class="current_page_item"><a href="signup.html">报名</a></li>
                 <li><a href="message.html">消息</a></li>
                 <li><a href="score.html">成绩</a></li>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                <li><a href=ordUmpire.html">管理比赛</a></li>
-                <li><a href="projectUmpire.html">管理项目</a></li>
-                <li><a href=chiefUmpire.html">主裁判入口</a></li>
-                <li><a href="manage.html">管理员入口</a></li>
+                <li id="show1" style="display:none"><a href="ordUmpire.html">管理比赛</a></li>
+                <li id="show2" style="display:none"><a href="projectUmpire.html">管理项目</a></li>
+                <li id="show3" style="display:none"><a href="chiefUmpire.html">主裁判入口</a></li>
+                <li id="show4" style="display:none"><a href="manage.html">管理员入口</a></li>
             </ul>
         </div>
     </div>
 </div>
 
 <div id="logo">
-    <h1><a href="http://www.865171.cn/">报名</a></h1>
+    <h1>报名</h1>
 
 </div>
 <hr />
@@ -72,7 +71,7 @@
                     <h1 v-for="n in computeGameToShow">{{n}}</h1>
                     <h1 v-for="n in computeUnreadMessageId">{{n}}</h1>
                     <h1 v-for="n in userInfo"></h1>
-
+                    <h1 v-for="n in computeUserPermission">{{n}}</h1>
                     
 
                 </li>
