@@ -146,6 +146,7 @@ class DataServlet : HttpServlet() {
             register(GameCompleteService)
             register(UnverifiedJoinGameInfoService)
             register(VerifyJoinGameService)
+            register(UserPermissionService)
         }
     }
 }
