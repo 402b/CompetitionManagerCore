@@ -1,5 +1,3 @@
-[TOC]
-
 # 后端整体架构
 
 - 动态module加载组件: 使得项目的扩展性和可维护性提升
@@ -10,17 +8,17 @@
 
 项目整体初始化执行逻辑如下:
 ServletContext初始化 $\to$ 数据库模块初始化 $\to$ 数据服务模块初始化 $\to$ Token处理初始化 $\to$ 排序服务初始化 $\to$ 外部module初始化 $\to$ 检查管理员
-
 ## 动态module加载组件
 该功能提供了一个动态加载外部jar包的效果
 若想实现一个module只需要以下步骤
 
 - 编写 module.json 模块描述文件 具体可参阅 [link](https://github.com/402b/CompetitionManagerMessageModule/blob/master/src/main/resources/module.json)
-|键|值|
-|---|---|
-|name|模块名|
-|version|模块版本|
-|main|模块主类的类路径|
+
+|键|值| 
+--------- | --------|
+|name|模块名 
+|version|模块版本 
+|main|模块主类的类路径 
 - 实现模块主类(继承[Module](https://github.com/402b/CompetitionManagerCore/blob/master/src/main/java/com/github/b402/cmc/core/module/Module.java))
 - 编写自己的业务逻辑
 
@@ -41,11 +39,12 @@ ServletContext初始化 $\to$ 数据库模块初始化 $\to$ 数据服务模块�
 实现如下:
 创建一个类并继承[DataService\<S exentd SubmitData\>](https://github.com/402b/CompetitionManagerCore/blob/master/src/main/java/com/github/b402/cmc/core/service/DataService.kt)
 其中 父类构造器所需参数如下
+
 |变量名|含义|类型|
 |---|---|---|
-|path|本数据服务的地址|String|
-|permission|本服务所需的权限|Permission|
-|sClass|自定义数据读取类|Class\<S\>|
+|path|本数据服务的地址|String
+|permission|本服务所需的权限|Permission
+|sClass|自定义数据读取类|Class\<S\>
 需要实现的抽象方法: suspend[^1] fun onRequest(data: S): ReturnData
 
 [^1]: 本方法为协程的可挂起方法
@@ -55,12 +54,13 @@ ServletContext初始化 $\to$ 数据库模块初始化 $\to$ 数据服务模块�
 所有数据库访问皆采用回调函数的方式互交
 提供以下方法
 
+
 |方法名|参数[^2]|返回|说明| 
-|---|---|---| 
-|operateConnection|Consumer\<Connection>|void|以阻塞的形式操作数据库(通常用于服务初始化)| 
-|coroutinesConnection|suspend Consumer\<Connection>|void|在协程中以阻塞形式操作数据库| 
-|async|suspend Consumer\<Connection>|Deferred\<Boolean>|在同一个协程上下文中异步执行操作数据库,操作成功后将会推迟返回true,反之false| 
-|asyncDeferred\<R>|suspend Function\<Connection,R>|Deferred\<R>|在同一个协程上下文中异步执行操作数据库并延迟返回结果| 
+|---|---|---|---|
+|operateConnection|Consumer\<Connection>|void|以阻塞的形式操作数据库(通常用于服务初始化)
+|coroutinesConnection|suspend Consumer\<Connection>|void|在协程中以阻塞形式操作数据库
+|async|suspend Consumer\<Connection>|Deferred\<Boolean>|在同一个协程上下文中异步执行操作数据库,操作成功后将会推迟返回true,反之false
+|asyncDeferred\<R>|suspend Function\<Connection,R>|Deferred\<R>|在同一个协程上下文中异步执行操作数据库并延迟返回结果
 
 [^2]: 注,所有kotlin的函数类型将用java.util.function的类描述
 
